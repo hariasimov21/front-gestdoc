@@ -78,8 +78,8 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
     resolver: zodResolver(formSchema),
     defaultValues: initialData ? { 
         ...initialData,
-        id_arrendatario: String(initialData.arrendatario.id_arrendatario),
-        id_propiedad: String(initialData.propiedad.id_propiedad),
+        id_arrendatario: String(initialData.arrendatario?.id_arrendatario || ''),
+        id_propiedad: String(initialData.propiedad?.id_propiedad || ''),
         fecha_inicio_arriendo: parseISO(initialData.fecha_inicio_arriendo),
         fecha_fin_arriendo: parseISO(initialData.fecha_fin_arriendo),
      } : {

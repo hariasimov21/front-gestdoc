@@ -49,12 +49,28 @@ export const columns = (dependencies: { properties: Property[], documentTypes: D
   {
     accessorKey: 'fecha_subida',
     header: 'Fecha Subida',
-    cell: ({ row }) => format(new Date(row.original.fecha_subida), 'dd/MM/yyyy')
+    cell: ({ row }) => {
+        const date = row.original.fecha_subida;
+        if (!date) return 'N/A';
+        try {
+            return format(new Date(date), 'dd/MM/yyyy');
+        } catch (e) {
+            return 'Fecha inválida';
+        }
+    }
   },
   {
     accessorKey: 'fecha_vencimiento',
     header: 'Fecha Vencimiento',
-    cell: ({ row }) => format(new Date(row.original.fecha_vencimiento), 'dd/MM/yyyy')
+    cell: ({ row }) => {
+        const date = row.original.fecha_vencimiento;
+        if (!date) return 'N/A';
+        try {
+            return format(new Date(date), 'dd/MM/yyyy');
+        } catch (e) {
+            return 'Fecha inválida';
+        }
+    }
   },
    {
     accessorKey: 'version',

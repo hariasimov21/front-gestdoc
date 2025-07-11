@@ -56,14 +56,18 @@ export async function login(
       }
     );
 
-    const loginData: ApiResponse<UserData> = await loginResponse.json();
+    const loginData: ApiResponse<UserData | UserData[]> = await loginResponse.json();
 
     if (!loginResponse.ok) {
       const errorMessage = Array.isArray(loginData.message) ? loginData.message.join(', ') : loginData.message;
       return { error: errorMessage || 'Credenciales incorrectas o error del servidor.' };
     }
 
-    const userData = loginData.payload;
+    const userData = Array.isArray(loginData.payload) ? loginData.payload[0] : loginData.payload;
+
+    if (!userData) {
+      return { error: 'No se recibieron datos de usuario válidos.' };
+    }
 
     // Fetch role information
     const roleResponse = await fetch(`${API_URL}/rol-usuario/getRolUsuario/${userData.rol_usuario_id}`, {

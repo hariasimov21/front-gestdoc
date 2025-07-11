@@ -101,7 +101,6 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
     } else if (state?.error === undefined) {
       // This condition handles the successful case.
       // After a successful action, `state` becomes `{ error: undefined }`
-      // We check for `!state` in role-form to avoid showing toast on initial render. Here it seems to work fine without it.
       if (form.formState.isSubmitSuccessful) {
         toast({ title: `Usuario ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
         handleClose();

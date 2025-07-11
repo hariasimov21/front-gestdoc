@@ -14,7 +14,13 @@ export type UserColumn = {
   };
 };
 
-export const columns: ColumnDef<UserColumn>[] = [
+type Role = {
+  id_rol_usuario: number;
+  nombre_rol: string;
+  descripcion: string;
+};
+
+export const columns = (roles: Role[]): ColumnDef<UserColumn>[] => [
   {
     accessorKey: 'id_usuario',
     header: 'ID',
@@ -31,8 +37,8 @@ export const columns: ColumnDef<UserColumn>[] = [
     accessorKey: 'rol_usuario',
     header: 'Rol',
     cell: ({ row }) => {
-      const roleName = row.original.rol_usuario.nombre_rol;
-      return <Badge variant={roleName === 'Administrador' ? 'default' : 'secondary'}>{roleName}</Badge>;
+      const roleName = row.original.rol_usuario?.nombre_rol;
+      return <Badge variant={roleName === 'Administrador' ? 'default' : 'secondary'}>{roleName || 'N/A'}</Badge>;
     },
     filterFn: (row, id, value) => {
         return value.includes(row.getValue(id))
@@ -40,6 +46,6 @@ export const columns: ColumnDef<UserColumn>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} />,
+    cell: ({ row }) => <CellAction data={row.original} roles={roles} />,
   },
 ];

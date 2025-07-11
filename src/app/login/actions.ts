@@ -5,8 +5,8 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
+  email_usuario: z.string().email(),
+  contrasena: z.string().min(1),
 });
 
 type UserData = {
@@ -21,9 +21,11 @@ type RoleData = {
   nombre_rol: string;
 };
 
-type RoleApiResponse = {
-  payload: RoleData[];
-} | RoleData;
+type ApiResponse<T> = {
+  payload: T;
+  message?: string | string[];
+  statusCode?: number;
+};
 
 
 export async function login(
@@ -38,7 +40,7 @@ export async function login(
     return { error: 'Datos inválidos. Por favor, revisa los campos.' };
   }
 
-  const { email, password } = validatedFields.data;
+  const { email_usuario, contrasena } = validatedFields.data;
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   try {
@@ -49,22 +51,25 @@ export async function login(
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email_usuario: email, contrasena: password }),
+        body: JSON.stringify({ email_usuario, contrasena }),
       }
     );
 
-    const loginData = await loginResponse.json();
+    const loginData: ApiResponse<UserData> = await loginResponse.json();
 
     if (!loginResponse.ok) {
       const errorMessage = Array.isArray(loginData.message) ? loginData.message.join(', ') : loginData.message;
       return { error: errorMessage || 'Credenciales incorrectas o error del servidor.' };
     }
 
-    const userData = loginData.payload as UserData;
+    const userData = loginData.payload;
 
     // Fetch role information
     const roleResponse = await fetch(`${API_URL}/rol-usuario/getRolUsuario/${userData.rol_usuario_id}`, {
-      method: 'GET'
+      method: 'GET',
+       headers: {
+        Authorization: `Bearer ${userData.token}`,
+      },
     });
 
     if (!roleResponse.ok) {
@@ -73,17 +78,21 @@ export async function login(
       };
     }
 
-    const roleApiResponse: RoleApiResponse = await roleResponse.json();
+    const roleApiResponse: ApiResponse<RoleData[] | RoleData> = await roleResponse.json();
     
     let roleData: RoleData;
 
-    if ('payload' in roleApiResponse && Array.isArray(roleApiResponse.payload)) {
+    if (Array.isArray(roleApiResponse.payload)) {
       if(roleApiResponse.payload.length === 0) {
         return { error: 'El usuario no tiene un rol asignado.' };
       }
-      roleData = roleApiResponse.payload[0];
+      // The backend response for roles has "nombre" but the rest of the app uses "nombre_rol".
+      // We map it here for consistency.
+      const rawRole = roleApiResponse.payload[0] as any;
+      roleData = { nombre_rol: rawRole.nombre || rawRole.nombre_rol };
     } else {
-      roleData = roleApiResponse as RoleData;
+      const rawRole = roleApiResponse.payload as any;
+      roleData = { nombre_rol: rawRole.nombre || rawRole.nombre_rol };
     }
 
 
@@ -100,6 +109,7 @@ export async function login(
       email: userData.email,
       rol_usuario_id: userData.rol_usuario_id,
       nombre_rol: roleData.nombre_rol,
+      id_usuario: userData.id_usuario
     };
 
     cookies().set('session', JSON.stringify(sessionData), {

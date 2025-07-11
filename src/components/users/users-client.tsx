@@ -5,7 +5,8 @@ import { PlusCircle } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table';
 import { Button } from '@/components/ui/button';
 import { UserFormModal } from './user-form-modal';
-import { columns, UserColumn } from './columns';
+import { columns } from './columns';
+import { UserColumn } from './columns';
 
 type Role = {
   id_rol_usuario: number;
@@ -20,6 +21,9 @@ interface UsersClientProps {
 
 export const UsersClient: React.FC<UsersClientProps> = ({ data, roles }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Pass roles to columns definition
+  const tableColumns = columns(roles);
 
   return (
     <>
@@ -41,7 +45,7 @@ export const UsersClient: React.FC<UsersClientProps> = ({ data, roles }) => {
           Crear Usuario
         </Button>
       </div>
-      <DataTable columns={columns} data={data} searchKey="nombre" />
+      <DataTable columns={tableColumns} data={data} searchKey="nombre" />
     </>
   );
 };

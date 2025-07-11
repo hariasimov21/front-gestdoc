@@ -26,6 +26,9 @@ type Role = {
   descripcion: string;
 };
 
+type ApiResponse<T> = {
+  payload: T;
+};
 
 async function getUsers(token: string): Promise<User[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -40,7 +43,8 @@ async function getUsers(token: string): Promise<User[]> {
     console.error('Failed to fetch users');
     return [];
   }
-  return response.json();
+  const data: ApiResponse<User[]> = await response.json();
+  return data.payload;
 }
 
 async function getRoles(token: string): Promise<Role[]> {
@@ -56,7 +60,14 @@ async function getRoles(token: string): Promise<Role[]> {
     console.error('Failed to fetch roles');
     return [];
   }
-  return response.json();
+  const data: ApiResponse<any[]> = await response.json();
+  // The backend response for roles has "nombre" but the rest of the app uses "nombre_rol".
+  // We map it here for consistency.
+  return data.payload.map((role) => ({
+    id_rol_usuario: role.id_rol_usuario,
+    nombre_rol: role.nombre || role.nombre_rol,
+    descripcion: role.descripcion,
+  }));
 }
 
 export default async function UsersPage() {

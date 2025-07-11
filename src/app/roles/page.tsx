@@ -17,7 +17,7 @@ type Role = {
 };
 
 type ApiResponse = {
-  payload: Role[];
+  payload: any[];
 };
 
 async function getRoles(token: string): Promise<Role[]> {
@@ -39,7 +39,7 @@ async function getRoles(token: string): Promise<Role[]> {
   // We map it here for consistency.
   return data.payload.map((role: any) => ({
     id_rol_usuario: role.id_rol_usuario,
-    nombre_rol: role.nombre, // Mapping 'nombre' to 'nombre_rol'
+    nombre_rol: role.nombre || role.nombre_rol,
     descripcion: role.descripcion,
   }));
 }

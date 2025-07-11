@@ -28,15 +28,10 @@ import { deleteUser } from '@/app/users/actions';
 
 interface CellActionProps {
   data: UserColumn;
+  roles: { id_rol_usuario: number; nombre_rol: string; descripcion: string }[];
 }
 
-// Dummy roles data for the modal, will be replaced by API call in parent component
-const dummyRoles = [
-  { id_rol_usuario: 1, nombre_rol: 'Administrador', descripcion: '' },
-  { id_rol_usuario: 2, nombre_rol: 'Usuario', descripcion: '' }
-];
-
-export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+export const CellAction: React.FC<CellActionProps> = ({ data, roles }) => {
   const [loading, setLoading] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -75,7 +70,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         initialData={data}
-        roles={dummyRoles} // In a real app, this would be fetched and passed down
+        roles={roles}
       />
       <AlertDialog>
         <DropdownMenu>

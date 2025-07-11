@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import { createUser, updateUser } from '@/app/users/actions';
 import { UserColumn } from './columns';
 
@@ -170,20 +170,16 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Rol de Usuario</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccione un rol" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {roles.map((role) => (
-                        <SelectItem key={role.id_rol_usuario} value={String(role.id_rol_usuario)}>
-                          {role.nombre_rol}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Combobox
+                        options={roles.map(r => ({ value: String(r.id_rol_usuario), label: r.nombre_rol }))}
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Seleccione un rol"
+                        searchPlaceholder="Buscar rol..."
+                        emptyPlaceholder="No se encontró rol."
+                     />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

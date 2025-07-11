@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useActionState } from 'react';
@@ -5,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useFormStatus } from 'react-dom';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 import {
@@ -28,7 +29,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { createProperty, updateProperty } from '@/app/properties/actions';
 import { PropertyColumn } from './columns';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Combobox } from '../ui/combobox';
 import { Textarea } from '../ui/textarea';
 
 
@@ -77,6 +78,9 @@ export const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
     },
   });
 
+  const latitud = form.watch('latitud');
+  const longitud = form.watch('longitud');
+
   const action = isEditing ? updateProperty.bind(null, initialData.id_propiedad) : createProperty;
   const [state, formAction] = useActionState(action, { error: undefined });
 
@@ -98,10 +102,16 @@ export const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
     form.reset();
     onClose();
   };
+
+  const isValidCoordinates = (lat: string, lon: string) => {
+    const latNum = parseFloat(lat);
+    const lonNum = parseFloat(lon);
+    return !isNaN(latNum) && !isNaN(lonNum) && lat.length > 3 && lon.length > 3;
+  }
   
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
@@ -162,26 +172,44 @@ export const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                 )}
                 />
             </div>
+            
+            {isValidCoordinates(latitud, longitud) && (
+                <div className="space-y-2">
+                    <a href={`https://www.google.com/maps/search/?api=1&query=${latitud},${longitud}`} target="_blank" rel="noopener noreferrer">
+                        <Button type="button" variant="outline" size="sm">
+                            <ExternalLink className="mr-2 h-4 w-4" />
+                            Ver en Google Maps
+                        </Button>
+                    </a>
+                    <iframe
+                        width="100%"
+                        height="250"
+                        style={{ border: 0 }}
+                        loading="lazy"
+                        allowFullScreen
+                        className="rounded-md"
+                        src={`https://maps.google.com/maps?q=${latitud},${longitud}&hl=es&z=14&amp;output=embed`}
+                    >
+                    </iframe>
+                </div>
+            )}
+
              <FormField
               control={form.control}
               name="id_sociedad"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Sociedad</FormLabel>
-                   <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccione una sociedad" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {societies.map((society) => (
-                        <SelectItem key={society.id_sociedad} value={String(society.id_sociedad)}>
-                          {society.nombre}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                   <FormControl>
+                    <Combobox
+                        options={societies.map(s => ({ value: String(s.id_sociedad), label: s.nombre }))}
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Seleccione una sociedad"
+                        searchPlaceholder="Buscar sociedad..."
+                        emptyPlaceholder="No se encontró sociedad."
+                     />
+                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

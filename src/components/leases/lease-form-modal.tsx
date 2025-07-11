@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Combobox } from '../ui/combobox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
@@ -127,20 +127,17 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Arrendatario</FormLabel>
-                   <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isEditing}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccione un arrendatario" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {tenants.map((tenant) => (
-                        <SelectItem key={tenant.id_arrendatario} value={String(tenant.id_arrendatario)}>
-                          {tenant.nombre}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                   <FormControl>
+                     <Combobox
+                        options={tenants.map(t => ({ value: String(t.id_arrendatario), label: t.nombre }))}
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Seleccione un arrendatario"
+                        searchPlaceholder="Buscar arrendatario..."
+                        emptyPlaceholder="No se encontró arrendatario."
+                        disabled={isEditing}
+                     />
+                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -151,20 +148,17 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Propiedad</FormLabel>
-                   <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isEditing}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccione una propiedad" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {properties.map((property) => (
-                        <SelectItem key={property.id_propiedad} value={String(property.id_propiedad)}>
-                          {property.direccion}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                   <FormControl>
+                      <Combobox
+                        options={properties.map(p => ({ value: String(p.id_propiedad), label: p.direccion }))}
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Seleccione una propiedad"
+                        searchPlaceholder="Buscar propiedad..."
+                        emptyPlaceholder="No se encontró propiedad."
+                        disabled={isEditing}
+                      />
+                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

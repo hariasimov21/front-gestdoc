@@ -1,3 +1,4 @@
+
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { UsersClient } from '@/components/users/users-client';
@@ -79,11 +80,6 @@ export default async function UsersPage() {
   }
 
   const user: Session = JSON.parse(sessionCookie);
-
-  if (user.rol_usuario_id !== 1) {
-    redirect('/');
-  }
-
   const users = await getUsers(token);
   const roles = await getRoles(token);
 

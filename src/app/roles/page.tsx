@@ -1,3 +1,4 @@
+
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { RolesClient } from '@/components/roles/roles-client';
@@ -53,12 +54,6 @@ export default async function RolesPage() {
   }
 
   const user: Session = JSON.parse(sessionCookie);
-
-  if (user.rol_usuario_id !== 1) {
-    // If not an admin, redirect to the dashboard.
-    redirect('/');
-  }
-
   const roles = await getRoles(token);
 
   return (

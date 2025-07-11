@@ -10,6 +10,7 @@ type Session = {
   email: string;
   rol_usuario_id: number;
   nombre_rol: string;
+  id_usuario: number;
 };
 
 export default function DashboardPage() {

@@ -9,6 +9,7 @@ type Session = {
   email: string;
   rol_usuario_id: number;
   nombre_rol: string;
+  id_usuario: number;
 };
 
 type Role = {
@@ -49,7 +50,6 @@ export default async function RolesPage() {
   const sessionCookie = cookies().get('session')?.value;
   const token = cookies().get('auth_token')?.value;
 
-  // This check is now handled by the middleware, but we keep it as a safeguard.
   if (!sessionCookie || !token) {
     redirect('/login');
   }

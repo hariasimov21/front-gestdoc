@@ -35,7 +35,7 @@ export function DashboardLayout({ user, children }: DashboardLayoutProps) {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen w-full">
         <Sidebar>
           <SidebarHeader>
             <Link href="/" className="flex items-center gap-2">

@@ -5,6 +5,10 @@ import { Toaster } from "@/components/ui/toaster"
 export const metadata: Metadata = {
   title: 'AuthFlow',
   description: 'Gestión de Documentos',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function RootLayout({

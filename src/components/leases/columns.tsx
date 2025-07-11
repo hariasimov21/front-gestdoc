@@ -36,14 +36,12 @@ export const columns = (dependencies: { tenants: Tenant[], properties: Property[
     header: 'ID Arriendo',
   },
   {
-    accessorKey: 'arrendatario.id_arrendatario',
-    header: 'ID Arrendatario',
-    cell: ({ row }) => row.original.arrendatario?.id_arrendatario ?? row.original.id_arrendatario ?? 'N/A'
+    accessorKey: 'arrendatarioNombre',
+    header: 'Arrendatario',
   },
   {
-    accessorKey: 'propiedad.id_propiedad',
-    header: 'ID Propiedad',
-    cell: ({ row }) => row.original.propiedad?.id_propiedad ?? row.original.id_propiedad ?? 'N/A'
+    accessorKey: 'propiedadDireccion',
+    header: 'Propiedad',
   },
     {
     accessorKey: 'fecha_inicio_arriendo',

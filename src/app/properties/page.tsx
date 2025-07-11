@@ -89,9 +89,17 @@ export default async function PropertiesPage() {
   const properties = await getProperties(token);
   const societies = await getSocieties(token);
 
+  const formattedProperties = properties.map(prop => {
+    const society = societies.find(s => s.id_sociedad === prop.id_sociedad);
+    return {
+      ...prop,
+      nombre_sociedad: society?.nombre || 'N/A',
+    };
+  });
+
   return (
     <DashboardLayout user={user}>
-      <PropertiesClient data={properties} societies={societies} />
+      <PropertiesClient data={formattedProperties} societies={societies} />
     </DashboardLayout>
   );
 }

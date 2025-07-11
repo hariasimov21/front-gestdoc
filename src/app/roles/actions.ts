@@ -4,7 +4,8 @@ import { z } from 'zod';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 
-const API_URL = 'https://gestor-documentos-590447208783.us-central1.run.app/api/rol-usuario';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = `${API_BASE_URL}/rol-usuario`;
 
 const roleSchema = z.object({
   nombre_rol: z.string().min(1, 'El nombre del rol es requerido.'),

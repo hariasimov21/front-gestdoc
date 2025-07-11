@@ -30,10 +30,11 @@ export async function login(
   }
 
   const { email, password } = validatedFields.data;
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   try {
     const response = await fetch(
-      'https://gestor-documentos-590447208783.us-central1.run.app/api/auth/login',
+      `${API_URL}/auth/login`,
       {
         method: 'POST',
         headers: {

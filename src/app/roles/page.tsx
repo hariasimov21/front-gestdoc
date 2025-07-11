@@ -16,7 +16,8 @@ type Role = {
 };
 
 async function getRoles(token: string): Promise<Role[]> {
-  const response = await fetch('https://gestor-documentos-590447208783.us-central1.run.app/api/rol-usuario/listarRolUsuarios', {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const response = await fetch(`${API_URL}/rol-usuario/listarRolUsuarios`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

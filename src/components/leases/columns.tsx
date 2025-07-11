@@ -31,15 +31,17 @@ export type LeaseColumn = {
 export const columns = (dependencies: { tenants: Tenant[], properties: Property[] }): ColumnDef<LeaseColumn>[] => [
   {
     accessorKey: 'id_arriendo',
-    header: 'ID',
+    header: 'ID Arriendo',
   },
   {
-    accessorKey: 'arrendatarioNombre',
-    header: 'Arrendatario',
+    accessorKey: 'arrendatario.id_arrendatario',
+    header: 'ID Arrendatario',
+    cell: ({ row }) => row.original.arrendatario?.id_arrendatario || 'N/A'
   },
   {
-    accessorKey: 'propiedadDireccion',
-    header: 'Propiedad',
+    accessorKey: 'propiedad.id_propiedad',
+    header: 'ID Propiedad',
+    cell: ({ row }) => row.original.propiedad?.id_propiedad || 'N/A'
   },
     {
     accessorKey: 'fecha_inicio_arriendo',

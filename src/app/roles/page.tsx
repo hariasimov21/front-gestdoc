@@ -59,9 +59,7 @@ export default async function RolesPage() {
 
   return (
     <DashboardLayout user={user}>
-      <div className="container mx-auto">
-        <RolesClient data={roles} />
-      </div>
+      <RolesClient data={roles} />
     </DashboardLayout>
   );
 }

@@ -86,9 +86,7 @@ export default async function UsersPage() {
 
   return (
     <DashboardLayout user={user}>
-        <div className="container mx-auto">
-          <UsersClient data={users} roles={roles} />
-        </div>
+      <UsersClient data={users} roles={roles} />
     </DashboardLayout>
   );
 }

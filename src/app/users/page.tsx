@@ -4,10 +4,10 @@ import { UsersClient } from '@/components/users/users-client';
 import { DashboardHeader } from '@/components/dashboard/header';
 
 type Session = {
-  name: string;
+  nombre: string;
   email: string;
-  roleId: number;
-  roleName: string;
+  rol_usuario_id: number;
+  nombre_rol: string;
 };
 
 type User = {
@@ -69,7 +69,7 @@ export default async function UsersPage() {
 
   const user: Session = JSON.parse(sessionCookie);
 
-  if (user.roleId !== 1) {
+  if (user.rol_usuario_id !== 1) {
     redirect('/');
   }
 
@@ -78,7 +78,7 @@ export default async function UsersPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <DashboardHeader userName={user.name} userRole={user.roleName} userEmail={user.email} />
+      <DashboardHeader userName={user.nombre} userRole={user.nombre_rol} userEmail={user.email} />
       <main className="flex-1 p-4 md:p-8">
         <div className="container mx-auto">
           <UsersClient data={users} roles={roles} />

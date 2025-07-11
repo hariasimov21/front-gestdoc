@@ -51,25 +51,29 @@ export async function login(
     const loginData = await loginResponse.json();
 
     if (!loginResponse.ok) {
-        const errorMessage = Array.isArray(loginData.message) ? loginData.message.join(', ') : loginData.message;
-        return { error: errorMessage || 'Credenciales incorrectas o error del servidor.' };
+      const errorMessage = Array.isArray(loginData.message) ? loginData.message.join(', ') : loginData.message;
+      return { error: errorMessage || 'Credenciales incorrectas o error del servidor.' };
     }
 
     const userData = loginData as UserData;
 
     // Fetch role information
-    const roleResponse = await fetch(`${API_URL}/rol-usuario/getRolUsuario/${userData.rol_usuario_id}`, {
-      headers: {
-        Authorization: `Bearer ${userData.token}`,
-      },
+    const roleResponse = await fetch(`${API_URL}/rol-usuario/getRolUsuario/${userData.id_usuario}`, {
+      method: 'GET'
     });
 
     if (!roleResponse.ok) {
-        return { error: 'No se pudo obtener la información del rol del usuario.' };
+      return {
+        error: 'No se pudo obtener la información del rol del usuario.',
+        status: roleResponse.status,
+        statusText: roleResponse.statusText,
+        userData,
+        url: `${API_URL}/rol-usuario/getRolUsuario/${userData.id_usuario}`
+      };
     }
 
     const roleData = await roleResponse.json() as RoleData;
-    
+
     cookies().set('auth_token', userData.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -77,12 +81,12 @@ export async function login(
       path: '/',
       sameSite: 'lax',
     });
-    
+
     const sessionData = {
-        name: userData.nombre,
-        email: userData.email,
-        roleId: userData.rol_usuario_id,
-        roleName: roleData.nombre_rol,
+      nombre: userData.nombre,
+      email: userData.email,
+      rol_usuario_id: userData.rol_usuario_id,
+      nombre_rol: roleData.nombre_rol,
     };
 
     cookies().set('session', JSON.stringify(sessionData), {
@@ -96,6 +100,6 @@ export async function login(
     console.error(error);
     return { error: 'No se pudo conectar con el servidor. Inténtalo más tarde.' };
   }
-  
+
   redirect('/');
 }

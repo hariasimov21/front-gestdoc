@@ -4,10 +4,10 @@ import { RolesClient } from '@/components/roles/roles-client';
 import { DashboardHeader } from '@/components/dashboard/header';
 
 type Session = {
-  name: string;
+  nombre: string;
   email: string;
-  roleId: number;
-  roleName: string;
+  rol_usuario_id: number;
+  nombre_rol: string;
 };
 
 type Role = {
@@ -43,7 +43,7 @@ export default async function RolesPage() {
 
   const user: Session = JSON.parse(sessionCookie);
 
-  if (user.roleId !== 1) {
+  if (user.rol_usuario_id !== 1) {
     // If not an admin, redirect to the dashboard.
     redirect('/');
   }
@@ -52,7 +52,7 @@ export default async function RolesPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <DashboardHeader userName={user.name} userRole={user.roleName} userEmail={user.email} />
+      <DashboardHeader userName={user.nombre} userRole={user.nombre_rol} userEmail={user.email} />
       <main className="flex-1 p-4 md:p-8">
         <div className="container mx-auto">
           <RolesClient data={roles} />

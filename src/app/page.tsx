@@ -5,10 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileText } from 'lucide-react';
 
 type Session = {
-  name: string;
+  nombre: string;
   email: string;
-  roleId: number;
-  roleName: string;
+  rol_usuario_id: number;
+  nombre_rol: string;
 };
 
 export default function DashboardPage() {
@@ -23,7 +23,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <DashboardHeader userName={user.name} userRole={user.roleName} userEmail={user.email} />
+      <DashboardHeader userName={user.nombre} userRole={user.nombre_rol} userEmail={user.email} />
       <main className="flex-1 p-4 md:p-8">
         <div className="container mx-auto">
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>

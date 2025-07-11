@@ -58,7 +58,7 @@ export function LoginForm() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl">AuthFlow</CardTitle>
+        <CardTitle className="text-2xl">GestDoc</CardTitle>
         <CardDescription>
           Introduce tus credenciales para acceder al panel.
         </CardDescription>

@@ -40,7 +40,7 @@ export async function login(
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email_usuario: email, contrasena: password }),
       }
     );
 

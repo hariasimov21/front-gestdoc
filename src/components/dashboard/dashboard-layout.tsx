@@ -14,7 +14,7 @@ import {
   SidebarFooter,
 } from '@/components/ui/sidebar';
 import { DashboardHeader } from './header';
-import { Home, KeyRound, Users } from 'lucide-react';
+import { Building, Home, KeyRound, Users } from 'lucide-react';
 import { UserNav } from './user-nav';
 
 type Session = {
@@ -55,6 +55,11 @@ export function DashboardLayout({ user, children }: DashboardLayoutProps) {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname.startsWith('/properties')}>
+                  <Link href="/properties"><Building /> Gestión de Propiedades</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname.startsWith('/roles')}>
                   <Link href="/roles"><KeyRound /> Gestión de Roles</Link>
                 </SidebarMenuButton>
@@ -72,7 +77,7 @@ export function DashboardLayout({ user, children }: DashboardLayoutProps) {
         </Sidebar>
         <main className="flex-1 flex flex-col">
            <DashboardHeader userName={user.nombre} userRole={user.nombre_rol} userEmail={user.email} />
-           <div className="flex-1 p-4 md:p-8 bg-background">
+           <div className="flex-1 p-4 md:p-8">
              {children}
            </div>
         </main>

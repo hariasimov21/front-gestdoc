@@ -17,6 +17,10 @@ type UserData = {
   token: string;
 };
 
+type RoleData = {
+  nombre_rol: string;
+};
+
 export async function login(
   prevState: { error: string } | undefined,
   formData: FormData
@@ -33,7 +37,7 @@ export async function login(
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   try {
-    const response = await fetch(
+    const loginResponse = await fetch(
       `${API_URL}/auth/login`,
       {
         method: 'POST',
@@ -44,15 +48,28 @@ export async function login(
       }
     );
 
-    const data = await response.json();
+    const loginData = await loginResponse.json();
 
-    if (!response.ok) {
-        const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
+    if (!loginResponse.ok) {
+        const errorMessage = Array.isArray(loginData.message) ? loginData.message.join(', ') : loginData.message;
         return { error: errorMessage || 'Credenciales incorrectas o error del servidor.' };
     }
 
-    const userData = data as UserData;
+    const userData = loginData as UserData;
 
+    // Fetch role information
+    const roleResponse = await fetch(`${API_URL}/rol-usuario/getRolUsuario/${userData.rol_usuario_id}`, {
+      headers: {
+        Authorization: `Bearer ${userData.token}`,
+      },
+    });
+
+    if (!roleResponse.ok) {
+        return { error: 'No se pudo obtener la información del rol del usuario.' };
+    }
+
+    const roleData = await roleResponse.json() as RoleData;
+    
     cookies().set('auth_token', userData.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -65,6 +82,7 @@ export async function login(
         name: userData.nombre,
         email: userData.email,
         roleId: userData.rol_usuario_id,
+        roleName: roleData.nombre_rol,
     };
 
     cookies().set('session', JSON.stringify(sessionData), {

@@ -83,7 +83,7 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
         nombre_documento: initialData.nombre_documento,
         id_propiedad: String(initialData.id_propiedad),
         id_tipo_documento: String(initialData.id_tipo_documento),
-        fecha_vencimiento: parseISO(initialData.fecha_vencimiento),
+        fecha_vencimiento: initialData.fecha_vencimiento ? parseISO(initialData.fecha_vencimiento) : undefined,
         file: undefined,
      } : {
       nombre_documento: '',

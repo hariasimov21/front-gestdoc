@@ -54,12 +54,12 @@ export function DashboardLayout({ user, children }: DashboardLayoutProps) {
               {isAdmin && (
                 <>
                   <SidebarMenuItem>
-                    <SidebarMenuButton asChild isActive={pathname === '/roles'}>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/roles')}>
                       <Link href="/roles"><KeyRound /> Gestión de Roles</Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton asChild isActive={pathname === '/users'}>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/users')}>
                       <Link href="/users"><Users /> Gestión de Usuarios</Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

@@ -18,6 +18,8 @@ type Property = {
 
 export type LeaseColumn = {
   id_arriendo: number;
+  id_arrendatario?: number; // Add optional top-level ID
+  id_propiedad?: number;   // Add optional top-level ID
   fecha_inicio_arriendo: string;
   fecha_fin_arriendo: string;
   activo: boolean;
@@ -36,12 +38,12 @@ export const columns = (dependencies: { tenants: Tenant[], properties: Property[
   {
     accessorKey: 'arrendatario.id_arrendatario',
     header: 'ID Arrendatario',
-    cell: ({ row }) => row.original.arrendatario?.id_arrendatario || 'N/A'
+    cell: ({ row }) => row.original.arrendatario?.id_arrendatario ?? row.original.id_arrendatario ?? 'N/A'
   },
   {
     accessorKey: 'propiedad.id_propiedad',
     header: 'ID Propiedad',
-    cell: ({ row }) => row.original.propiedad?.id_propiedad || 'N/A'
+    cell: ({ row }) => row.original.propiedad?.id_propiedad ?? row.original.id_propiedad ?? 'N/A'
   },
     {
     accessorKey: 'fecha_inicio_arriendo',

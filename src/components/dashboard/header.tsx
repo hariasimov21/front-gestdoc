@@ -10,7 +10,7 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({ userName, userRole, userEmail }: DashboardHeaderProps) {
-  const isAdmin = userRole === 'Administrador';
+  const isAdmin = userRole?.trim().toLowerCase() === 'administrador';
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-card/95 backdrop-blur-sm">

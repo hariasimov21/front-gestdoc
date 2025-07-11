@@ -46,12 +46,28 @@ export const columns = (dependencies: { tenants: Tenant[], properties: Property[
     {
     accessorKey: 'fecha_inicio_arriendo',
     header: 'Fecha Inicio',
-    cell: ({ row }) => format(new Date(row.original.fecha_inicio_arriendo), 'dd/MM/yyyy')
+    cell: ({ row }) => {
+        const date = row.original.fecha_inicio_arriendo;
+        if (!date) return 'N/A';
+        try {
+            return format(new Date(date), 'dd/MM/yyyy');
+        } catch (e) {
+            return 'Fecha inválida';
+        }
+    }
   },
   {
     accessorKey: 'fecha_fin_arriendo',
     header: 'Fecha Fin',
-    cell: ({ row }) => format(new Date(row.original.fecha_fin_arriendo), 'dd/MM/yyyy')
+    cell: ({ row }) => {
+        const date = row.original.fecha_fin_arriendo;
+        if (!date) return 'N/A';
+        try {
+            return format(new Date(date), 'dd/MM/yyyy');
+        } catch (e) {
+            return 'Fecha inválida';
+        }
+    }
   },
   {
     accessorKey: 'activo',

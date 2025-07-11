@@ -74,7 +74,6 @@ async function getRoles(token: string): Promise<Role[]> {
 export default async function UsersPage() {
   const sessionCookie = cookies().get('session')?.value;
   const token = cookies().get('auth_token')?.value;
-
   // This check is now handled by the middleware, but we keep it as a safeguard.
   if (!sessionCookie || !token) {
     redirect('/login');

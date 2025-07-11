@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -28,8 +29,8 @@ import { useToast } from '@/hooks/use-toast';
 import { login } from '@/app/login/actions';
 
 const formSchema = z.object({
-  email: z.string().email({ message: 'Por favor, introduce un email válido.' }),
-  password: z.string().min(1, { message: 'La contraseña es obligatoria.' }),
+  email_usuario: z.string().email({ message: 'Por favor, introduce un email válido.' }),
+  contrasena: z.string().min(1, { message: 'La contraseña es obligatoria.' }),
 });
 
 export function LoginForm() {
@@ -39,8 +40,8 @@ export function LoginForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email_usuario: '',
+      contrasena: '',
     },
   });
 
@@ -67,7 +68,7 @@ export function LoginForm() {
           <form action={formAction} className="space-y-4">
             <FormField
               control={form.control}
-              name="email"
+              name="email_usuario"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
@@ -80,7 +81,7 @@ export function LoginForm() {
             />
             <FormField
               control={form.control}
-              name="password"
+              name="contrasena"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Contraseña</FormLabel>

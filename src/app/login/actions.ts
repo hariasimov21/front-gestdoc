@@ -55,7 +55,7 @@ export async function login(
       return { error: errorMessage || 'Credenciales incorrectas o error del servidor.' };
     }
 
-    const userData = loginData as UserData;
+    const userData = loginData.payload as UserData;
 
     // Fetch role information
     const roleResponse = await fetch(`${API_URL}/rol-usuario/getRolUsuario/${userData.id_usuario}`, {

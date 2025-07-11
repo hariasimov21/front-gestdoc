@@ -90,6 +90,11 @@ export function DashboardLayout({ user, children }: DashboardLayoutProps) {
                   <Link href="/users"><Users /> Gestión de Usuarios</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname.startsWith('/user-society')}>
+                  <Link href="/user-society"><Users /> Usuario/Sociedad</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter>

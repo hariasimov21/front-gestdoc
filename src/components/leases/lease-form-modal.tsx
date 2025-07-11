@@ -80,8 +80,8 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
         ...initialData,
         id_arrendatario: String(initialData.arrendatario?.id_arrendatario || ''),
         id_propiedad: String(initialData.propiedad?.id_propiedad || ''),
-        fecha_inicio_arriendo: parseISO(initialData.fecha_inicio_arriendo),
-        fecha_fin_arriendo: parseISO(initialData.fecha_fin_arriendo),
+        fecha_inicio_arriendo: initialData.fecha_inicio_arriendo ? parseISO(initialData.fecha_inicio_arriendo) : undefined,
+        fecha_fin_arriendo: initialData.fecha_fin_arriendo ? parseISO(initialData.fecha_fin_arriendo) : undefined,
      } : {
       id_arrendatario: '',
       id_propiedad: '',

@@ -14,7 +14,7 @@ import {
   SidebarFooter,
 } from '@/components/ui/sidebar';
 import { DashboardHeader } from './header';
-import { Building, Home, KeyRound, Users } from 'lucide-react';
+import { Building, Home, KeyRound, Users, Briefcase } from 'lucide-react';
 import { UserNav } from './user-nav';
 
 type Session = {
@@ -57,6 +57,11 @@ export function DashboardLayout({ user, children }: DashboardLayoutProps) {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname.startsWith('/properties')}>
                   <Link href="/properties"><Building /> Gestión de Propiedades</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname.startsWith('/societies')}>
+                  <Link href="/societies"><Briefcase /> Gestión de Sociedades</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

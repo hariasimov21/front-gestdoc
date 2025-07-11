@@ -1,7 +1,7 @@
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { PropertiesClient } from '@/components/properties/properties-client';
+import { SocietiesClient } from '@/components/societies/societies-client';
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
 
 type Session = {
@@ -12,18 +12,9 @@ type Session = {
   id_usuario: number;
 };
 
-type Property = {
-  id_propiedad: number;
-  direccion: string;
-  descripcion: string;
-  longitud: string;
-  latitud: string;
-  id_sociedad: number;
-};
-
 type Society = {
-    id_sociedad: number;
-    nombre: string;
+  id_sociedad: number;
+  nombre: string;
 };
 
 type RawSociety = {
@@ -31,27 +22,9 @@ type RawSociety = {
   nombre_sociedad: string;
 }
 
-type ApiResponse<T> = {
-  payload: T;
+type ApiResponse = {
+  payload: any[];
 };
-
-async function getProperties(token: string): Promise<Property[]> {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const response = await fetch(`${API_URL}/propiedad/listarPropiedades`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: 'no-store',
-  });
-
-  if (!response.ok) {
-    console.error('Failed to fetch properties');
-    return [];
-  }
-  
-  const data: ApiResponse<Property[]> = await response.json();
-  return data.payload;
-}
 
 async function getSocieties(token: string): Promise<Society[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -67,17 +40,16 @@ async function getSocieties(token: string): Promise<Society[]> {
     return [];
   }
   
-  const data: { payload: RawSociety[] } = await response.json();
+  const data: ApiResponse = await response.json();
   // The backend response has "nombre_sociedad" but the rest of the app uses "nombre".
   // We map it here for consistency.
-  return data.payload.map((society) => ({
+  return data.payload.map((society: RawSociety) => ({
     id_sociedad: society.id_sociedad,
     nombre: society.nombre_sociedad,
   }));
 }
 
-
-export default async function PropertiesPage() {
+export default async function SocietiesPage() {
   const sessionCookie = cookies().get('session')?.value;
   const token = cookies().get('auth_token')?.value;
 
@@ -86,12 +58,11 @@ export default async function PropertiesPage() {
   }
 
   const user: Session = JSON.parse(sessionCookie);
-  const properties = await getProperties(token);
   const societies = await getSocieties(token);
 
   return (
     <DashboardLayout user={user}>
-      <PropertiesClient data={properties} societies={societies} />
+      <SocietiesClient data={societies} />
     </DashboardLayout>
   );
 }

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useActionState } from 'react';
@@ -78,7 +79,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
       ? { 
           nombre: initialData.nombre,
           email: initialData.email,
-          rol_usuario_id: String(initialData.rol_usuario.id_rol_usuario),
+          rol_usuario_id: initialData.rol_usuario ? String(initialData.rol_usuario.id_rol_usuario) : '',
         }
       : {
           nombre: '',
@@ -106,9 +107,9 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
         handleClose();
       }
     }
-  }, [state, form.formState.isSubmitSuccessful]);
+  }, [state, form.formState.isSubmitSuccessful, toast, isEditing, handleClose]);
 
-  const handleClose = () => {
+  function handleClose() {
     form.reset();
     onClose();
   };

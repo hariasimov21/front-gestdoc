@@ -21,6 +21,11 @@ type RoleData = {
   nombre_rol: string;
 };
 
+type RoleApiResponse = {
+  payload: RoleData[];
+} | RoleData;
+
+
 export async function login(
   prevState: { error: string } | undefined,
   formData: FormData
@@ -58,21 +63,29 @@ export async function login(
     const userData = loginData.payload as UserData;
 
     // Fetch role information
-    const roleResponse = await fetch(`${API_URL}/rol-usuario/getRolUsuario/${userData.id_usuario}`, {
+    const roleResponse = await fetch(`${API_URL}/rol-usuario/getRolUsuario/${userData.rol_usuario_id}`, {
       method: 'GET'
     });
 
     if (!roleResponse.ok) {
       return {
         error: 'No se pudo obtener la información del rol del usuario.',
-        status: roleResponse.status,
-        statusText: roleResponse.statusText,
-        userData,
-        url: `${API_URL}/rol-usuario/getRolUsuario/${userData.id_usuario}`
       };
     }
 
-    const roleData = await roleResponse.json() as RoleData;
+    const roleApiResponse: RoleApiResponse = await roleResponse.json();
+    
+    let roleData: RoleData;
+
+    if ('payload' in roleApiResponse && Array.isArray(roleApiResponse.payload)) {
+      if(roleApiResponse.payload.length === 0) {
+        return { error: 'El usuario no tiene un rol asignado.' };
+      }
+      roleData = roleApiResponse.payload[0];
+    } else {
+      roleData = roleApiResponse as RoleData;
+    }
+
 
     cookies().set('auth_token', userData.token, {
       httpOnly: true,

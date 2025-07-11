@@ -115,8 +115,8 @@ export default async function LeasesPage() {
 
   const formattedLeases = leases.map(item => ({
     ...item,
-    arrendatarioNombre: item.arrendatario.nombre,
-    propiedadDireccion: item.propiedad.direccion,
+    arrendatarioNombre: item.arrendatario?.nombre,
+    propiedadDireccion: item.propiedad?.direccion,
   }));
 
   return (

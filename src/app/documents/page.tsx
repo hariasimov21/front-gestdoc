@@ -1,0 +1,127 @@
+
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { DocumentsClient } from '@/components/documents/documents-client';
+import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
+
+type Session = {
+  nombre: string;
+  email: string;
+  rol_usuario_id: number;
+  nombre_rol: string;
+  id_usuario: number;
+};
+
+type Document = {
+  id_documento: number;
+  nombre_documento: string;
+  file_id_GD: string;
+  fecha_subida: string;
+  id_propiedad: number;
+  id_tipo_documento: number;
+  fecha_vencimiento: string;
+  estado: boolean;
+  version: string;
+  folder_id: string;
+};
+
+type Property = {
+  id_propiedad: number;
+  direccion: string;
+};
+
+type DocumentType = {
+    id_tipo_documento: number;
+    nombre_tipo_documento: string;
+};
+
+
+type ApiResponse<T> = {
+  payload: T;
+};
+
+async function getDocuments(token: string): Promise<Document[]> {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const response = await fetch(`${API_URL}/documento/listarDocumentos`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    console.error('Failed to fetch documents');
+    return [];
+  }
+  
+  const data: ApiResponse<Document[]> = await response.json();
+  return data.payload;
+}
+
+async function getProperties(token: string): Promise<Property[]> {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const response = await fetch(`${API_URL}/propiedad/listarPropiedades`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    console.error('Failed to fetch properties');
+    return [];
+  }
+  
+  const data: ApiResponse<any[]> = await response.json();
+  return data.payload.map(p => ({ id_propiedad: p.id_propiedad, direccion: p.direccion }));
+}
+
+async function getDocumentTypes(token: string): Promise<DocumentType[]> {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const response = await fetch(`${API_URL}/tipo-documento/listarTipoDocumentos`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    console.error('Failed to fetch document types');
+    return [];
+  }
+  
+  const data: ApiResponse<DocumentType[]> = await response.json();
+  return data.payload;
+}
+
+
+export default async function DocumentsPage() {
+  const sessionCookie = cookies().get('session')?.value;
+  const token = cookies().get('auth_token')?.value;
+
+  if (!sessionCookie || !token) {
+    redirect('/login');
+  }
+
+  const user: Session = JSON.parse(sessionCookie);
+  const documents = await getDocuments(token);
+  const properties = await getProperties(token);
+  const documentTypes = await getDocumentTypes(token);
+
+  const formattedDocuments = documents.map(doc => {
+    const property = properties.find(p => p.id_propiedad === doc.id_propiedad);
+    const documentType = documentTypes.find(dt => dt.id_tipo_documento === doc.id_tipo_documento);
+    return {
+        ...doc,
+        propiedadDireccion: property?.direccion || 'N/A',
+        tipoDocumentoNombre: documentType?.nombre_tipo_documento || 'N/A',
+    };
+  });
+
+
+  return (
+    <DashboardLayout user={user}>
+      <DocumentsClient data={formattedDocuments} properties={properties} documentTypes={documentTypes} />
+    </DashboardLayout>
+  );
+}

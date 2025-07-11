@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -6,8 +7,6 @@ import { DataTable } from '@/components/ui/data-table';
 import { Button } from '../ui/button';
 import { PropertyFormModal } from './property-form-modal';
 import { columns, PropertyColumn } from './columns';
-import { PropertiesMap } from './properties-map';
-import { Card, CardContent } from '../ui/card';
 
 type Society = {
     id_sociedad: number;
@@ -30,30 +29,19 @@ export const PropertiesClient: React.FC<PropertiesClientProps> = ({ data, societ
         initialData={null}
         societies={societies}
       />
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-              <h1 className="text-3xl font-bold tracking-tight">Gestión de Propiedades</h1>
-              <p className="text-muted-foreground mt-2">
-                  Administra las propiedades del sistema.
-              </p>
-          </div>
-          <Button onClick={() => setIsModalOpen(true)}>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Crear Propiedad
-          </Button>
+      <div className="flex items-center justify-between mb-4">
+        <div>
+            <h1 className="text-3xl font-bold tracking-tight">Gestión de Propiedades</h1>
+            <p className="text-muted-foreground mt-2">
+                Administra las propiedades del sistema.
+            </p>
         </div>
-        
-        <Card>
-          <CardContent className="p-2">
-            <div className="h-[400px] w-full rounded-md overflow-hidden">
-                <PropertiesMap properties={data} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <DataTable columns={columns(societies)} data={data} searchKey="direccion" />
+        <Button onClick={() => setIsModalOpen(true)}>
+          <PlusCircle className="mr-2 h-4 w-4" />
+          Crear Propiedad
+        </Button>
       </div>
+      <DataTable columns={columns(societies)} data={data} searchKey="direccion" />
     </>
   );
 };

@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { RolesClient } from '@/components/roles/roles-client';
-import { DashboardHeader } from '@/components/dashboard/header';
+import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
 
 type Session = {
   nombre: string;
@@ -62,13 +62,10 @@ export default async function RolesPage() {
   const roles = await getRoles(token);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <DashboardHeader userName={user.nombre} userRole={user.nombre_rol} userEmail={user.email} />
-      <main className="flex-1 p-4 md:p-8">
-        <div className="container mx-auto">
-          <RolesClient data={roles} />
-        </div>
-      </main>
-    </div>
+    <DashboardLayout user={user}>
+      <div className="container mx-auto">
+        <RolesClient data={roles} />
+      </div>
+    </DashboardLayout>
   );
 }

@@ -1,0 +1,83 @@
+
+'use client';
+
+import * as React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import {
+  SidebarProvider,
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarFooter,
+} from '@/components/ui/sidebar';
+import { DashboardHeader } from './header';
+import { Home, KeyRound, Users } from 'lucide-react';
+import { UserNav } from './user-nav';
+
+type Session = {
+  nombre: string;
+  email: string;
+  rol_usuario_id: number;
+  nombre_rol: string;
+};
+
+interface DashboardLayoutProps {
+  user: Session;
+  children: React.ReactNode;
+}
+
+export function DashboardLayout({ user, children }: DashboardLayoutProps) {
+  const pathname = usePathname();
+  const isAdmin = user.rol_usuario_id === 1;
+
+  return (
+    <SidebarProvider>
+      <div className="flex min-h-screen">
+        <Sidebar>
+          <SidebarHeader>
+            <Link href="/" className="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 text-primary"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                <span className="font-bold text-lg">AuthFlow</span>
+            </Link>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === '/'} >
+                  <Link href="/"><Home /> Dashboard</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              {isAdmin && (
+                <>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname === '/roles'}>
+                      <Link href="/roles"><KeyRound /> Gestión de Roles</Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname === '/users'}>
+                      <Link href="/users"><Users /> Gestión de Usuarios</Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </>
+              )}
+            </SidebarMenu>
+          </SidebarContent>
+          <SidebarFooter>
+             <UserNav userName={user.nombre} userEmail={user.email} />
+          </SidebarFooter>
+        </Sidebar>
+        <main className="flex-1 flex flex-col">
+           <DashboardHeader userName={user.nombre} userRole={user.nombre_rol} userEmail={user.email} />
+           <div className="flex-1 p-4 md:p-8 bg-background">
+             {children}
+           </div>
+        </main>
+      </div>
+    </SidebarProvider>
+  );
+}

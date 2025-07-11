@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -48,6 +47,11 @@ export function DashboardLayout({ user, children }: DashboardLayoutProps) {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname === '/'} >
                   <Link href="/"><Home /> Dashboard</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname.startsWith('/tenants')}>
+                  <Link href="/tenants"><Users /> Gestión de Arrendatarios</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -14,7 +15,7 @@ import {
   SidebarFooter,
 } from '@/components/ui/sidebar';
 import { DashboardHeader } from './header';
-import { Building, Home, KeyRound, Users, Briefcase } from 'lucide-react';
+import { Building, Home, KeyRound, Users, Briefcase, FileText } from 'lucide-react';
 import { UserNav } from './user-nav';
 
 type Session = {
@@ -47,6 +48,11 @@ export function DashboardLayout({ user, children }: DashboardLayoutProps) {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname === '/'} >
                   <Link href="/"><Home /> Dashboard</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname.startsWith('/leases')}>
+                  <Link href="/leases"><FileText /> Gestión de Arriendos</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
                <SidebarMenuItem>

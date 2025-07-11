@@ -1,4 +1,4 @@
-import { Bell, KeyRound } from 'lucide-react';
+import { Bell, KeyRound, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UserNav } from './user-nav';
 import Link from 'next/link';
@@ -23,10 +23,14 @@ export function DashboardHeader({ userName, userRole, userEmail }: DashboardHead
         </div>
         
         {isAdmin && (
-          <nav className="ml-6 hidden md:flex">
+          <nav className="ml-6 hidden items-center gap-4 md:flex">
              <Link href="/roles" className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                 <KeyRound className="mr-2 h-4 w-4" />
                 Gestión de Roles
+             </Link>
+             <Link href="/users" className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+                <Users className="mr-2 h-4 w-4" />
+                Gestión de Usuarios
              </Link>
           </nav>
         )}

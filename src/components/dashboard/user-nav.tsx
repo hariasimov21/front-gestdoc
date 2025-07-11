@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -16,6 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { logout } from '@/app/actions';
 import { LogOut, User } from 'lucide-react';
+import Link from 'next/link';
 
 interface UserNavProps {
     userName: string;
@@ -48,10 +50,12 @@ export function UserNav({ userName, userEmail }: UserNavProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Perfil</span>
-          </DropdownMenuItem>
+          <Link href="/profile">
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              <span>Perfil</span>
+            </DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <form action={logout} className="w-full">

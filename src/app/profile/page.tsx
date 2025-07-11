@@ -23,7 +23,7 @@ export default function ProfilePage() {
 
   return (
     <DashboardLayout user={user}>
-      <div className="max-w-2xl">
+      <div>
         <h1 className="text-3xl font-bold tracking-tight">Mi Perfil</h1>
         <p className="text-muted-foreground mt-2">
             Actualiza tu información personal y contraseña.

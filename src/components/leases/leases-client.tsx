@@ -29,10 +29,12 @@ export const LeasesClient: React.FC<LeasesClientProps> = ({ data, tenants, prope
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filter, setFilter] = useState('');
 
-  const filteredData = data.filter(item => 
-    item.arrendatarioNombre.toLowerCase().includes(filter.toLowerCase()) ||
-    item.propiedadDireccion.toLowerCase().includes(filter.toLowerCase())
-  );
+  const filteredData = data.filter(item => {
+    const lowercasedFilter = filter.toLowerCase();
+    const arrendatarioMatch = item.arrendatarioNombre?.toLowerCase().includes(lowercasedFilter);
+    const propiedadMatch = item.propiedadDireccion?.toLowerCase().includes(lowercasedFilter);
+    return arrendatarioMatch || propiedadMatch;
+  });
 
   return (
     <div className="space-y-4">

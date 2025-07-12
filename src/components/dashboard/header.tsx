@@ -20,10 +20,6 @@ export function DashboardHeader({ userName, userEmail, title, description }: Das
       <div className="flex h-16 items-center px-4 md:px-6">
         {isMobile && <SidebarTrigger />}
         
-        <div className='flex-1'>
-            <Breadcrumb />
-        </div>
-
         <div className="ml-auto flex items-center space-x-2 sm:space-x-4">
           <Button variant="ghost" size="icon" className="rounded-full">
             <Bell className="h-5 w-5" />
@@ -34,7 +30,8 @@ export function DashboardHeader({ userName, userEmail, title, description }: Das
           </div>
         </div>
       </div>
-       <div className="px-4 md:px-6 pb-4 border-b">
+       <div className="px-4 md:px-6 pb-4 border-b space-y-2">
+            <Breadcrumb />
             <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
             {description && <p className="text-muted-foreground mt-1 text-sm">{description}</p>}
         </div>

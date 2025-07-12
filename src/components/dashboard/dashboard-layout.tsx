@@ -17,6 +17,7 @@ import {
 import { DashboardHeader } from './header';
 import { Building, Home, KeyRound, Users, Briefcase, FileText, FileCog, FolderArchive } from 'lucide-react';
 import { UserNav } from './user-nav';
+import { Breadcrumb } from '../ui/breadcrumb';
 
 type Session = {
   nombre: string;
@@ -104,9 +105,14 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
           </SidebarFooter>
         </Sidebar>
         <main className="flex-1 flex flex-col">
-           <DashboardHeader userName={user.nombre} userEmail={user.email} title={title} description={description} />
-           <div className="flex-1 p-4 md:p-8">
-             {children}
+           <DashboardHeader userName={user.nombre} userEmail={user.email} />
+           <div className="flex-1 p-4 md:p-8 pt-6">
+            <div className="mb-4 space-y-2">
+                <Breadcrumb />
+                <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+                {description && <p className="text-muted-foreground mt-1 text-sm">{description}</p>}
+            </div>
+            {children}
            </div>
         </main>
       </div>

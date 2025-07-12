@@ -29,7 +29,8 @@ export const PropertiesClient: React.FC<PropertiesClientProps> = ({ data, societ
         initialData={null}
         societies={societies}
       />
-      <div className="flex items-center justify-end mb-4">
+      <div className="flex items-center justify-between mb-4">
+        <div/>
         <Button onClick={() => setIsModalOpen(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Crear Propiedad

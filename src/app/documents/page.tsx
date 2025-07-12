@@ -79,6 +79,7 @@ async function getProperties(token: string): Promise<Property[]> {
 async function getDocumentTypes(token: string): Promise<DocumentType[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const response = await fetch(`${API_URL}/tipo-documento/listarTipoDocumentos`, {
+    method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -120,7 +121,11 @@ export default async function DocumentsPage() {
 
 
   return (
-    <DashboardLayout user={user}>
+    <DashboardLayout 
+      user={user}
+      title="Gestión de Documentos"
+      description="Administra los documentos del sistema."
+    >
       <DocumentsClient data={formattedDocuments} properties={properties} documentTypes={documentTypes} />
     </DashboardLayout>
   );

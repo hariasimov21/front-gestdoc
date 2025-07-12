@@ -28,9 +28,11 @@ type Session = {
 interface DashboardLayoutProps {
   user: Session;
   children: React.ReactNode;
+  title: string;
+  description?: string;
 }
 
-export function DashboardLayout({ user, children }: DashboardLayoutProps) {
+export function DashboardLayout({ user, children, title, description }: DashboardLayoutProps) {
   const pathname = usePathname();
 
   return (
@@ -43,8 +45,8 @@ export function DashboardLayout({ user, children }: DashboardLayoutProps) {
                 <span className="font-bold text-lg">GestDoc</span>
             </Link>
           </SidebarHeader>
-          <SidebarContent>
-            <SidebarMenu>
+          <SidebarContent className="p-2">
+            <SidebarMenu className="gap-2">
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname === '/'} >
                   <Link href="/"><Home /> Dashboard</Link>
@@ -102,7 +104,7 @@ export function DashboardLayout({ user, children }: DashboardLayoutProps) {
           </SidebarFooter>
         </Sidebar>
         <main className="flex-1 flex flex-col">
-           <DashboardHeader userName={user.nombre} userRole={user.nombre_rol} userEmail={user.email} />
+           <DashboardHeader userName={user.nombre} userEmail={user.email} title={title} description={description} />
            <div className="flex-1 p-4 md:p-8">
              {children}
            </div>

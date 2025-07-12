@@ -22,16 +22,14 @@ export default function ProfilePage() {
   const user: Session = JSON.parse(sessionCookie);
 
   return (
-    <DashboardLayout user={user}>
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Mi Perfil</h1>
-        <p className="text-muted-foreground mt-2">
-            Actualiza tu información personal y contraseña.
-        </p>
+    <DashboardLayout 
+        user={user} 
+        title="Mi Perfil" 
+        description="Actualiza tu información personal y contraseña."
+    >
         <div className="mt-8">
             <ProfileForm user={user} />
         </div>
-      </div>
     </DashboardLayout>
   );
 }

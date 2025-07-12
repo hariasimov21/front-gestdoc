@@ -1,3 +1,4 @@
+
 'use client';
 
 import { DataTable } from '@/components/ui/data-table';
@@ -27,13 +28,7 @@ export const RolesClient: React.FC<RolesClientProps> = ({ data }) => {
         onClose={() => setIsModalOpen(false)}
         initialData={null}
       />
-      <div className="flex items-center justify-between mb-4">
-        <div>
-            <h1 className="text-3xl font-bold tracking-tight">Gestión de Roles</h1>
-            <p className="text-muted-foreground mt-2">
-                Administra los roles de usuario del sistema.
-            </p>
-        </div>
+      <div className="flex items-center justify-end mb-4">
         <Button onClick={() => setIsModalOpen(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Crear Rol

@@ -114,13 +114,7 @@ export const UserSocietyClient: React.FC<UserSocietyClientProps> = ({ users, soc
             if (selectedSocietyId) handleSocietyChange(selectedSocietyId);
         }}
       />
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Gestión de Usuario/Sociedad</h1>
-          <p className="text-muted-foreground mt-2">
-            Asocia usuarios a sociedades y visualiza las relaciones existentes.
-          </p>
-        </div>
+      <div className="flex items-center justify-end mb-4">
         <Button onClick={() => setIsModalOpen(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Asociar

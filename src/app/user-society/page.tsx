@@ -98,7 +98,11 @@ export default async function UserSocietyPage() {
   const societies = await getSocieties(token);
 
   return (
-    <DashboardLayout user={user}>
+    <DashboardLayout 
+      user={user}
+      title="Gestión de Usuario/Sociedad"
+      description="Asocia usuarios a sociedades y visualiza las relaciones existentes."
+    >
       <UserSocietyClient users={users} societies={societies} />
     </DashboardLayout>
   );

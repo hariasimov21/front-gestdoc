@@ -120,7 +120,11 @@ export default async function LeasesPage() {
   }));
 
   return (
-    <DashboardLayout user={user}>
+    <DashboardLayout 
+      user={user}
+      title="Gestión de Arriendos"
+      description="Administra los arriendos del sistema."
+    >
       <LeasesClient data={formattedLeases} tenants={tenants} properties={properties} />
     </DashboardLayout>
   );

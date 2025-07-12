@@ -85,7 +85,11 @@ export default async function UsersPage() {
   const roles = await getRoles(token);
 
   return (
-    <DashboardLayout user={user}>
+    <DashboardLayout 
+      user={user}
+      title="Gestión de Usuarios"
+      description="Administra los usuarios del sistema."
+    >
       <UsersClient data={users} roles={roles} />
     </DashboardLayout>
   );

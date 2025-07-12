@@ -55,7 +55,11 @@ export default async function TenantsPage() {
   const tenants = await getTenants(token);
 
   return (
-    <DashboardLayout user={user}>
+    <DashboardLayout 
+      user={user}
+      title="Gestión de Arrendatarios"
+      description="Administra los arrendatarios del sistema."
+    >
       <TenantsClient data={tenants} />
     </DashboardLayout>
   );

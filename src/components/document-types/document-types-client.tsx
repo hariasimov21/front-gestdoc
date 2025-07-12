@@ -21,13 +21,7 @@ export const DocumentTypesClient: React.FC<DocumentTypesClientProps> = ({ data }
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-      <div className="flex items-center justify-between mb-4">
-        <div>
-            <h1 className="text-3xl font-bold tracking-tight">Gestión de Tipos de Documento</h1>
-            <p className="text-muted-foreground mt-2">
-                Administra los tipos de documento del sistema.
-            </p>
-        </div>
+      <div className="flex items-center justify-end mb-4">
         <Button onClick={() => setIsModalOpen(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Crear Tipo de Documento

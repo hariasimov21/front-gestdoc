@@ -24,6 +24,7 @@ type ApiResponse = {
 async function getDocumentTypes(token: string): Promise<DocumentType[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const response = await fetch(`${API_URL}/tipo-documento/listarTipoDocumentos`, {
+    method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -51,7 +52,11 @@ export default async function DocumentTypesPage() {
   const documentTypes = await getDocumentTypes(token);
 
   return (
-    <DashboardLayout user={user}>
+    <DashboardLayout 
+      user={user}
+      title="Gestión de Tipos de Documento"
+      description="Administra los tipos de documento del sistema."
+    >
       <DocumentTypesClient data={documentTypes} />
     </DashboardLayout>
   );

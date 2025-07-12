@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -28,13 +29,7 @@ export const PropertiesClient: React.FC<PropertiesClientProps> = ({ data, societ
         initialData={null}
         societies={societies}
       />
-      <div className="flex items-center justify-between mb-4">
-        <div>
-            <h1 className="text-3xl font-bold tracking-tight">Gestión de Propiedades</h1>
-            <p className="text-muted-foreground mt-2">
-                Administra las propiedades del sistema.
-            </p>
-        </div>
+      <div className="flex items-center justify-end mb-4">
         <Button onClick={() => setIsModalOpen(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Crear Propiedad

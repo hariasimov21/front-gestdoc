@@ -98,7 +98,11 @@ export default async function PropertiesPage() {
   });
 
   return (
-    <DashboardLayout user={user}>
+    <DashboardLayout 
+      user={user} 
+      title="Gestión de Propiedades"
+      description="Administra las propiedades del sistema."
+    >
       <PropertiesClient data={formattedProperties} societies={societies} />
     </DashboardLayout>
   );

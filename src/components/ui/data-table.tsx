@@ -29,12 +29,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   searchKey: string
+  searchPlaceholder?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   searchKey,
+  searchPlaceholder = "Buscar...",
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -57,17 +59,19 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div>
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Buscar por nombre..."
-          value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(searchKey)?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-      </div>
+    <div className="space-y-4">
+       <div className="flex items-center justify-between">
+            <Input
+                placeholder={searchPlaceholder}
+                value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
+                onChange={(event) =>
+                    table.getColumn(searchKey)?.setFilterValue(event.target.value)
+                }
+                className="max-w-sm"
+            />
+             {/* This space is reserved for a create button, which will be added from the parent component */}
+             <div></div>
+        </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>

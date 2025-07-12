@@ -33,7 +33,7 @@ export function UserNav({ userName, userEmail }: UserNavProps) {
   return (
     <div className="flex items-center gap-2">
        <Button variant="ghost" size="icon" className="rounded-full h-9 w-9">
-            <Bell className="h-5 w-5" />
+            <Bell className="h-5 w-5 text-muted-foreground" />
             <span className="sr-only">Notificaciones</span>
         </Button>
         <DropdownMenu>

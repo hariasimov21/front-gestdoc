@@ -46,7 +46,7 @@ const Breadcrumb = ({
               )}
               aria-current={crumb.isLast ? "page" : undefined}
             >
-              {label}
+              {crumb.label}
             </Link>
           </li>
         ))}

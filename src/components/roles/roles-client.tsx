@@ -7,7 +7,6 @@ import { RoleFormModal } from './role-form-modal';
 import { Button } from '../ui/button';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
-import { Input } from '../ui/input';
 
 type Role = {
   id_rol_usuario: number;
@@ -21,12 +20,6 @@ interface RolesClientProps {
 
 export const RolesClient: React.FC<RolesClientProps> = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filter, setFilter] = useState('');
-
-  const filteredData = data.filter(item => 
-    item.nombre_rol.toLowerCase().includes(filter.toLowerCase())
-  );
-
 
   return (
     <div className="space-y-4">
@@ -35,19 +28,17 @@ export const RolesClient: React.FC<RolesClientProps> = ({ data }) => {
         onClose={() => setIsModalOpen(false)}
         initialData={null}
       />
-      <div className="flex items-center justify-between">
-         <Input
-            placeholder="Buscar por nombre de rol..."
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="max-w-sm"
-        />
+      <DataTable 
+        columns={columns} 
+        data={data} 
+        searchKey="nombre_rol"
+        searchPlaceholder="Buscar por nombre de rol..."
+      >
         <Button onClick={() => setIsModalOpen(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Crear Rol
         </Button>
-      </div>
-      <DataTable columns={columns} data={filteredData} searchKey="nombre_rol" />
+      </DataTable>
     </div>
   );
 };

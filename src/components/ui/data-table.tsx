@@ -30,6 +30,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   searchKey: string
   searchPlaceholder?: string;
+  children?: React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -37,6 +38,7 @@ export function DataTable<TData, TValue>({
   data,
   searchKey,
   searchPlaceholder = "Buscar...",
+  children,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -69,8 +71,7 @@ export function DataTable<TData, TValue>({
                 }
                 className="max-w-sm"
             />
-             {/* This space is reserved for a create button, which will be added from the parent component */}
-             <div></div>
+             {children}
         </div>
       <div className="rounded-md border">
         <Table>

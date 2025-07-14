@@ -50,7 +50,7 @@ const createFormSchema = z.object({
   id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
   id_tipo_documento: z.string().min(1, 'El tipo de documento es requerido.'),
   fecha_vencimiento: z.date({ required_error: 'La fecha de vencimiento es requerida.' }),
-  file: z.any().refine((files) => files?.[0] || files instanceof File, 'El archivo es requerido.'),
+  file: z.any().refine((files) => files?.length > 0, 'El archivo es requerido.'),
 });
 
 const updateFormSchema = z.object({
@@ -104,6 +104,8 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
     },
   });
 
+  const fileRef = form.register('file');
+
   const action = isEditing ? updateDocument : createDocument;
   const [state, formAction] = useActionState(action, { error: undefined });
 
@@ -138,6 +140,7 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
             ref={formRef}
             action={formAction} 
             className="space-y-4"
+            encType="multipart/form-data"
           >
             {isEditing && <input type="hidden" name="id_documento" value={initialData.id_documento} />}
             <FormField
@@ -169,6 +172,7 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
                         emptyPlaceholder="No se encontró propiedad."
                       />
                    </FormControl>
+                   <input type="hidden" name="id_propiedad" value={field.value} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -189,6 +193,7 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
                         emptyPlaceholder="No se encontró tipo."
                       />
                    </FormControl>
+                   <input type="hidden" name="id_tipo_documento" value={field.value} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -227,6 +232,7 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
                       />
                     </PopoverContent>
                   </Popover>
+                  <input type="hidden" name="fecha_vencimiento" value={field.value?.toISOString() ?? ''} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -234,16 +240,13 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
              <FormField
                 control={form.control}
                 name="file"
-                render={({ field: { onChange, value, ...rest } }) => (
+                render={() => (
                     <FormItem>
                         <FormLabel>Archivo {isEditing && '(Opcional: subir nueva versión)'}</FormLabel>
                         <FormControl>
                             <Input 
                                 type="file" 
-                                {...rest} 
-                                onChange={(event) => {
-                                    onChange(event.target.files);
-                                }}
+                                {...fileRef} 
                             />
                         </FormControl>
                         <FormMessage />

@@ -1,7 +1,8 @@
+
 'use client';
 
 import { useState } from 'react';
-import { MoreHorizontal, Edit, Trash, Copy } from 'lucide-react';
+import { MoreHorizontal, Edit, Trash, Copy, FileArchive } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import {
   DropdownMenu,
@@ -25,6 +26,7 @@ import { Button } from '@/components/ui/button';
 import { PropertyFormModal } from './property-form-modal';
 import { PropertyColumn } from './columns';
 import { deleteProperty } from '@/app/properties/actions';
+import { DocumentViewerModal } from './document-viewer-modal';
 
 type Society = {
     id_sociedad: number;
@@ -39,6 +41,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data, societies }) => {
   const [loading, setLoading] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isViewerModalOpen, setIsViewerModalOpen] = useState(false);
 
   const onCopy = (id: number) => {
     navigator.clipboard.writeText(String(id));
@@ -77,6 +80,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data, societies }) => {
         initialData={data}
         societies={societies}
       />
+      <DocumentViewerModal
+        isOpen={isViewerModalOpen}
+        onClose={() => setIsViewerModalOpen(false)}
+        property={data}
+       />
       <AlertDialog>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -89,6 +97,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data, societies }) => {
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => onCopy(data.id_propiedad)}>
               <Copy className="mr-2 h-4 w-4" /> Copiar ID
+            </DropdownMenuItem>
+             <DropdownMenuItem onClick={() => setIsViewerModalOpen(true)}>
+              <FileArchive className="mr-2 h-4 w-4" /> Ver Documentos
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setIsEditModalOpen(true)}>
               <Edit className="mr-2 h-4 w-4" /> Editar
@@ -103,7 +114,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, societies }) => {
 
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>¿Estás absolutely seguro?</AlertDialogTitle>
+            <AlertDialogTitle>¿Estás absolutamente seguro?</AlertDialogTitle>
             <AlertDialogDescription>
               Esta acción no se puede deshacer. Esto eliminará permanentemente la propiedad.
             </AlertDialogDescription>

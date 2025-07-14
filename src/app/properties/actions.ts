@@ -123,3 +123,29 @@ export async function deleteProperty(id_propiedad: number) {
         return { error: 'No se pudo conectar con el servidor.' };
     }
 }
+
+
+export async function getSignedUrlsForProperty(id_propiedad: number) {
+    try {
+        const token = await getAuthToken();
+        const response = await fetch(`${API_BASE_URL}/storage/urls-firmadas/propiedad/${id_propiedad}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
+            return { error: errorMessage || 'Error al obtener los documentos.' };
+        }
+
+        const data = await response.json();
+        return { success: true, payload: data.payload };
+
+    } catch (error) {
+        console.error(error);
+        return { error: 'No se pudo conectar con el servidor.' };
+    }
+}

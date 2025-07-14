@@ -45,12 +45,20 @@ type DocumentType = {
     nombre_tipo_documento: string;
 };
 
-const formSchema = z.object({
+const createFormSchema = z.object({
   nombre_documento: z.string().min(1, 'El nombre es requerido.'),
   id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
   id_tipo_documento: z.string().min(1, 'El tipo de documento es requerido.'),
   fecha_vencimiento: z.date({ required_error: 'La fecha de vencimiento es requerida.' }),
-  file: z.any().refine((files) => files?.length > 0 || files instanceof File, 'El archivo es requerido.').optional(),
+  file: z.any().refine((files) => files?.[0] || files instanceof File, 'El archivo es requerido.'),
+});
+
+const updateFormSchema = z.object({
+    nombre_documento: z.string().min(1, 'El nombre es requerido.'),
+    id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
+    id_tipo_documento: z.string().min(1, 'El tipo de documento es requerido.'),
+    fecha_vencimiento: z.date({ required_error: 'La fecha de vencimiento es requerida.' }),
+    file: z.any().optional(),
 });
 
 
@@ -77,13 +85,15 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
   const description = isEditing ? 'Actualiza los detalles del documento o sube una nueva versión.' : 'Añade un nuevo documento al sistema.';
   const actionLabel = isEditing ? 'Guardar Cambios' : 'Subir';
   
+  const formSchema = isEditing ? updateFormSchema : createFormSchema;
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData ? { 
         nombre_documento: initialData.nombre_documento,
         id_propiedad: String(initialData.id_propiedad),
         id_tipo_documento: String(initialData.id_tipo_documento),
-        fecha_vencimiento: initialData.fecha_vencimiento ? parseISO(initialData.fecha_vencimiento) : undefined,
+        fecha_vencimiento: initialData.fecha_vencimiento ? parseISO(initialData.fecha_vencimiento) : new Date(),
         file: undefined,
      } : {
       nombre_documento: '',
@@ -108,7 +118,7 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
       toast({ title: `Documento ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
       handleClose();
     }
-  }, [state]);
+  }, [state, isEditing, toast]);
 
 
   const handleClose = () => {
@@ -232,7 +242,7 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
                                 type="file" 
                                 {...rest} 
                                 onChange={(event) => {
-                                    onChange(event.target.files && event.target.files[0]);
+                                    onChange(event.target.files);
                                 }}
                             />
                         </FormControl>

@@ -9,7 +9,17 @@ import { format } from 'date-fns';
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const API_URL = `${API_BASE_URL}/documento`;
 
-const documentSchema = z.object({
+// Schema for creating a document
+const createDocumentSchema = z.object({
+  nombre_documento: z.string().min(1, 'El nombre es requerido.'),
+  id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
+  id_tipo_documento: z.string().min(1, 'El tipo de documento es requerido.'),
+  fecha_vencimiento: z.date({ required_error: 'La fecha de vencimiento es requerida.' }),
+  file: z.instanceof(File, { message: 'El archivo es requerido.' }).refine(file => file.size > 0, 'El archivo es requerido.'),
+});
+
+// Schema for updating a document (file is optional)
+const updateDocumentSchema = z.object({
   nombre_documento: z.string().min(1, 'El nombre es requerido.'),
   id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
   id_tipo_documento: z.string().min(1, 'El tipo de documento es requerido.'),
@@ -28,7 +38,7 @@ async function getAuthToken() {
 
 export async function createDocument(prevState: { error?: string }, formData: FormData) {
   
-  const validatedFields = documentSchema.safeParse({
+  const validatedFields = createDocumentSchema.safeParse({
     nombre_documento: formData.get('nombre_documento'),
     id_propiedad: formData.get('id_propiedad'),
     id_tipo_documento: formData.get('id_tipo_documento'),
@@ -37,11 +47,8 @@ export async function createDocument(prevState: { error?: string }, formData: Fo
   });
 
   if (!validatedFields.success) {
+    console.log(validatedFields.error.flatten().fieldErrors);
     return { error: 'Datos inválidos. Por favor, revisa los campos.' };
-  }
-
-  if (!validatedFields.data.file || validatedFields.data.file.size === 0) {
-    return { error: 'El archivo es requerido.' };
   }
 
   const apiFormData = new FormData();
@@ -78,9 +85,7 @@ export async function createDocument(prevState: { error?: string }, formData: Fo
 export async function updateDocument(prevState: { error?: string }, formData: FormData) {
     const documentId = formData.get('id_documento');
 
-    const validatedFields = documentSchema.omit({ file: true }).extend({
-        file: z.instanceof(File).optional(), // File is optional on update
-    }).safeParse({
+    const validatedFields = updateDocumentSchema.safeParse({
         nombre_documento: formData.get('nombre_documento'),
         id_propiedad: formData.get('id_propiedad'),
         id_tipo_documento: formData.get('id_tipo_documento'),
@@ -90,6 +95,7 @@ export async function updateDocument(prevState: { error?: string }, formData: Fo
 
 
     if (!validatedFields.success) {
+        console.log(validatedFields.error.flatten().fieldErrors);
         return { error: 'Datos inválidos. Por favor, revisa los campos.' };
     }
 

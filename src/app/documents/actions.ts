@@ -15,7 +15,7 @@ const createDocumentSchema = z.object({
   id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
   id_tipo_documento: z.string().min(1, 'El tipo de documento es requerido.'),
   fecha_vencimiento: z.date({ required_error: 'La fecha de vencimiento es requerida.' }),
-  file: z.any().refine((files) => files?.[0] || files instanceof File, 'El archivo es requerido.'),
+  file: z.instanceof(File, { message: 'El archivo es requerido.' }).refine(file => file.size > 0, 'El archivo es requerido.'),
 });
 
 // Schema for updating a document (file is optional)
@@ -24,7 +24,7 @@ const updateDocumentSchema = z.object({
   id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
   id_tipo_documento: z.string().min(1, 'El tipo de documento es requerido.'),
   fecha_vencimiento: z.date({ required_error: 'La fecha de vencimiento es requerida.' }),
-  file: z.any().optional(),
+  file: z.instanceof(File).optional(),
 });
 
 
@@ -38,13 +38,16 @@ async function getAuthToken() {
 
 export async function createDocument(prevState: { error?: string }, formData: FormData) {
   
-  const validatedFields = createDocumentSchema.safeParse({
-    nombre_documento: formData.get('nombre_documento'),
-    id_propiedad: formData.get('id_propiedad'),
-    id_tipo_documento: formData.get('id_tipo_documento'),
-    fecha_vencimiento: new Date(formData.get('fecha_vencimiento') as string),
-    file: formData.get('file'),
-  });
+    const rawData = {
+        nombre_documento: formData.get('nombre_documento'),
+        id_propiedad: formData.get('id_propiedad'),
+        id_tipo_documento: formData.get('id_tipo_documento'),
+        fecha_vencimiento: formData.get('fecha_vencimiento') ? new Date(formData.get('fecha_vencimiento') as string) : undefined,
+        file: formData.get('file'),
+    };
+
+    const validatedFields = createDocumentSchema.safeParse(rawData);
+
 
   if (!validatedFields.success) {
     console.log(validatedFields.error.flatten().fieldErrors);
@@ -53,13 +56,12 @@ export async function createDocument(prevState: { error?: string }, formData: Fo
   
   // Directly use formData from the form, the backend will handle parsing.
   const apiFormData = new FormData();
-  apiFormData.append('nombre_documento', formData.get('nombre_documento') as string);
-  apiFormData.append('id_propiedad', formData.get('id_propiedad') as string);
-  apiFormData.append('id_tipo_documento', formData.get('id_tipo_documento') as string);
+  apiFormData.append('nombre_documento', validatedFields.data.nombre_documento);
+  apiFormData.append('id_propiedad', validatedFields.data.id_propiedad);
+  apiFormData.append('id_tipo_documento', validatedFields.data.id_tipo_documento);
   // Format date correctly for the backend
-  const fechaVencimiento = new Date(formData.get('fecha_vencimiento') as string);
-  apiFormData.append('fecha_vencimiento', format(fechaVencimiento, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
-  apiFormData.append('file', formData.get('file') as File);
+  apiFormData.append('fecha_vencimiento', format(validatedFields.data.fecha_vencimiento, "yyyy-MM-dd"));
+  apiFormData.append('file', validatedFields.data.file);
 
 
   try {
@@ -88,13 +90,18 @@ export async function createDocument(prevState: { error?: string }, formData: Fo
 
 export async function updateDocument(prevState: { error?: string }, formData: FormData) {
     const documentId = formData.get('id_documento');
-
-    const validatedFields = updateDocumentSchema.safeParse({
+    
+    const rawData = {
         nombre_documento: formData.get('nombre_documento'),
         id_propiedad: formData.get('id_propiedad'),
         id_tipo_documento: formData.get('id_tipo_documento'),
-        fecha_vencimiento: new Date(formData.get('fecha_vencimiento') as string),
-        file: formData.get('file'),
+        fecha_vencimiento: formData.get('fecha_vencimiento') ? new Date(formData.get('fecha_vencimiento') as string) : undefined,
+        file: formData.get('file') as File | null,
+    };
+
+    const validatedFields = updateDocumentSchema.safeParse({
+        ...rawData,
+        file: rawData.file && rawData.file.size > 0 ? rawData.file : undefined
     });
 
 
@@ -108,12 +115,10 @@ export async function updateDocument(prevState: { error?: string }, formData: Fo
     apiFormData.append('nombre_documento', validatedFields.data.nombre_documento);
     apiFormData.append('id_propiedad', validatedFields.data.id_propiedad);
     apiFormData.append('id_tipo_documento', validatedFields.data.id_tipo_documento);
-    const fechaVencimiento = new Date(formData.get('fecha_vencimiento') as string);
-    apiFormData.append('fecha_vencimiento', format(fechaVencimiento, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+    apiFormData.append('fecha_vencimiento', format(validatedFields.data.fecha_vencimiento, 'yyyy-MM-dd'));
     
-    const file = formData.get('file') as File | null;
-    if (file && file.size > 0) {
-        apiFormData.append('file', file);
+    if (validatedFields.data.file) {
+        apiFormData.append('file', validatedFields.data.file);
     }
 
     try {
@@ -160,6 +165,31 @@ export async function inactivateDocument(id_documento: number) {
 
         revalidatePath('/documents');
         return { success: true };
+
+    } catch (error) {
+        console.error(error);
+        return { error: 'No se pudo conectar con el servidor.' };
+    }
+}
+
+export async function getSignedUrlForDocument(id_documento: number) {
+    try {
+        const token = await getAuthToken();
+        const response = await fetch(`${API_URL}/url-firmada/${id_documento}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
+            return { error: errorMessage || 'Error al obtener el documento.' };
+        }
+
+        const data = await response.json();
+        return { success: true, url: data.url };
 
     } catch (error) {
         console.error(error);

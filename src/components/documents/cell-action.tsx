@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MoreHorizontal, Edit, PowerOff, Copy } from 'lucide-react';
+import { MoreHorizontal, Edit, PowerOff, Copy, FileSearch } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import {
   DropdownMenu,
@@ -25,6 +25,7 @@ import { Button } from '@/components/ui/button';
 import { DocumentFormModal } from './document-form-modal';
 import { DocumentColumn } from './columns';
 import { inactivateDocument } from '@/app/documents/actions';
+import { DocumentPreviewModal } from './document-preview-modal';
 
 type Property = {
   id_propiedad: number;
@@ -45,6 +46,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data, properties, documentTypes }) => {
   const [loading, setLoading] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   const onCopy = (id: number) => {
@@ -86,6 +88,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data, properties, docume
         properties={properties}
         documentTypes={documentTypes}
       />
+      <DocumentPreviewModal
+        isOpen={isPreviewModalOpen}
+        onClose={() => setIsPreviewModalOpen(false)}
+        documentData={data}
+      />
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -98,6 +105,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data, properties, docume
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => onCopy(data.id_documento)}>
               <Copy className="mr-2 h-4 w-4" /> Copiar ID
+            </DropdownMenuItem>
+             <DropdownMenuItem onClick={() => setIsPreviewModalOpen(true)}>
+              <FileSearch className="mr-2 h-4 w-4" /> Ver
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setIsEditModalOpen(true)}>
               <Edit className="mr-2 h-4 w-4" /> Editar / Nueva Versión

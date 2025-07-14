@@ -81,7 +81,7 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl h-[90vh]">
+      <DialogContent className="max-w-[95vw] w-full h-[90vh]">
         <DialogHeader>
           <DialogTitle>Visor de Documentos</DialogTitle>
           <DialogDescription>

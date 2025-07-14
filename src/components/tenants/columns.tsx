@@ -1,8 +1,9 @@
+
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 export type TenantColumn = {
   id_arrendatario: number;
@@ -37,7 +38,7 @@ export const columns: ColumnDef<TenantColumn>[] = [
         const date = row.original.fecha_registro;
         if (!date) return 'N/A';
         try {
-            return format(new Date(date), 'dd/MM/yyyy');
+            return format(parseISO(date), 'dd/MM/yyyy');
         } catch (e) {
             return 'Fecha inválida'
         }

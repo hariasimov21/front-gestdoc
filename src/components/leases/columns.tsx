@@ -3,7 +3,7 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 
 type Tenant = {
@@ -50,7 +50,7 @@ export const columns = (dependencies: { tenants: Tenant[], properties: Property[
         const date = row.original.fecha_inicio_arriendo;
         if (!date) return 'N/A';
         try {
-            return format(new Date(date), 'dd/MM/yyyy');
+            return format(parseISO(date), 'dd/MM/yyyy');
         } catch (e) {
             return 'Fecha inválida';
         }
@@ -63,7 +63,7 @@ export const columns = (dependencies: { tenants: Tenant[], properties: Property[
         const date = row.original.fecha_fin_arriendo;
         if (!date) return 'N/A';
         try {
-            return format(new Date(date), 'dd/MM/yyyy');
+            return format(parseISO(date), 'dd/MM/yyyy');
         } catch (e) {
             return 'Fecha inválida';
         }

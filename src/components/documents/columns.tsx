@@ -3,7 +3,7 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 
 type Property = {
@@ -53,7 +53,7 @@ export const columns = (dependencies: { properties: Property[], documentTypes: D
         const date = row.original.fecha_subida;
         if (!date) return 'N/A';
         try {
-            return format(new Date(date), 'dd/MM/yyyy');
+            return format(parseISO(date), 'dd/MM/yyyy');
         } catch (e) {
             return 'Fecha inválida';
         }
@@ -66,7 +66,7 @@ export const columns = (dependencies: { properties: Property[], documentTypes: D
         const date = row.original.fecha_vencimiento;
         if (!date) return 'N/A';
         try {
-            return format(new Date(date), 'dd/MM/yyyy');
+            return format(parseISO(date), 'dd/MM/yyyy');
         } catch (e) {
             return 'Fecha inválida';
         }

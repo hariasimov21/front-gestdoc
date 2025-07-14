@@ -13,7 +13,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { getSignedUrlsForProperty } from '@/app/properties/actions';
 import { PropertyColumn } from './columns';
 import { format } from 'date-fns';
@@ -81,14 +81,14 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[95vw] w-full h-[90vh]">
-        <DialogHeader>
+      <DialogContent className="max-w-none w-[95vw] h-[95vh] flex flex-col p-0">
+        <DialogHeader className="p-4 pb-0">
           <DialogTitle>Visor de Documentos</DialogTitle>
           <DialogDescription>
             Propiedad: <span className="font-semibold">{property.direccion}</span>
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-[calc(100%-120px)]">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-4 flex-1 min-h-0">
             <Card className="md:col-span-1 h-full flex flex-col">
                  <CardHeader className="p-4">
                     <h3 className="text-lg font-semibold">Documentos</h3>
@@ -160,7 +160,7 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
                 )}
             </div>
         </div>
-        <DialogFooter className="!mt-0 pt-4">
+        <DialogFooter className="p-4 border-t">
             <Button asChild variant="outline" disabled={!selectedDocument}>
                 <a href={selectedDocument?.signedUrl} download={selectedDocument?.nombre_documento} target="_blank" rel="noopener noreferrer">
                     <Download className="mr-2 h-4 w-4" />

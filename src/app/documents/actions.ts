@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const API_URL = `${API_BASE_URL}/documento`;
+const API_URL_BASE = `${API_BASE_URL}`;
 
 // Schema for creating a document
 const createDocumentSchema = z.object({
@@ -175,7 +176,7 @@ export async function inactivateDocument(id_documento: number) {
 export async function getSignedUrlForDocument(id_documento: number) {
     try {
         const token = await getAuthToken();
-        const response = await fetch(`${API_URL}/url-firmada/${id_documento}`, {
+        const response = await fetch(`${API_URL_BASE}/storage/url-firmada/${id_documento}`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,

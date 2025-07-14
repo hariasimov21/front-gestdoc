@@ -138,6 +138,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                         disabled={isEditing}
                      />
                    </FormControl>
+                  <input type="hidden" {...field} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -159,6 +160,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                         disabled={isEditing}
                       />
                    </FormControl>
+                  <input type="hidden" {...field} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -194,13 +196,11 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date < new Date("1900-01-01")
-                        }
                         initialFocus
                       />
                     </PopoverContent>
                   </Popover>
+                  <input type="hidden" name="fecha_inicio_arriendo" value={field.value?.toISOString() ?? ''} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -236,13 +236,11 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date < new Date("1900-01-01")
-                        }
                         initialFocus
                       />
                     </PopoverContent>
                   </Popover>
+                  <input type="hidden" name="fecha_fin_arriendo" value={field.value?.toISOString() ?? ''} />
                   <FormMessage />
                 </FormItem>
               )}

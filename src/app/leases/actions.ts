@@ -25,12 +25,14 @@ async function getAuthToken() {
 }
 
 export async function createLease(prevState: { error?: string }, formData: FormData) {
-  const validatedFields = leaseSchema.safeParse({
+  const rawData = {
     id_arrendatario: formData.get('id_arrendatario'),
     id_propiedad: formData.get('id_propiedad'),
-    fecha_inicio_arriendo: new Date(formData.get('fecha_inicio_arriendo') as string),
-    fecha_fin_arriendo: new Date(formData.get('fecha_fin_arriendo') as string),
-  });
+    fecha_inicio_arriendo: formData.get('fecha_inicio_arriendo') ? new Date(formData.get('fecha_inicio_arriendo') as string) : undefined,
+    fecha_fin_arriendo: formData.get('fecha_fin_arriendo') ? new Date(formData.get('fecha_fin_arriendo') as string) : undefined,
+  };
+  
+  const validatedFields = leaseSchema.safeParse(rawData);
 
   if (!validatedFields.success) {
     console.log(validatedFields.error.flatten().fieldErrors)
@@ -72,10 +74,12 @@ export async function createLease(prevState: { error?: string }, formData: FormD
 }
 
 export async function updateLease(id_arriendo: number, prevState: { error?: string }, formData: FormData) {
-    const validatedFields = leaseSchema.omit({ id_arrendatario: true, id_propiedad: true }).safeParse({
-        fecha_inicio_arriendo: new Date(formData.get('fecha_inicio_arriendo') as string),
-        fecha_fin_arriendo: new Date(formData.get('fecha_fin_arriendo') as string),
-    });
+    const rawData = {
+        fecha_inicio_arriendo: formData.get('fecha_inicio_arriendo') ? new Date(formData.get('fecha_inicio_arriendo') as string) : undefined,
+        fecha_fin_arriendo: formData.get('fecha_fin_arriendo') ? new Date(formData.get('fecha_fin_arriendo') as string) : undefined,
+    };
+
+    const validatedFields = leaseSchema.omit({ id_arrendatario: true, id_propiedad: true }).safeParse(rawData);
 
     if (!validatedFields.success) {
         return { error: 'Datos inválidos. Por favor, revisa los campos.' };

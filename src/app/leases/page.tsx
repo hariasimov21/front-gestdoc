@@ -3,7 +3,6 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { LeasesClient } from '@/components/leases/leases-client';
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
-import { format } from 'date-fns';
 
 type Session = {
   nombre: string;
@@ -36,15 +35,17 @@ type Lease = {
     fecha_inicio_arriendo: string;
     fecha_fin_arriendo: string;
     activo: boolean;
-    arrendatario: Tenant;
-    propiedad: Property;
+    id_arrendatario: number; // Changed from nested object
+    id_propiedad: number;    // Changed from nested object
+    arrendatario: Tenant;    // This might be what the backend sends, let's keep it but also handle the ID case
+    propiedad: Property;     // This might be what the backend sends, let's keep it but also handle the ID case
 };
 
 type ApiResponse<T> = {
   payload: T;
 };
 
-async function getLeases(token: string): Promise<Lease[]> {
+async function getLeases(token: string): Promise<any[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const response = await fetch(`${API_URL}/arriendo/getArriendos`, {
     headers: {
@@ -58,7 +59,7 @@ async function getLeases(token: string): Promise<Lease[]> {
     return [];
   }
   
-  const data: ApiResponse<Lease[]> = await response.json();
+  const data: ApiResponse<any[]> = await response.json();
   return data.payload;
 }
 
@@ -109,15 +110,29 @@ export default async function LeasesPage() {
   }
 
   const user: Session = JSON.parse(sessionCookie);
-  const leases = await getLeases(token);
-  const tenants = await getTenants(token);
-  const properties = await getProperties(token);
+  const [leases, tenants, properties] = await Promise.all([
+      getLeases(token),
+      getTenants(token),
+      getProperties(token),
+  ]);
 
-  const formattedLeases = leases.map(item => ({
-    ...item,
-    arrendatarioNombre: item.arrendatario?.nombre,
-    propiedadDireccion: item.propiedad?.direccion,
-  }));
+  const formattedLeases = leases.map(item => {
+    // Backend might send nested objects or just IDs. We handle both.
+    const tenantId = item.id_arrendatario || item.arrendatario?.id_arrendatario;
+    const propertyId = item.id_propiedad || item.propiedad?.id_propiedad;
+
+    const tenant = tenants.find(t => t.id_arrendatario === tenantId);
+    const property = properties.find(p => p.id_propiedad === propertyId);
+    
+    return {
+      ...item,
+      arrendatarioNombre: tenant?.nombre || 'N/A',
+      propiedadDireccion: property?.direccion || 'N/A',
+      // Ensure the full objects are passed for the edit modal
+      arrendatario: tenant,
+      propiedad: property,
+    };
+  });
 
   return (
     <DashboardLayout 

@@ -26,7 +26,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Combobox } from '../ui/combobox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -77,7 +76,6 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData ? { 
-        ...initialData,
         id_arrendatario: String(initialData.arrendatario?.id_arrendatario || ''),
         id_propiedad: String(initialData.propiedad?.id_propiedad || ''),
         fecha_inicio_arriendo: initialData.fecha_inicio_arriendo ? parseISO(initialData.fecha_inicio_arriendo) : undefined,
@@ -138,7 +136,6 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                         disabled={isEditing}
                      />
                    </FormControl>
-                  <input type="hidden" {...field} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -160,7 +157,6 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                         disabled={isEditing}
                       />
                    </FormControl>
-                  <input type="hidden" {...field} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -200,7 +196,6 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                       />
                     </PopoverContent>
                   </Popover>
-                  <input type="hidden" name="fecha_inicio_arriendo" value={field.value?.toISOString() ?? ''} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -240,7 +235,6 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                       />
                     </PopoverContent>
                   </Popover>
-                  <input type="hidden" name="fecha_fin_arriendo" value={field.value?.toISOString() ?? ''} />
                   <FormMessage />
                 </FormItem>
               )}

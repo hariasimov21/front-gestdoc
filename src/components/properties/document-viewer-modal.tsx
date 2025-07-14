@@ -13,10 +13,10 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Card, CardHeader } from '@/components/ui/card';
 import { getSignedUrlsForProperty } from '@/app/properties/actions';
 import { PropertyColumn } from './columns';
 import { format } from 'date-fns';
-import { Badge } from '../ui/badge';
 import { ScrollArea } from '../ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { Separator } from '../ui/separator';

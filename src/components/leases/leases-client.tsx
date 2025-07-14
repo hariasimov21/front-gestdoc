@@ -38,9 +38,9 @@ export const LeasesClient: React.FC<LeasesClientProps> = ({ data, tenants, prope
 
   const filteredData = data.filter(item => {
     // Text search
-    const textMatch = 
-      item.arrendatarioNombre.toLowerCase().includes(globalFilter.toLowerCase()) ||
-      item.propiedadDireccion.toLowerCase().includes(globalFilter.toLowerCase());
+    const textMatch =
+      (item.arrendatarioNombre && item.arrendatarioNombre.toLowerCase().includes(globalFilter.toLowerCase())) ||
+      (item.propiedadDireccion && item.propiedadDireccion.toLowerCase().includes(globalFilter.toLowerCase()));
       
     // Date search
     let dateMatch = true;

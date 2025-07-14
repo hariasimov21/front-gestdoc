@@ -2,24 +2,25 @@
 'use client';
 
 import { DataTable } from '@/components/ui/data-table';
-import { columns } from './columns';
+import { columns, RoleColumn } from './columns';
 import { RoleFormModal } from './role-form-modal';
 import { Button } from '../ui/button';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
-
-type Role = {
-  id_rol_usuario: number;
-  nombre_rol: string;
-  descripcion: string;
-};
+import { Input } from '../ui/input';
 
 interface RolesClientProps {
-  data: Role[];
+  data: RoleColumn[];
 }
 
 export const RolesClient: React.FC<RolesClientProps> = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [globalFilter, setGlobalFilter] = useState('');
+  
+  const filteredData = data.filter(item =>
+    item.nombre_rol.toLowerCase().includes(globalFilter.toLowerCase()) ||
+    item.descripcion.toLowerCase().includes(globalFilter.toLowerCase())
+  );
 
   return (
     <div className="space-y-4">
@@ -28,17 +29,22 @@ export const RolesClient: React.FC<RolesClientProps> = ({ data }) => {
         onClose={() => setIsModalOpen(false)}
         initialData={null}
       />
-      <DataTable 
-        columns={columns} 
-        data={data} 
-        searchKey="nombre_rol"
-        searchPlaceholder="Buscar por nombre de rol..."
-      >
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+          <Input
+              placeholder="Buscar por nombre o descripción..."
+              value={globalFilter}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+              className="max-w-sm"
+          />
         <Button onClick={() => setIsModalOpen(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Crear Rol
         </Button>
-      </DataTable>
+      </div>
+      <DataTable 
+        columns={columns} 
+        data={filteredData} 
+      />
     </div>
   );
 };

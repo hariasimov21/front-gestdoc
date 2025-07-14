@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Loader2, AlertTriangle, FileText, ChevronRight } from 'lucide-react';
+import { Loader2, AlertTriangle, FileText, ChevronRight, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
   Dialog,
@@ -88,7 +88,7 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
             Propiedad: <span className="font-semibold">{property.direccion}</span>
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-[calc(100%-80px)]">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-[calc(100%-120px)]">
             <Card className="md:col-span-1 h-full flex flex-col">
                  <CardHeader className="p-4">
                     <h3 className="text-lg font-semibold">Documentos</h3>
@@ -161,9 +161,15 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
             </div>
         </div>
         <DialogFooter className="!mt-0 pt-4">
-          <Button type="button" variant="outline" onClick={onClose}>
-            Cerrar
-          </Button>
+            <Button asChild variant="outline" disabled={!selectedDocument}>
+                <a href={selectedDocument?.signedUrl} download={selectedDocument?.nombre_documento} target="_blank" rel="noopener noreferrer">
+                    <Download className="mr-2 h-4 w-4" />
+                    Descargar
+                </a>
+            </Button>
+            <Button type="button" onClick={onClose}>
+                Cerrar
+            </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

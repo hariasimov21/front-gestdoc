@@ -15,14 +15,72 @@ type Session = {
   id_usuario: number;
 };
 
-export default function DashboardPage() {
+type SummaryData = {
+  propiedades_activas: number;
+  documentos_activos: number; // This might correspond to active leases, will need clarification if not.
+  documentos_por_vencer: number;
+};
+
+type ApiResponse<T> = {
+  payload: T;
+};
+
+async function getSummaryData(token: string): Promise<SummaryData> {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  try {
+    const response = await fetch(`${API_URL}/dashboard/resumen`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: 'no-store',
+    });
+    if (!response.ok) {
+      console.error('Failed to fetch summary data');
+      return { propiedades_activas: 0, documentos_activos: 0, documentos_por_vencer: 0 };
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching summary data:', error);
+    return { propiedades_activas: 0, documentos_activos: 0, documentos_por_vencer: 0 };
+  }
+}
+
+async function getActiveLeasesCount(token: string): Promise<number> {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  try {
+    const response = await fetch(`${API_URL}/arriendo/getArriendos`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: 'no-store',
+    });
+    if (!response.ok) {
+        console.error('Failed to fetch leases');
+        return 0;
+    }
+    const data: ApiResponse<any[]> = await response.json();
+    return data.payload.filter(lease => lease.activo).length;
+  } catch (error) {
+    console.error('Error fetching leases:', error);
+    return 0;
+  }
+}
+
+export default async function DashboardPage() {
   const sessionCookie = cookies().get('session')?.value;
+  const token = cookies().get('auth_token')?.value;
   
-  if (!sessionCookie) {
+  if (!sessionCookie || !token) {
     redirect('/login');
   }
 
   const user: Session = JSON.parse(sessionCookie);
+
+  const [summaryData, activeLeasesCount] = await Promise.all([
+    getSummaryData(token),
+    getActiveLeasesCount(token),
+  ]);
 
   const quickAccessLinks = [
     { href: '/documents', icon: FolderArchive, label: 'Documentos' },
@@ -46,15 +104,15 @@ export default function DashboardPage() {
             <CardContent className="grid gap-4 sm:grid-cols-3">
                  <div className="p-4 border rounded-lg">
                     <h3 className="text-sm font-medium text-muted-foreground">Propiedades Activas</h3>
-                    <p className="text-2xl font-bold">42</p>
+                    <p className="text-2xl font-bold">{summaryData.propiedades_activas ?? 0}</p>
                 </div>
                  <div className="p-4 border rounded-lg">
                     <h3 className="text-sm font-medium text-muted-foreground">Arriendos Vigentes</h3>
-                    <p className="text-2xl font-bold">112</p>
+                    <p className="text-2xl font-bold">{activeLeasesCount}</p>
                 </div>
                  <div className="p-4 border rounded-lg">
                     <h3 className="text-sm font-medium text-muted-foreground">Documentos por Vencer</h3>
-                    <p className="text-2xl font-bold text-destructive">8</p>
+                    <p className="text-2xl font-bold text-destructive">{summaryData.documentos_por_vencer ?? 0}</p>
                 </div>
             </CardContent>
         </Card>

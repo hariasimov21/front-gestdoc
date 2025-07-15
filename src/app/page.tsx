@@ -37,9 +37,30 @@ export default function DashboardPage() {
         title="Dashboard" 
         description={`Bienvenido de nuevo, ${user.nombre}.`}
     >
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
+      <div className="space-y-6">
+        {/* Key Metrics Summary */}
+        <Card>
+            <CardHeader>
+                <CardTitle>Resumen del Sistema</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-4 sm:grid-cols-3">
+                 <div className="p-4 border rounded-lg">
+                    <h3 className="text-sm font-medium text-muted-foreground">Propiedades Activas</h3>
+                    <p className="text-2xl font-bold">42</p>
+                </div>
+                 <div className="p-4 border rounded-lg">
+                    <h3 className="text-sm font-medium text-muted-foreground">Arriendos Vigentes</h3>
+                    <p className="text-2xl font-bold">112</p>
+                </div>
+                 <div className="p-4 border rounded-lg">
+                    <h3 className="text-sm font-medium text-muted-foreground">Documentos por Vencer</h3>
+                    <p className="text-2xl font-bold text-destructive">8</p>
+                </div>
+            </CardContent>
+        </Card>
+
+        {/* Main Content Area */}
+        <div className="grid gap-6 lg:grid-cols-2">
             <Card>
                 <CardHeader>
                     <CardTitle>Accesos Rápidos</CardTitle>
@@ -58,30 +79,7 @@ export default function DashboardPage() {
                     </div>
                 </CardContent>
             </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle>Resumen del Sistema</CardTitle>
-                </CardHeader>
-                <CardContent className="grid gap-4 sm:grid-cols-3">
-                     <div className="p-4 border rounded-lg">
-                        <h3 className="text-sm font-medium text-muted-foreground">Propiedades Activas</h3>
-                        <p className="text-2xl font-bold">42</p>
-                    </div>
-                     <div className="p-4 border rounded-lg">
-                        <h3 className="text-sm font-medium text-muted-foreground">Arriendos Vigentes</h3>
-                        <p className="text-2xl font-bold">112</p>
-                    </div>
-                     <div className="p-4 border rounded-lg">
-                        <h3 className="text-sm font-medium text-muted-foreground">Documentos por Vencer</h3>
-                        <p className="text-2xl font-bold text-destructive">8</p>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
-
-        {/* Sidebar-like column on larger screens */}
-        <div className="lg:col-span-1 space-y-6">
+            
             <ExpiringLeases />
         </div>
       </div>

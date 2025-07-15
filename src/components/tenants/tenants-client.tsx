@@ -66,7 +66,7 @@ export const TenantsClient: React.FC<TenantsClientProps> = ({ data }) => {
                   placeholder="Buscar por nombre, RUT, email..."
                   value={globalFilter}
                   onChange={(e) => setGlobalFilter(e.target.value)}
-                  className="h-9 max-w-sm"
+                  className="h-9 w-full max-w-sm"
               />
               <Popover>
                   <PopoverTrigger asChild>
@@ -74,7 +74,7 @@ export const TenantsClient: React.FC<TenantsClientProps> = ({ data }) => {
                       id="date"
                       variant={"outline"}
                       className={cn(
-                      "h-9 w-[260px] justify-start text-left font-normal",
+                      "h-9 w-[260px] justify-start text-left font-normal sm:w-auto",
                       !dateRange && "text-muted-foreground"
                       )}
                   >

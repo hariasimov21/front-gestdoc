@@ -74,13 +74,13 @@ export const LeasesClient: React.FC<LeasesClientProps> = ({ data, tenants, prope
         tenants={tenants}
         properties={properties}
       />
-      <div className="flex items-center justify-between gap-2 flex-wrap">
-          <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex items-center justify-between">
+          <div className="flex flex-1 items-center space-x-2">
               <Input
                   placeholder="Buscar por arrendatario o propiedad..."
                   value={globalFilter}
                   onChange={(e) => setGlobalFilter(e.target.value)}
-                  className="max-w-sm"
+                  className="h-9 max-w-sm"
               />
               <Popover>
                   <PopoverTrigger asChild>
@@ -88,7 +88,7 @@ export const LeasesClient: React.FC<LeasesClientProps> = ({ data, tenants, prope
                       id="date"
                       variant={"outline"}
                       className={cn(
-                      "w-[260px] justify-start text-left font-normal",
+                      "h-9 w-[260px] justify-start text-left font-normal",
                       !dateRange && "text-muted-foreground"
                       )}
                   >
@@ -125,7 +125,7 @@ export const LeasesClient: React.FC<LeasesClientProps> = ({ data, tenants, prope
                 </Button>
               )}
           </div>
-          <Button onClick={() => setIsModalOpen(true)}>
+          <Button onClick={() => setIsModalOpen(true)} size="sm">
               <PlusCircle className="mr-2 h-4 w-4" />
               Crear Arriendo
           </Button>

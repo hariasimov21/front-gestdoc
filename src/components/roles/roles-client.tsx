@@ -29,14 +29,16 @@ export const RolesClient: React.FC<RolesClientProps> = ({ data }) => {
         onClose={() => setIsModalOpen(false)}
         initialData={null}
       />
-      <div className="flex items-center justify-between gap-2 flex-wrap">
+      <div className="flex items-center justify-between">
+        <div className="flex flex-1 items-center space-x-2">
           <Input
               placeholder="Buscar por nombre o descripción..."
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
-              className="max-w-sm"
+              className="h-9 max-w-sm"
           />
-        <Button onClick={() => setIsModalOpen(true)}>
+        </div>
+        <Button onClick={() => setIsModalOpen(true)} size="sm">
           <PlusCircle className="mr-2 h-4 w-4" />
           Crear Rol
         </Button>

@@ -106,7 +106,7 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
         </Sidebar>
         <main className="flex-1 flex flex-col">
            <DashboardHeader userName={user.nombre} userEmail={user.email} />
-           <div className="flex-1 p-4 md:p-8 pt-6">
+           <div className="flex-1 p-4 md:p-8 pt-6 animate-fade-in-up">
             <div className="mb-4 space-y-2">
                 <Breadcrumb />
                 <h1 className="text-2xl font-bold tracking-tight">{title}</h1>

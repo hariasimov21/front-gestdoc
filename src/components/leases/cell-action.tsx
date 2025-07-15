@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MoreHorizontal, Edit, Trash, Copy, PowerOff } from 'lucide-react';
+import { MoreHorizontal, Edit, Copy, PowerOff } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import {
   DropdownMenu,

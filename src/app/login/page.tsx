@@ -17,7 +17,7 @@ export default function LoginPage() {
                 alt="Modern office"
                 width="600"
                 height="400"
-                data-ai-hint="office"
+                data-ai-hint="office building"
                 className="h-full w-full object-cover rounded-lg shadow-md"
             />
         </div>

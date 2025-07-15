@@ -148,3 +148,28 @@ export async function inactivateLease(id_arriendo: number) {
         return { error: 'No se pudo conectar con el servidor.' };
     }
 }
+
+export async function getExpiringLeases(days: number): Promise<{ payload: any[], error?: string }> {
+    try {
+        const token = await getAuthToken();
+        const response = await fetch(`${API_URL}/vencimientos?dias=${days}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            cache: 'no-store',
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
+            return { payload: [], error: errorMessage || 'Error al obtener los arriendos por vencer.' };
+        }
+        
+        const data = await response.json();
+        return { payload: data.payload || [] };
+    } catch (error) {
+        console.error(error);
+        return { payload: [], error: 'No se pudo conectar con el servidor.' };
+    }
+}

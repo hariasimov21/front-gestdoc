@@ -3,10 +3,9 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { FolderArchive, FileText, Building, Users, Clock, Plus, ArrowRight } from 'lucide-react';
+import { FolderArchive, FileText, Building, Users } from 'lucide-react';
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { ExpiringLeases } from '@/components/dashboard/expiring-leases';
 
 type Session = {
   nombre: string;
@@ -30,33 +29,6 @@ export default function DashboardPage() {
     { href: '/leases', icon: FileText, label: 'Arriendos' },
     { href: '/properties', icon: Building, label: 'Propiedades' },
     { href: '/users', icon: Users, label: 'Usuarios' },
-  ];
-
-  const recentActivity = [
-    {
-      action: 'Nuevo Documento',
-      details: 'Contrato de Arriendo 2024.pdf',
-      time: 'hace 5 minutos',
-      user: 'Ana García',
-    },
-    {
-      action: 'Nuevo Arriendo',
-      details: 'Propiedad Av. Siempreviva 742',
-      time: 'hace 1 hora',
-      user: 'Carlos Ruiz',
-    },
-    {
-      action: 'Propiedad Actualizada',
-      details: 'Oficina Central',
-      time: 'hace 3 horas',
-      user: 'Ana García',
-    },
-     {
-      action: 'Nuevo Usuario',
-      details: 'roberto@empresa.com',
-      time: 'hace 1 día',
-      user: 'Admin',
-    },
   ];
 
   return (
@@ -110,27 +82,7 @@ export default function DashboardPage() {
 
         {/* Sidebar-like column on larger screens */}
         <div className="lg:col-span-1 space-y-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Actividad Reciente</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="space-y-4">
-                    {recentActivity.map((activity, index) => (
-                        <div key={index} className="flex items-start gap-3">
-                            <div className="bg-primary/10 text-primary p-2 rounded-full">
-                                <Clock className="h-4 w-4" />
-                            </div>
-                            <div className="flex-1">
-                                <p className="text-sm font-medium">{activity.action}</p>
-                                <p className="text-sm text-muted-foreground truncate">{activity.details}</p>
-                                <p className="text-xs text-muted-foreground">{activity.time} por {activity.user}</p>
-                            </div>
-                        </div>
-                    ))}
-                    </div>
-                </CardContent>
-            </Card>
+            <ExpiringLeases />
         </div>
       </div>
     </DashboardLayout>

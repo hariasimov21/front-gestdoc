@@ -56,47 +56,47 @@ export function LoginForm() {
   }, [state, toast]);
 
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl">GestDoc</CardTitle>
-        <CardDescription>
-          Introduce tus credenciales para acceder al panel.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form action={formAction} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email_usuario"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="nombre@ejemplo.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="contrasena"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Contraseña</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="••••••••" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <SubmitButton />
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+    <div className="w-full max-w-md">
+        <div className="mx-auto grid gap-6">
+            <div className="grid gap-2 text-center">
+                <h1 className="text-3xl font-bold">Iniciar Sesión</h1>
+                <p className="text-balance text-muted-foreground">
+                    Introduce tus credenciales para acceder al panel.
+                </p>
+            </div>
+            <Form {...form}>
+                <form action={formAction} className="grid gap-4">
+                    <FormField
+                    control={form.control}
+                    name="email_usuario"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                            <Input placeholder="nombre@ejemplo.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                    <FormField
+                    control={form.control}
+                    name="contrasena"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Contraseña</FormLabel>
+                        <FormControl>
+                            <Input type="password" placeholder="••••••••" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                    <SubmitButton />
+                </form>
+            </Form>
+        </div>
+    </div>
   );
 }
 

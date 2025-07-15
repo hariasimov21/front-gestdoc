@@ -102,7 +102,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
       toast({ title: `Arriendo ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
       handleClose();
     }
-  }, [state]);
+  }, [state, isEditing, toast]);
 
 
   const handleClose = () => {
@@ -136,6 +136,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                         disabled={isEditing}
                      />
                    </FormControl>
+                   <input type="hidden" name="id_arrendatario" value={field.value} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -157,6 +158,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                         disabled={isEditing}
                       />
                    </FormControl>
+                   <input type="hidden" name="id_propiedad" value={field.value} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -179,7 +181,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                            format(field.value, "PPP", { weekStartsOn: 1 })
                           ) : (
                             <span>Selecciona una fecha</span>
                           )}
@@ -196,6 +198,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                       />
                     </PopoverContent>
                   </Popover>
+                  <input type="hidden" name="fecha_inicio_arriendo" value={field.value?.toISOString()} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -218,7 +221,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                            format(field.value, "PPP", { weekStartsOn: 1 })
                           ) : (
                             <span>Selecciona una fecha</span>
                           )}
@@ -235,6 +238,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                       />
                     </PopoverContent>
                   </Popover>
+                  <input type="hidden" name="fecha_fin_arriendo" value={field.value?.toISOString()} />
                   <FormMessage />
                 </FormItem>
               )}

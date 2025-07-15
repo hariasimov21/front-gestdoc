@@ -79,7 +79,7 @@ export async function updateLease(id_arriendo: number, prevState: { error?: stri
         fecha_fin_arriendo: formData.get('fecha_fin_arriendo') ? new Date(formData.get('fecha_fin_arriendo') as string) : undefined,
     };
     
-    // For updates, we only care about the dates
+    // For updates, we only care about the dates, matching the backend DTO
     const updateSchema = z.object({
         fecha_inicio_arriendo: z.date({ required_error: 'La fecha de inicio es requerida.' }),
         fecha_fin_arriendo: z.date({ required_error: 'La fecha de fin es requerida.' }),
@@ -92,7 +92,6 @@ export async function updateLease(id_arriendo: number, prevState: { error?: stri
     }
     
     const putData = {
-      ...validatedFields.data,
       fecha_inicio_arriendo: format(validatedFields.data.fecha_inicio_arriendo, 'yyyy-MM-dd'),
       fecha_fin_arriendo: format(validatedFields.data.fecha_fin_arriendo, 'yyyy-MM-dd'),
     };

@@ -1,7 +1,8 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { PlusCircle, Calendar as CalendarIcon, X } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import { format, parseISO, startOfDay, endOfDay } from 'date-fns';
@@ -31,18 +32,19 @@ interface LeasesClientProps {
   properties: Property[];
 }
 
-export const LeasesClient: React.FC<LeasesClientProps> = ({ data, tenants, properties }) => {
+function LeasesClientContent({ data, tenants, properties }: LeasesClientProps) {
+  const searchParams = useSearchParams();
+  const highlightedId = searchParams.get('highlight');
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   const filteredData = data.filter(item => {
-    // Text search
     const textMatch =
       (item.arrendatarioNombre && item.arrendatarioNombre.toLowerCase().includes(globalFilter.toLowerCase())) ||
       (item.propiedadDireccion && item.propiedadDireccion.toLowerCase().includes(globalFilter.toLowerCase()));
       
-    // Date search
     let dateMatch = true;
     if (dateRange?.from) {
       try {
@@ -51,7 +53,7 @@ export const LeasesClient: React.FC<LeasesClientProps> = ({ data, tenants, prope
         const toDate = dateRange.to ? endOfDay(dateRange.to) : endOfDay(dateRange.from);
         dateMatch = itemDate >= fromDate && itemDate <= toDate;
       } catch (e) {
-        dateMatch = true; // If date is invalid, don't filter it out
+        dateMatch = true;
       }
     }
 
@@ -80,7 +82,7 @@ export const LeasesClient: React.FC<LeasesClientProps> = ({ data, tenants, prope
                   placeholder="Buscar por arrendatario o propiedad..."
                   value={globalFilter}
                   onChange={(e) => setGlobalFilter(e.target.value)}
-                  className="h-9 w-full max-w-sm"
+                  className="h-9 max-w-sm"
               />
               <Popover>
                   <PopoverTrigger asChild>
@@ -130,7 +132,20 @@ export const LeasesClient: React.FC<LeasesClientProps> = ({ data, tenants, prope
               Crear Arriendo
           </Button>
       </div>
-      <DataTable columns={tableColumns} data={filteredData} />
+      <DataTable 
+        columns={tableColumns} 
+        data={filteredData} 
+        highlightedRowId={highlightedId}
+        rowIdKey="id_arriendo"
+      />
     </div>
   );
-};
+}
+
+export const LeasesClient: React.FC<LeasesClientProps> = (props) => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LeasesClientContent {...props} />
+    </Suspense>
+  )
+}

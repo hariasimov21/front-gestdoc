@@ -94,7 +94,7 @@ export function ExpiringLeases() {
                     </Badge>
                 </div>
               </div>
-               <Link href={`/leases`} className="opacity-0 group-hover:opacity-100 transition-opacity">
+               <Link href={`/leases?highlight=${lease.id_arriendo}`} className="opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button variant="ghost" size="icon" className="h-8 w-8">
                         <ArrowRight className="h-4 w-4" />
                     </Button>

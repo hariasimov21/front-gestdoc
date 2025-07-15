@@ -39,7 +39,7 @@ export default function DashboardPage() {
     >
       <div className="space-y-6">
         {/* Key Metrics Summary */}
-        <Card>
+        <Card className="animate-fade-in-up">
             <CardHeader>
                 <CardTitle>Resumen del Sistema</CardTitle>
             </CardHeader>
@@ -61,7 +61,7 @@ export default function DashboardPage() {
 
         {/* Main Content Area */}
         <div className="grid gap-6 lg:grid-cols-2">
-            <Card>
+            <Card className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                 <CardHeader>
                     <CardTitle>Accesos Rápidos</CardTitle>
                     <CardDescription>Navega a las secciones más importantes.</CardDescription>
@@ -80,7 +80,9 @@ export default function DashboardPage() {
                 </CardContent>
             </Card>
             
-            <ExpiringLeases />
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              <ExpiringLeases />
+            </div>
         </div>
       </div>
     </DashboardLayout>

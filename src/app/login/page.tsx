@@ -14,10 +14,10 @@ export default function LoginPage() {
         <div className="mt-10 w-full max-w-md">
             <Image
                 src="https://placehold.co/600x400.png"
-                alt="Image"
+                alt="Modern office"
                 width="600"
                 height="400"
-                data-ai-hint="documents management"
+                data-ai-hint="office"
                 className="h-full w-full object-cover rounded-lg shadow-md"
             />
         </div>

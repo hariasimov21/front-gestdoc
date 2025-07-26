@@ -89,23 +89,25 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
   });
 
    useEffect(() => {
-    if (isOpen && initialData && isEditing) {
-      const tenant = tenants.find(t => t.nombre === initialData.arrendatarioNombre);
-      const property = properties.find(p => p.direccion === initialData.propiedadDireccion);
-      
-      form.reset({
-        id_arrendatario: tenant ? String(tenant.id_arrendatario) : '',
-        id_propiedad: property ? String(property.id_propiedad) : '',
-        fecha_inicio_arriendo: initialData.fecha_inicio_arriendo ? parseISO(initialData.fecha_inicio_arriendo) : new Date(),
-        fecha_fin_arriendo: initialData.fecha_fin_arriendo ? parseISO(initialData.fecha_fin_arriendo) : new Date(),
-      });
-    } else if (isOpen && !isEditing) {
-       form.reset({
-        id_arrendatario: '',
-        id_propiedad: '',
-        fecha_inicio_arriendo: undefined,
-        fecha_fin_arriendo: undefined,
-      });
+    if (isOpen) {
+      if (initialData && isEditing) {
+        const tenant = tenants.find(t => t.nombre === initialData.arrendatarioNombre);
+        const property = properties.find(p => p.direccion === initialData.propiedadDireccion);
+        
+        form.reset({
+          id_arrendatario: tenant ? String(tenant.id_arrendatario) : '',
+          id_propiedad: property ? String(property.id_propiedad) : '',
+          fecha_inicio_arriendo: initialData.fecha_inicio_arriendo ? parseISO(initialData.fecha_inicio_arriendo) : new Date(),
+          fecha_fin_arriendo: initialData.fecha_fin_arriendo ? parseISO(initialData.fecha_fin_arriendo) : new Date(),
+        });
+      } else {
+         form.reset({
+          id_arrendatario: '',
+          id_propiedad: '',
+          fecha_inicio_arriendo: undefined,
+          fecha_fin_arriendo: undefined,
+        });
+      }
     }
   }, [isOpen, initialData, isEditing, tenants, properties, form]);
 

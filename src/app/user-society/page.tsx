@@ -48,7 +48,7 @@ async function getUsers(token: string): Promise<User[]> {
     }
     const data: ApiResponse<any[]> = await response.json();
     return data.payload
-        .filter(user => user.rol_usuario.nombre_rol === 'Usuario')
+        .filter(user => user.rol_usuario && user.rol_usuario.nombre_rol === 'Usuario')
         .map(user => ({ id_usuario: user.id_usuario, nombre: user.nombre }));
   } catch (error) {
     console.error('Error fetching users:', error);

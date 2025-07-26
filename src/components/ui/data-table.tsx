@@ -11,6 +11,7 @@ import {
   getSortedRowModel,
   useReactTable,
   Table as ReactTable,
+  Header,
 } from "@tanstack/react-table"
 import { cn } from "@/lib/utils"
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react"
@@ -25,6 +26,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -47,60 +49,120 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   });
+  const isMobile = useIsMobile();
+
+  const getHeaderName = (header: Header<TData, unknown>) => {
+    const { columnDef } = header.column;
+    if (typeof columnDef.header === 'string') {
+        return columnDef.header;
+    }
+    // Attempt to extract from a simple component if possible, otherwise skip
+    // This is a simplification and might not work for complex header components
+    return null;
+  }
 
   return (
     <div className="space-y-4">
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  )
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => {
-                const isHighlighted = rowIdKey && highlightedRowId 
+      {isMobile ? (
+        // Mobile Card View
+        <div className="space-y-4">
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => {
+               const isHighlighted = rowIdKey && highlightedRowId 
                   ? String(row.original[rowIdKey]) === highlightedRowId
                   : false;
-                
-                return (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    className={cn(isHighlighted && 'bg-primary/10 animate-pulse-once')}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+              return (
+              <div 
+                key={row.id} 
+                className={cn(
+                  "rounded-lg border bg-card text-card-foreground shadow-sm p-4 space-y-3",
+                  isHighlighted && 'bg-primary/10 animate-pulse-once'
+                  )}
+              >
+                {row.getVisibleCells().map((cell) => {
+                   const headerName = getHeaderName(cell.column.getHeader());
+                  // Don't render a row for actions in the card view, we'll render it separately
+                  if (cell.column.id === 'actions') return null;
+                  
+                  return (
+                    <div key={cell.id} className="flex justify-between items-start text-sm">
+                      <span className="font-medium text-muted-foreground mr-2">{headerName}</span>
+                      <div className="text-right">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                )
-              })
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No se encontraron resultados.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+                      </div>
+                    </div>
+                  )
+                })}
+                 {/* Render actions at the bottom of the card */}
+                <div className="flex justify-end pt-2 border-t -mx-4 px-4">
+                    {row.getVisibleCells().find(cell => cell.column.id === 'actions') &&
+                      flexRender(
+                        row.getVisibleCells().find(cell => cell.column.id === 'actions')!.column.columnDef.cell,
+                        row.getVisibleCells().find(cell => cell.column.id === 'actions')!.getContext()
+                      )}
+                </div>
+              </div>
+            )})
+          ) : (
+            <div className="text-center py-10 text-muted-foreground">
+              No se encontraron resultados.
+            </div>
+          )}
+        </div>
+      ) : (
+        // Desktop Table View
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    )
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => {
+                  const isHighlighted = rowIdKey && highlightedRowId 
+                    ? String(row.original[rowIdKey]) === highlightedRowId
+                    : false;
+                  
+                  return (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      className={cn(isHighlighted && 'bg-primary/10 animate-pulse-once')}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  )
+                })
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                    No se encontraron resultados.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      )}
       <DataTablePagination table={table} />
     </div>
   )

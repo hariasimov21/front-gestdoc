@@ -69,7 +69,8 @@ export const UserSocietyFormModal: React.FC<UserSocietyFormModalProps> = ({
     },
   });
 
-  const [state, formAction] = useActionState(createAssociation, { error: undefined });
+  const action = createAssociation;
+  const [state, formAction] = useActionState(action, { error: undefined });
 
   useEffect(() => {
     if (state?.error) {
@@ -83,7 +84,7 @@ export const UserSocietyFormModal: React.FC<UserSocietyFormModalProps> = ({
       onSuccess();
       handleClose();
     }
-  }, [state, onSuccess]);
+  }, [state, onSuccess, toast]);
 
 
   const handleClose = () => {

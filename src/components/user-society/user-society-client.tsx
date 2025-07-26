@@ -2,20 +2,10 @@
 'use client';
 
 import { useState, useTransition, useEffect } from 'react';
-import { PlusCircle, Trash, Loader2 } from 'lucide-react';
+import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UserSocietyFormModal } from './user-society-form-modal';
 import { useToast } from '@/hooks/use-toast';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
 import { DataTable } from '../ui/data-table';
 import { columns, AssociationColumn } from './columns';
 import { deleteAssociation, getAllAssociations } from '@/app/user-society/actions';
@@ -67,7 +57,7 @@ export const UserSocietyClient: React.FC<UserSocietyClientProps> = ({ users, soc
         toast({ variant: 'destructive', title: 'Error', description: result.error });
     } else {
         toast({ title: 'Asociación eliminada' });
-        fetchAssociations();
+        fetchAssociations(); // Refetch data to update the table
     }
     setIsDeleting(null);
   };
@@ -76,6 +66,8 @@ export const UserSocietyClient: React.FC<UserSocietyClientProps> = ({ users, soc
     item.nombre_usuario.toLowerCase().includes(globalFilter.toLowerCase()) ||
     item.nombre_sociedad.toLowerCase().includes(globalFilter.toLowerCase())
   );
+
+  const tableColumns = columns({ onDelete: handleDelete, isDeleting });
 
   return (
     <div className="space-y-4">
@@ -102,11 +94,9 @@ export const UserSocietyClient: React.FC<UserSocietyClientProps> = ({ users, soc
       </div>
       
       <DataTable 
-        columns={columns({
-            onDelete: handleDelete,
-            isDeleting,
-        })} 
-        data={filteredData} 
+        columns={tableColumns} 
+        data={filteredData}
+        rowIdKey="id_usuario_sociedad"
       />
 
     </div>

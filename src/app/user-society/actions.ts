@@ -11,6 +11,7 @@ const API_URL = `${API_BASE_URL}/usuario-sociedad`;
 type ApiResponse<T> = {
   payload: T;
   error?: string;
+  message?: string | string[];
 };
 
 const associationSchema = z.object({
@@ -35,7 +36,8 @@ export async function getAllAssociations(): Promise<ApiResponse<{ id_usuario_soc
         });
         if (!response.ok) {
             const data = await response.json();
-            return { payload: [], error: data.message || 'Error al obtener las asociaciones.' };
+            const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : (data.message || 'Error al obtener las asociaciones.');
+            return { payload: [], error: errorMessage };
         };
         const data = await response.json();
         return { payload: data.payload };
@@ -94,8 +96,8 @@ export async function deleteAssociation(id_usuario_sociedad: number) {
 
         if (!response.ok) {
             const data = await response.json();
-            const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
-            return { error: errorMessage || 'Error al eliminar la asociación.' };
+            const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : (data.message || 'Error al eliminar la asociación.');
+            return { error: errorMessage };
         }
 
         revalidatePath('/user-society');

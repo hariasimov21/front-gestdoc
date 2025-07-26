@@ -76,8 +76,8 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData ? { 
-        id_arrendatario: String(initialData.arrendatario?.id_arrendatario || ''),
-        id_propiedad: String(initialData.propiedad?.id_propiedad || ''),
+        id_arrendatario: String(initialData.id_arrendatario || ''),
+        id_propiedad: String(initialData.id_propiedad || ''),
         fecha_inicio_arriendo: initialData.fecha_inicio_arriendo ? parseISO(initialData.fecha_inicio_arriendo) : undefined,
         fecha_fin_arriendo: initialData.fecha_fin_arriendo ? parseISO(initialData.fecha_fin_arriendo) : undefined,
      } : {
@@ -87,6 +87,21 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
       fecha_fin_arriendo: undefined,
     },
   });
+
+  // Since the API doesn't return the IDs anymore, we find them from the full lists.
+  // This is only necessary for pre-filling the edit form.
+   useEffect(() => {
+    if (initialData && isEditing) {
+      const tenant = tenants.find(t => t.nombre === initialData.arrendatarioNombre);
+      const property = properties.find(p => p.direccion === initialData.propiedadDireccion);
+      
+      form.setValue('id_arrendatario', tenant ? String(tenant.id_arrendatario) : '');
+      form.setValue('id_propiedad', property ? String(property.id_propiedad) : '');
+      form.setValue('fecha_inicio_arriendo', initialData.fecha_inicio_arriendo ? parseISO(initialData.fecha_inicio_arriendo) : new Date());
+      form.setValue('fecha_fin_arriendo', initialData.fecha_fin_arriendo ? parseISO(initialData.fecha_fin_arriendo) : new Date());
+    }
+  }, [initialData, tenants, properties, form, isEditing]);
+
 
   const action = isEditing ? updateLease.bind(null, initialData.id_arriendo) : createLease;
   const [state, formAction] = useActionState(action, { error: undefined });

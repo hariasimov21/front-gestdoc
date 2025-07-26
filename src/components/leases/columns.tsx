@@ -18,15 +18,17 @@ type Property = {
 
 export type LeaseColumn = {
   id_arriendo: number;
-  id_arrendatario?: number; // Add optional top-level ID
-  id_propiedad?: number;   // Add optional top-level ID
   fecha_inicio_arriendo: string;
   fecha_fin_arriendo: string;
   activo: boolean;
-  arrendatario: Tenant;
-  propiedad: Property;
   arrendatarioNombre: string;
   propiedadDireccion: string;
+  // The following are needed for the edit modal to pre-populate.
+  // We can't get them from the new API response directly.
+  id_arrendatario?: number; 
+  id_propiedad?: number;
+  arrendatario?: Tenant;
+  propiedad?: Property;
 };
 
 

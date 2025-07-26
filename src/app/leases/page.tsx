@@ -15,37 +15,27 @@ type Session = {
 type Tenant = {
   id_arrendatario: number;
   nombre: string;
-  fecha_registro: string;
-  email: string;
-  rubro: string;
-  rut_arrendatario: string;
 };
 
 type Property = {
   id_propiedad: number;
   direccion: string;
-  descripcion: string;
-  longitud: string;
-  latitud: string;
-  id_sociedad: number;
 };
 
-type Lease = {
+type LeaseFromApi = {
     id_arriendo: number;
+    nombre_arrendatario: string;
+    direccion_propiedad: string;
     fecha_inicio_arriendo: string;
     fecha_fin_arriendo: string;
     activo: boolean;
-    id_arrendatario: number; // Changed from nested object
-    id_propiedad: number;    // Changed from nested object
-    arrendatario: Tenant;    // This might be what the backend sends, let's keep it but also handle the ID case
-    propiedad: Property;     // This might be what the backend sends, let's keep it but also handle the ID case
 };
 
 type ApiResponse<T> = {
   payload: T;
 };
 
-async function getLeases(token: string): Promise<any[]> {
+async function getLeases(token: string): Promise<LeaseFromApi[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const response = await fetch(`${API_URL}/arriendo/getArriendos`, {
     headers: {
@@ -59,10 +49,11 @@ async function getLeases(token: string): Promise<any[]> {
     return [];
   }
   
-  const data: ApiResponse<any[]> = await response.json();
+  const data: ApiResponse<LeaseFromApi[]> = await response.json();
   return data.payload;
 }
 
+// These are still needed for the create/edit modal
 async function getTenants(token: string): Promise<Tenant[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const response = await fetch(`${API_URL}/arrendatario/listarArrendatarios`, {
@@ -112,25 +103,15 @@ export default async function LeasesPage() {
   const user: Session = JSON.parse(sessionCookie);
   const [leases, tenants, properties] = await Promise.all([
       getLeases(token),
-      getTenants(token),
-      getProperties(token),
+      getTenants(token), // Still needed for the form
+      getProperties(token), // Still needed for the form
   ]);
 
   const formattedLeases = leases.map(item => {
-    // Backend might send nested objects or just IDs. We handle both.
-    const tenantId = item.id_arrendatario || item.arrendatario?.id_arrendatario;
-    const propertyId = item.id_propiedad || item.propiedad?.id_propiedad;
-
-    const tenant = tenants.find(t => t.id_arrendatario === tenantId);
-    const property = properties.find(p => p.id_propiedad === propertyId);
-    
     return {
       ...item,
-      arrendatarioNombre: tenant?.nombre || 'N/A',
-      propiedadDireccion: property?.direccion || 'N/A',
-      // Ensure the full objects are passed for the edit modal
-      arrendatario: tenant,
-      propiedad: property,
+      arrendatarioNombre: item.nombre_arrendatario || 'N/A',
+      propiedadDireccion: item.direccion_propiedad || 'N/A',
     };
   });
 

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { UserFormModal } from './user-form-modal';
 import { columns, UserColumn } from './columns';
 import { Input } from '../ui/input';
+import { useReactTable, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, SortingState } from '@tanstack/react-table';
 
 type Role = {
   id_rol_usuario: number;

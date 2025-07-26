@@ -5,21 +5,24 @@ import { LoginForm } from '@/components/auth/login-form';
 export default function LoginPage() {
   return (
     <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2">
-      <div className="hidden bg-muted lg:flex lg:flex-col lg:items-center lg:justify-center p-8">
-        <div className="flex flex-col items-center text-center">
-           <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-16 w-16 text-primary"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-           <h1 className="mt-4 text-4xl font-bold tracking-tight">GestDoc</h1>
-           <p className="mt-2 text-lg text-muted-foreground">Tu centro de control documental.</p>
+      <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
+        <div 
+          className="absolute inset-0 bg-cover"
+          style={{ backgroundImage: 'url(https://placehold.co/1080x1920.png)', backgroundPosition: 'center' }}
+          data-ai-hint="office building"
+        />
+        <div className="absolute inset-0 bg-zinc-900/60" />
+        <div className="relative z-20 flex items-center text-lg font-medium">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-6 w-6"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          GestDoc
         </div>
-        <div className="mt-10 w-full max-w-md">
-            <Image
-                src="https://placehold.co/600x400.png"
-                alt="Modern office"
-                width="600"
-                height="400"
-                data-ai-hint="office building"
-                className="h-full w-full object-cover rounded-lg shadow-md"
-            />
+        <div className="relative z-20 mt-auto">
+            <blockquote className="space-y-2">
+                <p className="text-lg">
+                “Esta herramienta ha transformado nuestra gestión de documentos. Es intuitiva, eficiente y totalmente indispensable para nuestras operaciones.”
+                </p>
+                <footer className="text-sm">Sofia Davis, Gerente de Operaciones</footer>
+            </blockquote>
         </div>
       </div>
       <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

@@ -22,11 +22,14 @@ type Tenant = {
 };
 
 type ApiResponse = {
-  payload: any[];
+  payload: {
+    datos: Tenant[];
+  };
 };
 
 async function getTenants(token: string): Promise<Tenant[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  // Fetch all tenants by not sending pagination params for now
   const response = await fetch(`${API_URL}/arrendatario/listarArrendatarios`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -40,7 +43,7 @@ async function getTenants(token: string): Promise<Tenant[]> {
   }
   
   const data: ApiResponse = await response.json();
-  return data.payload;
+  return data.payload.datos || [];
 }
 
 export default async function TenantsPage() {

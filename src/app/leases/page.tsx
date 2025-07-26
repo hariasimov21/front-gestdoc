@@ -35,6 +35,12 @@ type ApiResponse<T> = {
   payload: T;
 };
 
+type TenantsApiResponse = {
+    payload: {
+        datos: Tenant[];
+    }
+}
+
 async function getLeases(token: string): Promise<LeaseFromApi[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const response = await fetch(`${API_URL}/arriendo/getArriendos`, {
@@ -68,8 +74,8 @@ async function getTenants(token: string): Promise<Tenant[]> {
     return [];
   }
   
-  const data: ApiResponse<Tenant[]> = await response.json();
-  return data.payload;
+  const data: TenantsApiResponse = await response.json();
+  return data.payload.datos || [];
 }
 
 

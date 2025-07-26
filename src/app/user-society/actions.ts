@@ -8,18 +8,9 @@ import { revalidatePath } from 'next/cache';
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const API_URL = `${API_BASE_URL}/usuario-sociedad`;
 
-type User = {
-  id_usuario: number;
-  nombre: string;
-};
-
-type Society = {
-    id_sociedad: number;
-    nombre: string;
-};
-
 type ApiResponse<T> = {
   payload: T;
+  error?: string;
 };
 
 const associationSchema = z.object({
@@ -35,35 +26,22 @@ async function getAuthToken() {
   return token;
 }
 
-export async function getSocietiesForUser(userId: number): Promise<Society[]> {
-    if (!userId) return [];
+export async function getAllAssociations(): Promise<ApiResponse<{ id_usuario_sociedad: number, nombre_usuario: string, nombre_sociedad: string }[]>> {
     try {
         const token = await getAuthToken();
-        const response = await fetch(`${API_URL}/usuario/${userId}`, {
+        const response = await fetch(`${API_URL}/listarAsociaciones`, {
             headers: { Authorization: `Bearer ${token}` },
             cache: 'no-store',
         });
-        if (!response.ok) return [];
-        const data: ApiResponse<{ sociedad: { id_sociedad: number; nombre_sociedad: string; } }[]> = await response.json();
-        return data.payload.map(item => ({ id_sociedad: item.sociedad.id_sociedad, nombre: item.sociedad.nombre_sociedad }));
+        if (!response.ok) {
+            const data = await response.json();
+            return { payload: [], error: data.message || 'Error al obtener las asociaciones.' };
+        };
+        const data = await response.json();
+        return { payload: data.payload };
     } catch (error) {
-        return [];
-    }
-}
-
-export async function getUsersForSociety(societyId: number): Promise<User[]> {
-    if (!societyId) return [];
-    try {
-        const token = await getAuthToken();
-        const response = await fetch(`${API_URL}/sociedad/${societyId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-            cache: 'no-store',
-        });
-        if (!response.ok) return [];
-        const data: ApiResponse<{ usuario: User }[]> = await response.json();
-        return data.payload.map(item => item.usuario);
-    } catch (error) {
-        return [];
+        console.error(error);
+        return { payload: [], error: 'No se pudo conectar con el servidor.' };
     }
 }
 
@@ -92,8 +70,8 @@ export async function createAssociation(prevState: { error?: string }, formData:
 
     if (!response.ok) {
       const data = await response.json();
-      const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
-      return { error: errorMessage || 'Error al crear la asociación.' };
+      const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : (data.message || 'Error al crear la asociación.');
+      return { error: errorMessage };
     }
 
     revalidatePath('/user-society');
@@ -104,17 +82,14 @@ export async function createAssociation(prevState: { error?: string }, formData:
   }
 }
 
-export async function deleteAssociation(id_usuario: number, id_sociedad: number) {
-    const deleteData = { id_usuario, id_sociedad };
+export async function deleteAssociation(id_usuario_sociedad: number) {
     try {
         const token = await getAuthToken();
-        const response = await fetch(`${API_URL}/eliminarAsociacion`, {
+        const response = await fetch(`${API_URL}/eliminarAsociacion/${id_usuario_sociedad}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(deleteData),
         });
 
         if (!response.ok) {

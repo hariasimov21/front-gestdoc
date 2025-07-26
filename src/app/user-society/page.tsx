@@ -15,11 +15,6 @@ type Session = {
 type User = {
   id_usuario: number;
   nombre: string;
-  email: string;
-  rol_usuario: {
-    id_rol_usuario: number;
-    nombre_rol: string;
-  };
 };
 
 type Society = {
@@ -36,6 +31,7 @@ type ApiResponse<T> = {
   payload: T;
 };
 
+// We only need users with rol "Usuario" for association
 async function getUsers(token: string): Promise<User[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   try {
@@ -50,8 +46,10 @@ async function getUsers(token: string): Promise<User[]> {
       console.error('Failed to fetch users:', await response.text());
       return [];
     }
-    const data: ApiResponse<User[]> = await response.json();
-    return data.payload;
+    const data: ApiResponse<any[]> = await response.json();
+    return data.payload
+        .filter(user => user.rol_usuario.nombre_rol === 'Usuario')
+        .map(user => ({ id_usuario: user.id_usuario, nombre: user.nombre }));
   } catch (error) {
     console.error('Error fetching users:', error);
     return [];

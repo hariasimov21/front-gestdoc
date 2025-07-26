@@ -28,7 +28,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { createAssociation } from '@/app/user-society/actions';
 import { Combobox } from '../ui/combobox';
-import { Input } from '../ui/input';
 
 type User = {
   id_usuario: number;
@@ -84,7 +83,7 @@ export const UserSocietyFormModal: React.FC<UserSocietyFormModalProps> = ({
       onSuccess();
       handleClose();
     }
-  }, [state]);
+  }, [state, onSuccess]);
 
 
   const handleClose = () => {
@@ -108,17 +107,14 @@ export const UserSocietyFormModal: React.FC<UserSocietyFormModalProps> = ({
                 <FormItem>
                   <FormLabel>Usuario</FormLabel>
                    <FormControl>
-                    <>
-                      <Input {...field} type="hidden" />
                       <Combobox
                         options={users.map(u => ({ value: String(u.id_usuario), label: u.nombre }))}
                         value={field.value}
-                        onChange={(value) => form.setValue('id_usuario', value)}
+                        onChange={field.onChange}
                         placeholder="Selecciona un usuario"
                         searchPlaceholder="Buscar usuario..."
                         emptyPlaceholder="No se encontraron usuarios."
                       />
-                    </>
                    </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -131,17 +127,14 @@ export const UserSocietyFormModal: React.FC<UserSocietyFormModalProps> = ({
                 <FormItem>
                   <FormLabel>Sociedad</FormLabel>
                    <FormControl>
-                    <>
-                       <Input {...field} type="hidden" />
                        <Combobox
                         options={societies.map(s => ({ value: String(s.id_sociedad), label: s.nombre }))}
                         value={field.value}
-                        onChange={(value) => form.setValue('id_sociedad', value)}
+                        onChange={field.onChange}
                         placeholder="Selecciona una sociedad"
                         searchPlaceholder="Buscar sociedad..."
                         emptyPlaceholder="No se encontraron sociedades."
                       />
-                    </>
                    </FormControl>
                   <FormMessage />
                 </FormItem>

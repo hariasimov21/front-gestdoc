@@ -16,7 +16,6 @@ import {
 } from '@/components/ui/sidebar';
 import { DashboardHeader } from './header';
 import { Building, Home, KeyRound, Users, Briefcase, FileText, FileCog, FolderArchive } from 'lucide-react';
-import { UserNav } from './user-nav';
 import { Breadcrumb } from '../ui/breadcrumb';
 
 type Session = {
@@ -101,7 +100,7 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter>
-             <UserNav userName={user.nombre} userEmail={user.email} />
+             {/* UserNav removed from here for a cleaner look */}
           </SidebarFooter>
         </Sidebar>
         <main className="flex-1 flex flex-col">

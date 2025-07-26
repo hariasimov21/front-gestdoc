@@ -44,12 +44,21 @@ type Property = {
   direccion: string;
 };
 
-const formSchema = z.object({
+const createLeaseSchema = z.object({
   id_arrendatario: z.string().min(1, 'El arrendatario es requerido.'),
   id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
   fecha_inicio_arriendo: z.date({ required_error: 'La fecha de inicio es requerida.' }),
   fecha_fin_arriendo: z.date({ required_error: 'La fecha de fin es requerida.' }),
 });
+
+const updateLeaseSchema = z.object({
+  fecha_inicio_arriendo: z.date({ required_error: 'La fecha de inicio es requerida.' }),
+  fecha_fin_arriendo: z.date({ required_error: 'La fecha de fin es requerida.' }),
+   // These are not submitted but need to be in the form state for display
+  id_arrendatario: z.string().optional(),
+  id_propiedad: z.string().optional(),
+});
+
 
 interface LeaseFormModalProps {
   isOpen: boolean;
@@ -72,35 +81,33 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
   const title = isEditing ? 'Editar Arriendo' : 'Crear Arriendo';
   const description = isEditing ? 'Modifica los detalles del arriendo.' : 'Añade un nuevo arriendo al sistema.';
   const actionLabel = isEditing ? 'Guardar Cambios' : 'Crear';
+
+  const formSchema = isEditing ? updateLeaseSchema : createLeaseSchema;
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData ? { 
-        id_arrendatario: String(initialData.id_arrendatario || ''),
-        id_propiedad: String(initialData.id_propiedad || ''),
-        fecha_inicio_arriendo: initialData.fecha_inicio_arriendo ? parseISO(initialData.fecha_inicio_arriendo) : undefined,
-        fecha_fin_arriendo: initialData.fecha_fin_arriendo ? parseISO(initialData.fecha_fin_arriendo) : undefined,
-     } : {
-      id_arrendatario: '',
-      id_propiedad: '',
-      fecha_inicio_arriendo: undefined,
-      fecha_fin_arriendo: undefined,
-    },
   });
 
-  // Since the API doesn't return the IDs anymore, we find them from the full lists.
-  // This is only necessary for pre-filling the edit form.
    useEffect(() => {
-    if (initialData && isEditing) {
+    if (isOpen && initialData && isEditing) {
       const tenant = tenants.find(t => t.nombre === initialData.arrendatarioNombre);
       const property = properties.find(p => p.direccion === initialData.propiedadDireccion);
       
-      form.setValue('id_arrendatario', tenant ? String(tenant.id_arrendatario) : '');
-      form.setValue('id_propiedad', property ? String(property.id_propiedad) : '');
-      form.setValue('fecha_inicio_arriendo', initialData.fecha_inicio_arriendo ? parseISO(initialData.fecha_inicio_arriendo) : new Date());
-      form.setValue('fecha_fin_arriendo', initialData.fecha_fin_arriendo ? parseISO(initialData.fecha_fin_arriendo) : new Date());
+      form.reset({
+        id_arrendatario: tenant ? String(tenant.id_arrendatario) : '',
+        id_propiedad: property ? String(property.id_propiedad) : '',
+        fecha_inicio_arriendo: initialData.fecha_inicio_arriendo ? parseISO(initialData.fecha_inicio_arriendo) : new Date(),
+        fecha_fin_arriendo: initialData.fecha_fin_arriendo ? parseISO(initialData.fecha_fin_arriendo) : new Date(),
+      });
+    } else if (isOpen && !isEditing) {
+       form.reset({
+        id_arrendatario: '',
+        id_propiedad: '',
+        fecha_inicio_arriendo: undefined,
+        fecha_fin_arriendo: undefined,
+      });
     }
-  }, [initialData, tenants, properties, form, isEditing]);
+  }, [isOpen, initialData, isEditing, tenants, properties, form]);
 
 
   const action = isEditing ? updateLease.bind(null, initialData.id_arriendo) : createLease;
@@ -151,7 +158,6 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                         disabled={isEditing}
                      />
                    </FormControl>
-                   <input type="hidden" name="id_arrendatario" value={field.value} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -173,7 +179,6 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                         disabled={isEditing}
                       />
                    </FormControl>
-                   <input type="hidden" name="id_propiedad" value={field.value} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -196,7 +201,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP", { weekStartsOn: 1 })
+                            format(field.value, "PPP")
                           ) : (
                             <span>Selecciona una fecha</span>
                           )}
@@ -236,7 +241,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP", { weekStartsOn: 1 })
+                            format(field.value, "PPP")
                           ) : (
                             <span>Selecciona una fecha</span>
                           )}

@@ -23,12 +23,6 @@ export type LeaseColumn = {
   activo: boolean;
   arrendatarioNombre: string;
   propiedadDireccion: string;
-  // The following are needed for the edit modal to pre-populate.
-  // We can't get them from the new API response directly.
-  id_arrendatario?: number; 
-  id_propiedad?: number;
-  arrendatario?: Tenant;
-  propiedad?: Property;
 };
 
 

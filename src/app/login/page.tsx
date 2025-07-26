@@ -19,9 +19,8 @@ export default function LoginPage() {
         <div className="relative z-20 mt-auto hidden lg:block">
             <blockquote className="space-y-2">
                 <p className="text-lg">
-                “Esta herramienta ha transformado nuestra gestión de documentos. Es intuitiva, eficiente y totalmente indispensable para nuestras operaciones.”
+                "La plataforma líder para la gestión de documentos inmobiliarios."
                 </p>
-                <footer className="text-sm">Sofia Davis, Gerente de Operaciones</footer>
             </blockquote>
         </div>
       </div>

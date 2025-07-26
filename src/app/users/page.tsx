@@ -46,6 +46,7 @@ async function getUsers(token: string): Promise<User[]> {
     return [];
   }
   const data: ApiResponse<User[]> = await response.json();
+  // The backend now returns relations, so we can directly use the payload
   return data.payload;
 }
 

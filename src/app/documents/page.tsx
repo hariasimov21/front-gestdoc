@@ -40,6 +40,12 @@ type ApiResponse<T> = {
   payload: T;
 };
 
+type PaginatedApiResponse<T> = {
+  payload: {
+    datos: T;
+  };
+};
+
 async function getDocuments(token: string): Promise<Document[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const response = await fetch(`${API_URL}/documento/listarDocumentos`, {
@@ -72,8 +78,9 @@ async function getProperties(token: string): Promise<Property[]> {
     return [];
   }
   
-  const data: ApiResponse<any[]> = await response.json();
-  return data.payload.map(p => ({ id_propiedad: p.id_propiedad, direccion: p.direccion }));
+  const data: PaginatedApiResponse<Property[]> = await response.json();
+  const properties = data.payload.datos || [];
+  return properties.map(p => ({ id_propiedad: p.id_propiedad, direccion: p.direccion }));
 }
 
 async function getDocumentTypes(token: string): Promise<DocumentType[]> {

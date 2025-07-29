@@ -60,8 +60,8 @@ async function getDocuments(token: string): Promise<Document[]> {
     return [];
   }
   
-  const data: ApiResponse<Document[]> = await response.json();
-  return data.payload;
+  const data: PaginatedApiResponse<Document[]> = await response.json();
+  return data.payload.datos || [];
 }
 
 async function getProperties(token: string): Promise<Property[]> {

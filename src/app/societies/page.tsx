@@ -22,8 +22,10 @@ type RawSociety = {
   nombre_sociedad: string;
 }
 
-type ApiResponse = {
-  payload: any[];
+type PaginatedApiResponse = {
+  payload: {
+    datos: RawSociety[]
+  };
 };
 
 async function getSocieties(token: string): Promise<Society[]> {
@@ -40,10 +42,10 @@ async function getSocieties(token: string): Promise<Society[]> {
     return [];
   }
   
-  const data: ApiResponse = await response.json();
+  const data: PaginatedApiResponse = await response.json();
   // The backend response has "nombre_sociedad" but the rest of the app uses "nombre".
   // We map it here for consistency.
-  return data.payload.map((society: RawSociety) => ({
+  return data.payload.datos.map((society: RawSociety) => ({
     id_sociedad: society.id_sociedad,
     nombre: society.nombre_sociedad,
   }));

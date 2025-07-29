@@ -35,6 +35,12 @@ type ApiResponse<T> = {
   payload: T;
 };
 
+type PaginatedApiResponse<T> = {
+    payload: {
+        datos: T;
+    }
+}
+
 async function getProperties(token: string): Promise<Property[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const response = await fetch(`${API_URL}/propiedad/listarPropiedades`, {
@@ -67,10 +73,10 @@ async function getSocieties(token: string): Promise<Society[]> {
     return [];
   }
   
-  const data: { payload: RawSociety[] } = await response.json();
+  const data: PaginatedApiResponse<RawSociety[]> = await response.json();
   // The backend response has "nombre_sociedad" but the rest of the app uses "nombre".
   // We map it here for consistency.
-  return data.payload.map((society) => ({
+  return data.payload.datos.map((society) => ({
     id_sociedad: society.id_sociedad,
     nombre: society.nombre_sociedad,
   }));

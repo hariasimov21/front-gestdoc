@@ -32,6 +32,12 @@ type ApiResponse<T> = {
   payload: T;
 };
 
+type PaginatedApiResponse<T> = {
+    payload: {
+        datos: T;
+    }
+}
+
 async function getUsers(token: string): Promise<User[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const response = await fetch(`${API_URL}/usuario/listarUsuarios`, {
@@ -63,10 +69,10 @@ async function getRoles(token: string): Promise<Role[]> {
     console.error('Failed to fetch roles');
     return [];
   }
-  const data: ApiResponse<any[]> = await response.json();
+  const data: PaginatedApiResponse<any[]> = await response.json();
   // The backend response for roles has "nombre" but the rest of the app uses "nombre_rol".
   // We map it here for consistency.
-  return data.payload.map((role) => ({
+  return data.payload.datos.map((role) => ({
     id_rol_usuario: role.id_rol_usuario,
     nombre_rol: role.nombre || role.nombre_rol,
     descripcion: role.descripcion,

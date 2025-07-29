@@ -41,6 +41,12 @@ type TenantsApiResponse = {
     }
 }
 
+type LeaseApiResponse = {
+    payload: {
+        datos: LeaseFromApi[];
+    }
+}
+
 async function getLeases(token: string): Promise<LeaseFromApi[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const response = await fetch(`${API_URL}/arriendo/getArriendos`, {
@@ -55,8 +61,8 @@ async function getLeases(token: string): Promise<LeaseFromApi[]> {
     return [];
   }
   
-  const data: ApiResponse<LeaseFromApi[]> = await response.json();
-  return data.payload;
+  const data: LeaseApiResponse = await response.json();
+  return data.payload.datos || [];
 }
 
 // These are still needed for the create/edit modal

@@ -60,7 +60,8 @@ async function getActiveLeasesCount(token: string): Promise<number> {
         return 0;
     }
     const data: ApiResponse<any[]> = await response.json();
-    return data.payload.filter(lease => lease.activo).length;
+    const leases = data.payload || []; // Safeguard against undefined payload
+    return leases.filter(lease => lease.activo).length;
   } catch (error) {
     console.error('Error fetching leases:', error);
     return 0;

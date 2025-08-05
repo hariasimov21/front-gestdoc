@@ -13,6 +13,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
+  SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { DashboardHeader } from './header';
 import { Building, Home, KeyRound, Users, Briefcase, FileText, FileCog, FolderArchive } from 'lucide-react';
@@ -46,58 +47,75 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
             </Link>
           </SidebarHeader>
           <SidebarContent className="p-2">
-            <SidebarMenu className="gap-2">
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname === '/'} >
-                  <Link href="/"><Home /> Dashboard</Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname.startsWith('/documents')}>
-                  <Link href="/documents"><FolderArchive /> Gestión de Documentos</Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname.startsWith('/leases')}>
-                  <Link href="/leases"><FileText /> Gestión de Arriendos</Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname.startsWith('/tenants')}>
-                  <Link href="/tenants"><Users /> Gestión de Arrendatarios</Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname.startsWith('/properties')}>
-                  <Link href="/properties"><Building /> Gestión de Propiedades</Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname.startsWith('/societies')}>
-                  <Link href="/societies"><Briefcase /> Gestión de Sociedades</Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname.startsWith('/document-types')}>
-                  <Link href="/document-types"><FileCog /> Tipos de Documento</Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname.startsWith('/roles')}>
-                  <Link href="/roles"><KeyRound /> Gestión de Roles</Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname.startsWith('/users')}>
-                  <Link href="/users"><Users /> Gestión de Usuarios</Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname.startsWith('/user-society')}>
-                  <Link href="/user-society"><Users /> Usuario/Sociedad</Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+            <SidebarMenu>
+                 <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname === '/'} >
+                    <Link href="/"><Home /> Dashboard</Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
             </SidebarMenu>
+
+            <SidebarSeparator className="my-2" />
+            
+            <SidebarMenu>
+                <div className="px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Gestión
+                </div>
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/documents')}>
+                    <Link href="/documents"><FolderArchive /> Documentos</Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/leases')}>
+                    <Link href="/leases"><FileText /> Arriendos</Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/tenants')}>
+                    <Link href="/tenants"><Users /> Arrendatarios</Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/properties')}>
+                    <Link href="/properties"><Building /> Propiedades</Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/societies')}>
+                    <Link href="/societies"><Briefcase /> Sociedades</Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/document-types')}>
+                    <Link href="/document-types"><FileCog /> Tipos de Documento</Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+            </SidebarMenu>
+            
+            <SidebarSeparator className="my-2" />
+
+             <SidebarMenu>
+                <div className="px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Administración
+                </div>
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/roles')}>
+                    <Link href="/roles"><KeyRound /> Roles</Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/users')}>
+                    <Link href="/users"><Users /> Usuarios</Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/user-society')}>
+                    <Link href="/user-society"><Users /> Usuario/Sociedad</Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+            </SidebarMenu>
+
           </SidebarContent>
           <SidebarFooter>
              {/* UserNav removed from here for a cleaner look */}

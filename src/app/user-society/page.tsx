@@ -28,7 +28,9 @@ type RawSociety = {
 }
 
 type ApiResponse<T> = {
-  payload: T;
+  payload: {
+    datos: T;
+  };
 };
 
 // We only need users with rol "Usuario" for association
@@ -49,7 +51,8 @@ async function getUsers(token: string): Promise<User[]> {
     const data: ApiResponse<any[]> = await response.json();
     
     // The backend now returns relations. We must filter safely.
-    return data.payload
+    const users = data.payload?.datos || [];
+    return users
         .filter(user => user.rol_usuario && user.rol_usuario.nombre_rol === 'Usuario')
         .map(user => ({ id_usuario: user.id_usuario, nombre: user.nombre }));
 
@@ -74,8 +77,9 @@ async function getSocieties(token: string): Promise<Society[]> {
       return [];
     }
     
-    const data: { payload: RawSociety[] } = await response.json();
-    return data.payload.map((society) => ({
+    const data: { payload: { datos: RawSociety[] } } = await response.json();
+    const societies = data.payload?.datos || [];
+    return societies.map((society) => ({
       id_sociedad: society.id_sociedad,
       nombre: society.nombre_sociedad,
     }));

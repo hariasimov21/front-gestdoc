@@ -31,15 +31,11 @@ type RawSociety = {
   nombre_sociedad: string;
 }
 
-type ApiResponse<T> = {
-  payload: T;
-};
-
 type PaginatedApiResponse<T> = {
-    payload: {
-        datos: T;
-    }
-}
+  payload: {
+    datos: T;
+  };
+};
 
 async function getProperties(token: string): Promise<Property[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -55,8 +51,8 @@ async function getProperties(token: string): Promise<Property[]> {
     return [];
   }
   
-  const data: ApiResponse<Property[]> = await response.json();
-  return data.payload;
+  const data: PaginatedApiResponse<Property[]> = await response.json();
+  return data.payload.datos || [];
 }
 
 async function getSocieties(token: string): Promise<Society[]> {

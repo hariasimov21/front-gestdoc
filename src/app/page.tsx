@@ -25,6 +25,12 @@ type ApiResponse<T> = {
   payload: T;
 };
 
+type PaginatedLeaseResponse = {
+    payload: {
+        datos: any[];
+    }
+}
+
 async function getSummaryData(token: string): Promise<SummaryData> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   try {
@@ -59,8 +65,8 @@ async function getActiveLeasesCount(token: string): Promise<number> {
         console.error('Failed to fetch leases');
         return 0;
     }
-    const data: ApiResponse<any[]> = await response.json();
-    const leases = data.payload || []; // Safeguard against undefined payload
+    const data: PaginatedLeaseResponse = await response.json();
+    const leases = data.payload?.datos || []; // Safeguard against undefined payload
     return leases.filter(lease => lease.activo).length;
   } catch (error) {
     console.error('Error fetching leases:', error);

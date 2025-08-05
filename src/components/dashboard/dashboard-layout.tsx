@@ -18,6 +18,7 @@ import {
 import { DashboardHeader } from './header';
 import { Building, Home, KeyRound, Users, Briefcase, FileText, FileCog, FolderArchive } from 'lucide-react';
 import { Breadcrumb } from '../ui/breadcrumb';
+import packageJson from '../../../package.json';
 
 type Session = {
   nombre: string;
@@ -35,6 +36,7 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ user, children, title, description }: DashboardLayoutProps) {
   const pathname = usePathname();
+  const appVersion = packageJson.version;
 
   return (
     <SidebarProvider>
@@ -118,7 +120,9 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
 
           </SidebarContent>
           <SidebarFooter>
-             {/* UserNav removed from here for a cleaner look */}
+             <div className="text-center text-xs text-muted-foreground p-2">
+                Versión {appVersion}
+             </div>
           </SidebarFooter>
         </Sidebar>
         <main className="flex-1 flex flex-col">

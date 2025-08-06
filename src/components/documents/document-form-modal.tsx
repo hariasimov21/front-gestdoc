@@ -45,12 +45,16 @@ type DocumentType = {
     nombre_tipo_documento: string;
 };
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
 const createFormSchema = z.object({
   nombre_documento: z.string().min(1, 'El nombre es requerido.'),
   id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
   id_tipo_documento: z.string().min(1, 'El tipo de documento es requerido.'),
   fecha_vencimiento: z.date({ required_error: 'La fecha de vencimiento es requerida.' }),
-  file: z.any().refine((files) => files?.length > 0, 'El archivo es requerido.'),
+  file: z.any()
+    .refine((files) => files?.length > 0, 'El archivo es requerido.')
+    .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `El tamaño máximo del archivo es 5MB.`),
 });
 
 const updateFormSchema = z.object({
@@ -58,7 +62,9 @@ const updateFormSchema = z.object({
     id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
     id_tipo_documento: z.string().min(1, 'El tipo de documento es requerido.'),
     fecha_vencimiento: z.date({ required_error: 'La fecha de vencimiento es requerida.' }),
-    file: z.any().optional(),
+    file: z.any()
+      .optional()
+      .refine((files) => !files || files.length === 0 || files?.[0]?.size <= MAX_FILE_SIZE, `El tamaño máximo del archivo es 5MB.`),
 });
 
 

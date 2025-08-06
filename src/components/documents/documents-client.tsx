@@ -43,7 +43,7 @@ export const DocumentsClient: React.FC<DocumentsClientProps> = ({ data, properti
       item.nombre_documento.toLowerCase().includes(globalFilter.toLowerCase()) ||
       item.propiedadDireccion.toLowerCase().includes(globalFilter.toLowerCase()) ||
       item.tipoDocumentoNombre.toLowerCase().includes(globalFilter.toLowerCase()) ||
-      item.version.toLowerCase().includes(globalFilter.toLowerCase());
+      String(item.version).toLowerCase().includes(globalFilter.toLowerCase());
       
     // Date search
     let dateMatch = true;
@@ -139,7 +139,11 @@ export const DocumentsClient: React.FC<DocumentsClientProps> = ({ data, properti
             </div>
         </CardHeader>
         <CardContent className="p-4 pt-0">
-            <DataTable columns={tableColumns} data={filteredData} />
+            <DataTable 
+              columns={tableColumns} 
+              data={filteredData}
+              rowIdKey="id_documento"
+            />
         </CardContent>
       </Card>
     </div>

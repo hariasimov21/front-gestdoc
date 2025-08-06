@@ -121,7 +121,7 @@ function LeasesClientContent({ data, tenants, properties }: LeasesClientProps) {
                         placeholder="Buscar por arrendatario o propiedad..."
                         value={globalFilter}
                         onChange={(e) => setGlobalFilter(e.target.value)}
-                        className="h-9 max-w-sm"
+                        className="h-9 w-full max-w-sm"
                     />
                     {(globalFilter || dateRange) && (
                         <Button variant="ghost" onClick={clearFilters} className="h-9 px-3">

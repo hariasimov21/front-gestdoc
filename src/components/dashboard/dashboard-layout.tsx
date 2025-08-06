@@ -155,6 +155,7 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
            <DashboardHeader userName={user.nombre} userEmail={user.email} sessionExp={user.tokenExp} />
            <div className="flex-1 p-4 md:p-8 pt-6 animate-fade-in-up">
             <div className="mb-6 space-y-1">
+                <Breadcrumb className="mb-2" />
                 <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
                 {description && <p className="text-muted-foreground text-sm">{description}</p>}
             </div>

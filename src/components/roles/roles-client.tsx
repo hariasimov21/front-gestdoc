@@ -9,7 +9,7 @@ import { RoleFormModal } from './role-form-modal';
 import { Button } from '../ui/button';
 import { PlusCircle } from 'lucide-react';
 import { Input } from '../ui/input';
-import { Card, CardContent } from '../ui/card';
+import { Card, CardContent, CardHeader } from '../ui/card';
 
 interface RolesClientProps {
   data: RoleColumn[];
@@ -34,25 +34,26 @@ export const RolesClient: React.FC<RolesClientProps> = ({ data }) => {
         onClose={() => setIsModalOpen(false)}
         initialData={null}
       />
-      <div className="flex items-center justify-between">
-        <div className="flex flex-1 items-center space-x-2">
-          {/* Future filter components can go here */}
-        </div>
-        <div className="flex items-center space-x-2">
-            <Input
-                placeholder="Buscar por nombre o descripción..."
-                value={globalFilter}
-                onChange={(e) => setGlobalFilter(e.target.value)}
-                className="h-9 max-w-sm"
-            />
-            <Button onClick={() => setIsModalOpen(true)} size="sm">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Crear Rol
-            </Button>
-        </div>
-      </div>
       <Card>
-        <CardContent className="p-4">
+        <CardHeader className="p-4">
+            <div className="flex items-center justify-between">
+                <div className="flex flex-1 items-center space-x-2">
+                    <Input
+                        placeholder="Buscar por nombre o descripción..."
+                        value={globalFilter}
+                        onChange={(e) => setGlobalFilter(e.target.value)}
+                        className="h-9 max-w-sm"
+                    />
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Button onClick={() => setIsModalOpen(true)} size="sm">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Crear Rol
+                    </Button>
+                </div>
+            </div>
+        </CardHeader>
+        <CardContent className="p-4 pt-0">
             <DataTable 
                 columns={columns} 
                 data={filteredData}

@@ -95,18 +95,17 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
   }, [form, onClose]);
 
   const action = isEditing ? updateUser.bind(null, initialData.id_usuario) : createUser;
-  const [state, formAction] = useActionState(action, { error: undefined });
+  const [state, formAction] = useActionState(action, undefined);
 
   useEffect(() => {
-    if (state?.error) {
+    if (!state) return;
+    if (state.error) {
       toast({
         variant: 'destructive',
         title: 'Error',
         description: state.error,
       });
-    } else if (state?.error === undefined && !state) {
-        // This case can happen on the first render, do nothing.
-    } else if (state?.error === undefined) {
+    } else {
       toast({ title: `Usuario ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
       handleClose();
     }
@@ -162,6 +161,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                 )}
               />
             )}
+             {isEditing && <input type="hidden" {...form.register('email')} />}
             <FormField
               control={form.control}
               name="rol_usuario_id"

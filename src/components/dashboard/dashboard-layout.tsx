@@ -14,15 +14,18 @@ import {
   SidebarMenuButton,
   SidebarFooter,
   SidebarSeparator,
+  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { DashboardHeader } from './header';
-import { Building, Home, KeyRound, Users, Briefcase, FileText, FileCog, FolderArchive, Clock, User, ChevronDown } from 'lucide-react';
+import { Building, Home, KeyRound, Users, Briefcase, FileText, FileCog, FolderArchive, Clock, User, ChevronDown, PanelLeft } from 'lucide-react';
 import { Breadcrumb } from '../ui/breadcrumb';
 import packageJson from '../../../package.json';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { SessionExpirationManager } from './session-expiration-manager';
 import { Avatar, AvatarFallback } from '../ui/avatar';
+import { Button } from '../ui/button';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 
 type Session = {
@@ -43,6 +46,7 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ user, children, title, description }: DashboardLayoutProps) {
   const pathname = usePathname();
   const appVersion = packageJson.version;
+  const isMobile = useIsMobile();
 
   const sessionExpiresAt = user.tokenExp
       ? `Expira ${formatDistanceToNow(new Date(user.tokenExp), { addSuffix: true, locale: es })}`
@@ -153,7 +157,7 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
         </Sidebar>
         <main className="flex-1 flex flex-col peer-data-[collapsible=icon]:md:ml-[3rem]">
            <DashboardHeader userName={user.nombre} userEmail={user.email} sessionExp={user.tokenExp} />
-           <div className="flex-1 p-4 md:p-8 pt-6 animate-fade-in-up">
+           <div className="flex-1 p-4 md:p-8 pt-6 animate-fade-in-up pb-20 md:pb-8">
             <div className="mb-6 space-y-1">
                 <Breadcrumb className="mb-2" />
                 <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
@@ -163,6 +167,13 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
            </div>
            <SessionExpirationManager sessionExp={user.tokenExp} />
         </main>
+        {isMobile && (
+            <footer className="fixed bottom-0 left-0 right-0 z-40 bg-background/95 border-t p-2 backdrop-blur-sm">
+                 <div className="flex justify-start">
+                    <SidebarTrigger />
+                </div>
+            </footer>
+        )}
       </div>
     </SidebarProvider>
   );

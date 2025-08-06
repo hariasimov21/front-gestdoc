@@ -92,9 +92,11 @@ const SidebarProvider = React.forwardRef<
 
     // Helper to toggle the sidebar.
     const toggleSidebar = React.useCallback(() => {
-      return isMobile
-        ? setOpenMobile((open) => !open)
-        : setOpen((open) => !open)
+      if (isMobile) {
+        setOpenMobile((prev) => !prev)
+      } else {
+        setOpen((prev) => !prev)
+      }
     }, [isMobile, setOpen, setOpenMobile])
 
     // Adds a keyboard shortcut to toggle the sidebar.
@@ -261,7 +263,7 @@ const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
-  const { toggleSidebar, openMobile, setOpenMobile } = useSidebar()
+  const { toggleSidebar } = useSidebar()
 
   return (
     <Button
@@ -269,12 +271,9 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       variant="ghost"
       size="icon"
-      className={cn("h-7 w-7", className)}
+      className={cn("h-9 w-9", className)}
       onClick={(event) => {
         onClick?.(event)
-        if(openMobile){
-          setOpenMobile(false)
-        }
         toggleSidebar()
       }}
       {...props}

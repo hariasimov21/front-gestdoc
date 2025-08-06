@@ -104,11 +104,13 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
         title: 'Error',
         description: state.error,
       });
-    } else if (state && !state.error) {
-       toast({ title: `Usuario ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
-       handleClose();
+    } else if (state?.error === undefined) {
+        if(form.formState.isSubmitSuccessful) {
+             toast({ title: `Usuario ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
+             handleClose();
+        }
     }
-  }, [state, isEditing, toast, handleClose]);
+  }, [state, isEditing, toast, handleClose, form.formState.isSubmitSuccessful]);
   
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -141,6 +143,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                   <FormControl>
                     <Input placeholder="nombre@ejemplo.com" {...field} disabled={isEditing} />
                   </FormControl>
+                  {isEditing && <input type="hidden" name="email" value={field.value} />}
                   <FormMessage />
                 </FormItem>
               )}
@@ -160,7 +163,6 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                 )}
               />
             )}
-             <input type="hidden" {...form.register('email')} />
             <FormField
               control={form.control}
               name="rol_usuario_id"
@@ -168,14 +170,17 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                 <FormItem>
                   <FormLabel>Rol de Usuario</FormLabel>
                   <FormControl>
-                    <Combobox
-                        options={roles.map(r => ({ value: String(r.id_rol_usuario), label: r.nombre_rol }))}
-                        value={field.value}
-                        onChange={field.onChange}
-                        placeholder="Seleccione un rol"
-                        searchPlaceholder="Buscar rol..."
-                        emptyPlaceholder="No se encontró rol."
-                     />
+                    <>
+                      <Combobox
+                          options={roles.map(r => ({ value: String(r.id_rol_usuario), label: r.nombre_rol }))}
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder="Seleccione un rol"
+                          searchPlaceholder="Buscar rol..."
+                          emptyPlaceholder="No se encontró rol."
+                       />
+                       <input type="hidden" name="rol_usuario_id" value={field.value} />
+                    </>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

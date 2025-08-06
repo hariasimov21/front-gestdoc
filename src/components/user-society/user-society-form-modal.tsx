@@ -117,6 +117,7 @@ export const UserSocietyFormModal: React.FC<UserSocietyFormModalProps> = ({
                         emptyPlaceholder="No se encontraron usuarios."
                       />
                    </FormControl>
+                   <input type="hidden" name={field.name} value={field.value} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -137,6 +138,7 @@ export const UserSocietyFormModal: React.FC<UserSocietyFormModalProps> = ({
                         emptyPlaceholder="No se encontraron sociedades."
                       />
                    </FormControl>
+                   <input type="hidden" name={field.name} value={field.value} />
                   <FormMessage />
                 </FormItem>
               )}

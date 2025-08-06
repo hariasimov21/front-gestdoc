@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { UserNav } from './user-nav';
 import { SidebarTrigger } from '../ui/sidebar';
@@ -14,7 +16,7 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ userName, userEmail, sessionExp }: DashboardHeaderProps) {
   const isMobile = useIsMobile();
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-card/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-30 w-full border-b bg-card/95 backdrop-blur-sm">
       <div className="flex h-16 items-center px-4 md:px-6">
         {isMobile && <SidebarTrigger />}
         

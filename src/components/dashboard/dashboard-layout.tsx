@@ -16,9 +16,13 @@ import {
   SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { DashboardHeader } from './header';
-import { Building, Home, KeyRound, Users, Briefcase, FileText, FileCog, FolderArchive } from 'lucide-react';
+import { Building, Home, KeyRound, Users, Briefcase, FileText, FileCog, FolderArchive, Clock } from 'lucide-react';
 import { Breadcrumb } from '../ui/breadcrumb';
 import packageJson from '../../../package.json';
+import { formatDistanceToNow } from 'date-fns';
+import { es } from 'date-fns/locale';
+import { SessionExpirationManager } from './session-expiration-manager';
+
 
 type Session = {
   nombre: string;
@@ -38,6 +42,10 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ user, children, title, description }: DashboardLayoutProps) {
   const pathname = usePathname();
   const appVersion = packageJson.version;
+
+  const sessionExpiresAt = user.tokenExp
+      ? `Expira ${formatDistanceToNow(new Date(user.tokenExp), { addSuffix: true, locale: es })}`
+      : 'No se pudo determinar la expiración';
 
   return (
     <SidebarProvider>
@@ -121,8 +129,12 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
 
           </SidebarContent>
           <SidebarFooter>
-             <div className="text-center text-xs text-muted-foreground p-2">
-                Versión {appVersion}
+             <div className="text-center text-xs text-muted-foreground p-2 space-y-1">
+                <div className="flex items-center justify-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  <span>{sessionExpiresAt}</span>
+                </div>
+                <div>Versión {appVersion}</div>
              </div>
           </SidebarFooter>
         </Sidebar>
@@ -136,6 +148,7 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
             </div>
             {children}
            </div>
+           <SessionExpirationManager sessionExp={user.tokenExp} />
         </main>
       </div>
     </SidebarProvider>

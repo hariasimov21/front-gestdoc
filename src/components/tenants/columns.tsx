@@ -3,7 +3,7 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 
 export type TenantColumn = {
   id_arrendatario: number;
@@ -13,6 +13,18 @@ export type TenantColumn = {
   rubro: string;
   rut_arrendatario: string;
 };
+
+const formatDate = (dateString: string) => {
+    if (!dateString) return 'N/A';
+    try {
+        // Create date in a way that avoids timezone shifts for date-only strings
+        const [year, month, day] = dateString.split('T')[0].split('-').map(Number);
+        const date = new Date(year, month - 1, day);
+        return format(date, 'dd/MM/yyyy');
+    } catch (e) {
+        return 'Fecha inválida';
+    }
+}
 
 export const columns: ColumnDef<TenantColumn>[] = [
   {
@@ -34,15 +46,7 @@ export const columns: ColumnDef<TenantColumn>[] = [
   {
     accessorKey: 'fecha_registro',
     header: 'Fecha de Registro',
-    cell: ({ row }) => {
-        const date = row.original.fecha_registro;
-        if (!date) return 'N/A';
-        try {
-            return format(parseISO(date), 'dd/MM/yyyy');
-        } catch (e) {
-            return 'Fecha inválida'
-        }
-    }
+    cell: ({ row }) => formatDate(row.original.fecha_registro)
   },
   {
     id: 'actions',

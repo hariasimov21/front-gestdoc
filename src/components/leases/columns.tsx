@@ -3,7 +3,7 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import { Switch } from '@/components/ui/switch';
 
 type Tenant = {
@@ -25,6 +25,18 @@ export type LeaseColumn = {
   propiedadDireccion: string;
 };
 
+const formatDate = (dateString: string) => {
+    if (!dateString) return 'N/A';
+    try {
+        // Create date in a way that avoids timezone shifts for date-only strings
+        const [year, month, day] = dateString.split('T')[0].split('-').map(Number);
+        const date = new Date(year, month - 1, day);
+        return format(date, 'dd/MM/yyyy');
+    } catch (e) {
+        return 'Fecha inválida';
+    }
+}
+
 
 export const columns = (dependencies: { tenants: Tenant[], properties: Property[] }): ColumnDef<LeaseColumn>[] => [
   {
@@ -42,28 +54,12 @@ export const columns = (dependencies: { tenants: Tenant[], properties: Property[
     {
     accessorKey: 'fecha_inicio_arriendo',
     header: 'Fecha Inicio',
-    cell: ({ row }) => {
-        const date = row.original.fecha_inicio_arriendo;
-        if (!date) return 'N/A';
-        try {
-            return format(parseISO(date), 'dd/MM/yyyy');
-        } catch (e) {
-            return 'Fecha inválida';
-        }
-    }
+    cell: ({ row }) => formatDate(row.original.fecha_inicio_arriendo)
   },
   {
     accessorKey: 'fecha_fin_arriendo',
     header: 'Fecha Fin',
-    cell: ({ row }) => {
-        const date = row.original.fecha_fin_arriendo;
-        if (!date) return 'N/A';
-        try {
-            return format(parseISO(date), 'dd/MM/yyyy');
-        } catch (e) {
-            return 'Fecha inválida';
-        }
-    }
+    cell: ({ row }) => formatDate(row.original.fecha_fin_arriendo)
   },
   {
     accessorKey: 'activo',

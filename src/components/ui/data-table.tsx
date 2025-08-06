@@ -12,6 +12,7 @@ import {
   useReactTable,
   Table as ReactTable,
   Header,
+  Cell,
 } from "@tanstack/react-table"
 import { cn } from "@/lib/utils"
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react"
@@ -52,14 +53,14 @@ export function DataTable<TData, TValue>({
   });
   const isMobile = useIsMobile();
 
-  const getHeaderName = (header: Header<TData, unknown>) => {
-    const { columnDef } = header.column;
-    if (typeof columnDef.header === 'string') {
-        return columnDef.header;
+  const getHeaderName = (cell: Cell<TData, unknown>) => {
+    const header = cell.column.columnDef.header;
+    if (typeof header === 'string') {
+        return header;
     }
     // This is a simplification for non-string headers.
     // It will be null for complex components.
-    return columnDef.id;
+    return cell.column.id;
   }
 
   if (isMobile) {
@@ -77,7 +78,7 @@ export function DataTable<TData, TValue>({
             >
               <div className="p-4 space-y-3">
                   {row.getVisibleCells().map((cell) => {
-                    const headerName = getHeaderName(cell.column.getHeader());
+                    const headerName = getHeaderName(cell);
                     // Don't render a row for actions in the card view, we'll render it separately
                     if (cell.column.id === 'actions' || !headerName) return null;
                     

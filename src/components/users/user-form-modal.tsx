@@ -75,20 +75,28 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: isEditing
-      ? { 
-          nombre: initialData.nombre,
-          email: initialData.email,
-          rol_usuario_id: initialData.rol_usuario ? String(initialData.rol_usuario.id_rol_usuario) : '',
-        }
-      : {
-          nombre: '',
-          email: '',
-          contrasena: '',
-          rol_usuario_id: '',
-        },
   });
   
+  useEffect(() => {
+    if (isOpen) {
+        if (isEditing && initialData) {
+            form.reset({
+                nombre: initialData.nombre,
+                email: initialData.email,
+                rol_usuario_id: String(initialData.rol_usuario.id_rol_usuario),
+            });
+        } else {
+            form.reset({
+                nombre: '',
+                email: '',
+                contrasena: '',
+                rol_usuario_id: '',
+            });
+        }
+    }
+  }, [isOpen, isEditing, initialData, form]);
+
+
   const handleClose = useCallback(() => {
     form.reset();
     onClose();
@@ -98,17 +106,15 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
   const [state, formAction] = useActionState(action, undefined);
 
   useEffect(() => {
-    // This effect runs when the server action returns a state.
-    if (!state) return; // Initial state is undefined, do nothing.
+    if (state === undefined) return;
 
-    if (state.error) {
+    if (state?.error) {
       toast({
         variant: 'destructive',
         title: 'Error',
         description: state.error,
       });
     } else {
-      // If there's no error, it means success.
       toast({ title: `Usuario ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
       handleClose();
     }
@@ -145,11 +151,12 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                   <FormControl>
                     <Input placeholder="nombre@ejemplo.com" {...field} disabled={isEditing} />
                   </FormControl>
+                   {isEditing && <input type="hidden" name="email" value={field.value} />}
                   <FormMessage />
                 </FormItem>
               )}
             />
-            {!isEditing && (
+            {!isEditing && 'contrasena' in form.getValues() && (
               <FormField
                 control={form.control}
                 name="contrasena"
@@ -171,7 +178,6 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                 <FormItem>
                   <FormLabel>Rol de Usuario</FormLabel>
                   <FormControl>
-                    <>
                       <Combobox
                           options={roles.map(r => ({ value: String(r.id_rol_usuario), label: r.nombre_rol }))}
                           value={field.value}
@@ -180,8 +186,6 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                           searchPlaceholder="Buscar rol..."
                           emptyPlaceholder="No se encontró rol."
                        />
-                       <input type="hidden" name="rol_usuario_id" value={field.value} />
-                    </>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -12,7 +12,18 @@ type Session = {
   id_usuario: number;
 };
 
-type User = {
+// This type represents the raw user data from the API
+type RawUser = {
+  id_usuario: number;
+  nombre: string;
+  email: string;
+  rol_usuario_id: number; // The API sends the ID, not the object
+  rol_usuario: null; // The API sends null for the relation
+};
+
+
+// This is the type the frontend components expect
+export type User = {
   id_usuario: number;
   nombre: string;
   email: string;
@@ -34,7 +45,7 @@ type PaginatedApiResponse<T> = {
     }
 }
 
-async function getUsers(token: string): Promise<User[]> {
+async function getUsers(token: string): Promise<RawUser[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const response = await fetch(`${API_URL}/usuario/listarUsuarios`, {
     headers: {
@@ -47,7 +58,7 @@ async function getUsers(token: string): Promise<User[]> {
     console.error('Failed to fetch users');
     return [];
   }
-  const data: PaginatedApiResponse<User[]> = await response.json();
+  const data: PaginatedApiResponse<RawUser[]> = await response.json();
   return data.payload.datos || [];
 }
 
@@ -84,8 +95,18 @@ export default async function UsersPage() {
   }
 
   const user: Session = JSON.parse(sessionCookie);
-  const users = await getUsers(token);
-  const roles = await getRoles(token);
+  const [rawUsers, roles] = await Promise.all([getUsers(token), getRoles(token)]);
+
+  // Enrich user data with role object
+  const users: User[] = rawUsers.map(rawUser => {
+    const role = roles.find(r => r.id_rol_usuario === rawUser.rol_usuario_id);
+    return {
+      ...rawUser,
+      rol_usuario: role 
+        ? { id_rol_usuario: role.id_rol_usuario, nombre_rol: role.nombre_rol }
+        : { id_rol_usuario: 0, nombre_rol: 'N/A' }, // Fallback for safety
+    };
+  });
 
   return (
     <DashboardLayout 

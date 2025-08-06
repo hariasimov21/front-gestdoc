@@ -5,6 +5,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export type UserColumn = {
   id_usuario: number;
@@ -48,14 +49,21 @@ export const columns = (roles: Role[]): ColumnDef<UserColumn>[] => [
       }
 
       return (
-        <Link href={`/roles?highlight=${roleId}`}>
-            <Badge 
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link href={`/roles?highlight=${roleId}`}>
+              <Badge
                 variant={roleName === 'Administrador' ? 'default' : 'secondary'}
                 className="hover:ring-2 hover:ring-ring hover:ring-offset-2 transition-all"
-            >
+              >
                 {roleName}
-            </Badge>
-        </Link>
+              </Badge>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Ver detalle del rol</p>
+          </TooltipContent>
+        </Tooltip>
       );
     },
     filterFn: (row, id, value) => {

@@ -38,7 +38,7 @@ const createFormSchema = z.object({
   rol_usuario_id: z.string().min(1, 'El rol es requerido'),
 });
 
-const updateFormSchema = z.object({
+const updateUserSchema = z.object({
     nombre: z.string().min(1, 'El nombre es requerido.'),
     email: z.string().email('El correo no es válido.'),
     rol_usuario_id: z.string().min(1, 'El rol es requerido'),
@@ -71,7 +71,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
   const description = isEditing ? 'Modifica los detalles del usuario.' : 'Añade un nuevo usuario al sistema.';
   const actionLabel = isEditing ? 'Guardar Cambios' : 'Crear';
   
-  const formSchema = isEditing ? updateFormSchema : createFormSchema;
+  const formSchema = isEditing ? updateUserSchema : createFormSchema;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -98,19 +98,21 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
   const [state, formAction] = useActionState(action, undefined);
 
   useEffect(() => {
-    if (state?.error) {
+    // This effect runs when the server action returns a state.
+    if (!state) return; // Initial state is undefined, do nothing.
+
+    if (state.error) {
       toast({
         variant: 'destructive',
         title: 'Error',
         description: state.error,
       });
-    } else if (state?.error === undefined) {
-        if(form.formState.isSubmitSuccessful) {
-             toast({ title: `Usuario ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
-             handleClose();
-        }
+    } else {
+      // If there's no error, it means success.
+      toast({ title: `Usuario ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
+      handleClose();
     }
-  }, [state, isEditing, toast, handleClose, form.formState.isSubmitSuccessful]);
+  }, [state, isEditing, toast, handleClose]);
   
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -143,7 +145,6 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                   <FormControl>
                     <Input placeholder="nombre@ejemplo.com" {...field} disabled={isEditing} />
                   </FormControl>
-                  {isEditing && <input type="hidden" name="email" value={field.value} />}
                   <FormMessage />
                 </FormItem>
               )}

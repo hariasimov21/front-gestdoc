@@ -8,9 +8,10 @@ import { useIsMobile } from '@/hooks/use-mobile';
 interface DashboardHeaderProps {
   userName: string;
   userEmail: string;
+  sessionExp?: number;
 }
 
-export function DashboardHeader({ userName, userEmail }: DashboardHeaderProps) {
+export function DashboardHeader({ userName, userEmail, sessionExp }: DashboardHeaderProps) {
   const isMobile = useIsMobile();
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-card/95 backdrop-blur-sm">
@@ -18,7 +19,7 @@ export function DashboardHeader({ userName, userEmail }: DashboardHeaderProps) {
         {isMobile && <SidebarTrigger />}
         
         <div className="ml-auto flex items-center space-x-2 sm:space-x-4">
-          <UserNav userName={userName} userEmail={userEmail} />
+          <UserNav userName={userName} userEmail={userEmail} sessionExp={sessionExp} />
         </div>
       </div>
     </header>

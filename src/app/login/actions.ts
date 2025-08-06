@@ -4,6 +4,7 @@
 import { z } from 'zod';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { jwtDecode } from 'jwt-decode';
 
 const formSchema = z.object({
   email_usuario: z.string().email(),
@@ -69,6 +70,10 @@ export async function login(
       return { error: 'No se recibieron datos de usuario válidos.' };
     }
 
+    // Decode JWT to get expiration
+    const decodedToken: { exp: number } = jwtDecode(userData.token);
+    const tokenExp = decodedToken.exp * 1000; // Convert to milliseconds
+
     // Fetch role information
     const roleResponse = await fetch(`${API_URL}/rol-usuario/getRolUsuario/${userData.rol_usuario_id}`, {
       method: 'GET',
@@ -114,7 +119,8 @@ export async function login(
       email: userData.email,
       rol_usuario_id: userData.rol_usuario_id,
       nombre_rol: roleData.nombre_rol,
-      id_usuario: userData.id_usuario
+      id_usuario: userData.id_usuario,
+      tokenExp: tokenExp, // Add expiration to session
     };
 
     cookies().set('session', JSON.stringify(sessionData), {

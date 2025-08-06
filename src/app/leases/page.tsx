@@ -10,6 +10,7 @@ type Session = {
   rol_usuario_id: number;
   nombre_rol: string;
   id_usuario: number;
+  tokenExp?: number;
 };
 
 type Tenant = {

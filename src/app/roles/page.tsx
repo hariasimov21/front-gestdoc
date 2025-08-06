@@ -1,5 +1,4 @@
 
-
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { RolesClient } from '@/components/roles/roles-client';
@@ -12,6 +11,7 @@ type Session = {
   rol_usuario_id: number;
   nombre_rol: string;
   id_usuario: number;
+  tokenExp?: number;
 };
 
 export type Role = {

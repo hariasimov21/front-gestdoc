@@ -16,19 +16,26 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { logout } from '@/app/actions';
-import { LogOut, User, Bell } from 'lucide-react';
+import { LogOut, User, Bell, Clock } from 'lucide-react';
 import Link from 'next/link';
+import { format, formatDistanceToNow } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 interface UserNavProps {
     userName: string;
     userEmail: string;
+    sessionExp?: number;
 }
 
-export function UserNav({ userName, userEmail }: UserNavProps) {
+export function UserNav({ userName, userEmail, sessionExp }: UserNavProps) {
     const getInitials = (name: string) => {
         if (!name) return '';
         return name.charAt(0).toUpperCase();
     }
+
+    const sessionExpiresAt = sessionExp 
+      ? `Expira ${formatDistanceToNow(new Date(sessionExp), { addSuffix: true, locale: es })}`
+      : 'No se pudo determinar la expiración';
 
   return (
     <div className="flex items-center gap-2">
@@ -61,6 +68,13 @@ export function UserNav({ userName, userEmail }: UserNavProps) {
                 <span>Perfil</span>
                 </DropdownMenuItem>
             </Link>
+             <DropdownMenuItem disabled>
+                <Clock className="mr-2 h-4 w-4" />
+                <div className="flex flex-col">
+                    <span>Sesión</span>
+                    <span className="text-xs text-muted-foreground -mt-1">{sessionExpiresAt}</span>
+                </div>
+            </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <form action={logout} className="w-full">

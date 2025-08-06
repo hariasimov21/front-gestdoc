@@ -25,6 +25,7 @@ type Session = {
   email: string;
   rol_usuario_id: number;
   nombre_rol: string;
+  tokenExp?: number;
 };
 
 interface DashboardLayoutProps {
@@ -126,7 +127,7 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
           </SidebarFooter>
         </Sidebar>
         <main className="flex-1 flex flex-col">
-           <DashboardHeader userName={user.nombre} userEmail={user.email} />
+           <DashboardHeader userName={user.nombre} userEmail={user.email} sessionExp={user.tokenExp} />
            <div className="flex-1 p-4 md:p-8 pt-6 animate-fade-in-up">
             <div className="mb-4 space-y-2">
                 <Breadcrumb />

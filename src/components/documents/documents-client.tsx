@@ -79,64 +79,64 @@ export const DocumentsClient: React.FC<DocumentsClientProps> = ({ data, properti
       />
       <Card>
         <CardHeader className="p-4">
-            <div className="flex items-center justify-between">
-                <div className="flex flex-1 items-center space-x-2">
-                    <Popover>
-                        <PopoverTrigger asChild>
-                        <Button
-                            id="date"
-                            variant={"outline"}
-                            className={cn(
-                            "h-9 w-[260px] justify-start text-left font-normal sm:w-auto",
-                            !dateRange && "text-muted-foreground"
-                            )}
-                        >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {dateRange?.from ? (
-                            dateRange.to ? (
-                                <>
-                                {format(dateRange.from, "LLL dd, y")} -{" "}
-                                {format(dateRange.to, "LLL dd, y")}
-                                </>
-                            ) : (
-                                format(dateRange.from, "LLL dd, y")
-                            )
-                            ) : (
-                            <span>Filtrar por fecha de subida</span>
-                            )}
-                        </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                            initialFocus
-                            mode="range"
-                            defaultMonth={dateRange?.from}
-                            selected={dateRange}
-                            onSelect={setDateRange}
-                            numberOfMonths={2}
-                        />
-                        </PopoverContent>
-                    </Popover>
-                    <Input
-                        placeholder="Buscar en la tabla..."
-                        value={globalFilter}
-                        onChange={(e) => setGlobalFilter(e.target.value)}
-                        className="h-9 w-full max-w-sm"
-                    />
-                    {(globalFilter || dateRange) && (
-                        <Button variant="ghost" onClick={clearFilters} className="h-9 px-3">
-                            <X className="mr-2 h-4 w-4" />
-                            Limpiar
-                        </Button>
-                    )}
-                </div>
-                <div className="flex items-center space-x-2">
-                    <Button onClick={() => setIsModalOpen(true)} size="sm">
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        Subir Documento
-                    </Button>
-                </div>
-            </div>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex flex-col md:flex-row flex-1 items-center gap-2 w-full">
+                  <Popover>
+                      <PopoverTrigger asChild>
+                      <Button
+                          id="date"
+                          variant={"outline"}
+                          className={cn(
+                          "h-9 w-full md:w-[260px] justify-start text-left font-normal",
+                          !dateRange && "text-muted-foreground"
+                          )}
+                      >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {dateRange?.from ? (
+                          dateRange.to ? (
+                              <>
+                              {format(dateRange.from, "LLL dd, y")} -{" "}
+                              {format(dateRange.to, "LLL dd, y")}
+                              </>
+                          ) : (
+                              format(dateRange.from, "LLL dd, y")
+                          )
+                          ) : (
+                          <span>Filtrar por fecha de subida</span>
+                          )}
+                      </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                          initialFocus
+                          mode="range"
+                          defaultMonth={dateRange?.from}
+                          selected={dateRange}
+                          onSelect={setDateRange}
+                          numberOfMonths={2}
+                      />
+                      </PopoverContent>
+                  </Popover>
+                  <Input
+                      placeholder="Buscar en la tabla..."
+                      value={globalFilter}
+                      onChange={(e) => setGlobalFilter(e.target.value)}
+                      className="h-9 w-full md:max-w-sm"
+                  />
+                  {(globalFilter || dateRange) && (
+                      <Button variant="ghost" onClick={clearFilters} className="h-9 px-3 w-full md:w-auto">
+                          <X className="mr-2 h-4 w-4" />
+                          Limpiar
+                      </Button>
+                  )}
+              </div>
+              <div className="flex items-center space-x-2 w-full md:w-auto">
+                  <Button onClick={() => setIsModalOpen(true)} size="sm" className="w-full md:w-auto">
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Subir Documento
+                  </Button>
+              </div>
+          </div>
         </CardHeader>
         <CardContent className="p-4 pt-0">
             <DataTable 

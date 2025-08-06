@@ -74,7 +74,7 @@ export function DataTable<TData, TValue>({
             return (
             <Card 
               key={row.id} 
-              className={cn(isHighlighted && 'bg-primary/10 animate-pulse-once')}
+              className={cn('overflow-hidden', isHighlighted && 'bg-primary/10 animate-pulse-once')}
             >
               <div className="p-4 space-y-3">
                   {row.getVisibleCells().map((cell) => {
@@ -83,9 +83,9 @@ export function DataTable<TData, TValue>({
                     if (cell.column.id === 'actions' || !headerName) return null;
                     
                     return (
-                      <div key={cell.id} className="flex justify-between items-start text-sm">
-                        <span className="font-medium text-muted-foreground mr-2">{headerName}</span>
-                        <div className="text-right">
+                      <div key={cell.id} className="flex justify-between items-start text-sm gap-4">
+                        <span className="font-medium text-muted-foreground mr-2 shrink-0">{headerName}</span>
+                        <div className="text-right break-words truncate">
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </div>
                       </div>

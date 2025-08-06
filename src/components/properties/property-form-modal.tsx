@@ -29,8 +29,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { createProperty, updateProperty } from '@/app/properties/actions';
 import { PropertyColumn } from './columns';
-import { Combobox } from '../ui/combobox';
 import { Textarea } from '../ui/textarea';
+import { Combobox } from '../ui/combobox';
 
 
 const formSchema = z.object({
@@ -201,16 +201,16 @@ export const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                 <FormItem>
                   <FormLabel>Sociedad</FormLabel>
                    <FormControl>
-                    <Combobox
-                        options={societies.map(s => ({ value: String(s.id_sociedad), label: s.nombre }))}
-                        value={field.value}
-                        onChange={field.onChange}
-                        placeholder="Seleccione una sociedad"
-                        searchPlaceholder="Buscar sociedad..."
-                        emptyPlaceholder="No se encontró sociedad."
-                     />
+                        <Combobox
+                            options={societies.map(s => ({ value: String(s.id_sociedad), label: s.nombre }))}
+                            value={field.value}
+                            onChange={field.onChange}
+                            placeholder="Seleccione una sociedad"
+                            searchPlaceholder="Buscar sociedad..."
+                            emptyPlaceholder="No se encontró sociedad."
+                        />
                    </FormControl>
-                   <input type="hidden" {...form.register('id_sociedad')} />
+                   <input type="hidden" {...form.register('id_sociedad')} value={field.value} />
                   <FormMessage />
                 </FormItem>
               )}

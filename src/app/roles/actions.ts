@@ -8,7 +8,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const API_URL = `${API_BASE_URL}/rol-usuario`;
 
 const roleSchema = z.object({
-  nombre_rol: z.string().min(1, 'El nombre del rol es requerido.'),
+  nombre: z.string().min(1, 'El nombre del rol es requerido.'),
   descripcion: z.string().min(1, 'La descripción es requerida.'),
 });
 
@@ -45,7 +45,7 @@ export async function createRole(prevState: { error: string } | undefined, formD
     }
 
     revalidatePath('/roles');
-    return { error: undefined };
+    return { success: true };
   } catch (error) {
     console.error(error);
     return { error: 'No se pudo conectar con el servidor.' };
@@ -77,7 +77,7 @@ export async function updateRole(id: number, prevState: { error: string } | unde
         }
 
         revalidatePath('/roles');
-        return { error: undefined };
+        return { success: true };
 
     } catch (error) {
         console.error(error);

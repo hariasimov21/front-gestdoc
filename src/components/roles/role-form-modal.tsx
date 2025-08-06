@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState, useActionState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useEffect, useActionState, useCallback } from 'react';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useFormStatus } from 'react-dom';
@@ -30,7 +30,7 @@ import { Button } from '@/components/ui/button';
 import { createRole, updateRole } from '@/app/roles/actions';
 
 const formSchema = z.object({
-  nombre_rol: z.string().min(1, 'El nombre del rol es requerido.'),
+  nombre: z.string().min(1, 'El nombre del rol es requerido.'),
   descripcion: z.string().min(1, 'La descripción es requerida.'),
 });
 
@@ -53,19 +53,37 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({
 }) => {
   const { toast } = useToast();
   
-  const title = initialData ? 'Editar Rol' : 'Crear Rol';
-  const description = initialData ? 'Modifica los detalles del rol.' : 'Añade un nuevo rol al sistema.';
-  const actionLabel = initialData ? 'Guardar Cambios' : 'Crear';
+  const isEditing = !!initialData;
+  const title = isEditing ? 'Editar Rol' : 'Crear Rol';
+  const description = isEditing ? 'Modifica los detalles del rol.' : 'Añade un nuevo rol al sistema.';
+  const actionLabel = isEditing ? 'Guardar Cambios' : 'Crear';
 
   const form = useForm<RoleFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || {
-      nombre_rol: '',
-      descripcion: '',
-    },
   });
 
-  const action = initialData ? updateRole.bind(null, initialData.id_rol_usuario) : createRole;
+  const handleClose = useCallback(() => {
+    form.reset();
+    onClose();
+  }, [form, onClose]);
+
+  useEffect(() => {
+    if (isOpen) {
+      if (initialData) {
+        form.reset({
+          nombre: initialData.nombre_rol || '',
+          descripcion: initialData.descripcion || '',
+        });
+      } else {
+        form.reset({
+          nombre: '',
+          descripcion: '',
+        });
+      }
+    }
+  }, [isOpen, initialData, form]);
+
+  const action = isEditing ? updateRole.bind(null, initialData.id_rol_usuario) : createRole;
   const [state, formAction] = useActionState(action, undefined);
 
   useEffect(() => {
@@ -75,18 +93,12 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({
         title: 'Error',
         description: state.error,
       });
-    } else if (state?.error === undefined && !state) {
-        // Successful submission, form state becomes null
-    } else if (state?.error === undefined) {
-        toast({ title: `Rol ${initialData ? 'actualizado' : 'creado'} con éxito.` });
+    } else if (state?.success) {
+        toast({ title: `Rol ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
         handleClose();
     }
-  }, [state]);
+  }, [state, isEditing, toast, handleClose]);
 
-  const handleClose = () => {
-    form.reset();
-    onClose();
-  };
   
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -99,7 +111,7 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({
           <form action={formAction} className="space-y-4">
             <FormField
               control={form.control}
-              name="nombre_rol"
+              name="nombre"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nombre del Rol</FormLabel>

@@ -31,8 +31,10 @@ type LeaseFromApi = {
     activo: boolean;
 };
 
-type ApiResponse<T> = {
-  payload: T;
+type PaginatedApiResponse<T> = {
+  payload: {
+    datos: T;
+  };
 };
 
 type TenantsApiResponse = {
@@ -99,8 +101,8 @@ async function getProperties(token: string): Promise<Property[]> {
     return [];
   }
   
-  const data: ApiResponse<Property[]> = await response.json();
-  return data.payload;
+  const data: PaginatedApiResponse<Property[]> = await response.json();
+  return data.payload.datos || [];
 }
 
 

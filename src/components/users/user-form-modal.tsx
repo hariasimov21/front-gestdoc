@@ -98,16 +98,15 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
   const [state, formAction] = useActionState(action, undefined);
 
   useEffect(() => {
-    if (!state) return;
-    if (state.error) {
+    if (state?.error) {
       toast({
         variant: 'destructive',
         title: 'Error',
         description: state.error,
       });
-    } else {
-      toast({ title: `Usuario ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
-      handleClose();
+    } else if (state && !state.error) {
+       toast({ title: `Usuario ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
+       handleClose();
     }
   }, [state, isEditing, toast, handleClose]);
   
@@ -161,7 +160,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                 )}
               />
             )}
-             {isEditing && <input type="hidden" {...form.register('email')} />}
+             <input type="hidden" {...form.register('email')} />
             <FormField
               control={form.control}
               name="rol_usuario_id"

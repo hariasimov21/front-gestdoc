@@ -40,7 +40,6 @@ export async function createLease(prevState: { error?: string }, formData: FormD
   }
   
   const postData = {
-    ...validatedFields.data,
     id_arrendatario: parseInt(validatedFields.data.id_arrendatario, 10),
     id_propiedad: parseInt(validatedFields.data.id_propiedad, 10),
     fecha_inicio_arriendo: format(validatedFields.data.fecha_inicio_arriendo, 'yyyy-MM-dd'),

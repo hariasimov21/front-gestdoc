@@ -1,8 +1,10 @@
 
+
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { RolesClient } from '@/components/roles/roles-client';
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
+import { Suspense } from 'react';
 
 type Session = {
   nombre: string;
@@ -12,7 +14,7 @@ type Session = {
   id_usuario: number;
 };
 
-type Role = {
+export type Role = {
   id_rol_usuario: number;
   nombre_rol: string;
   descripcion: string;
@@ -45,7 +47,8 @@ async function getRoles(token: string): Promise<Role[]> {
   const data: PaginatedApiResponse = await response.json();
   // The backend response for roles has "nombre" but the rest of the app uses "nombre_rol".
   // We map it here for consistency.
-  return data.payload.datos.map((role: any) => ({
+  const roles = data.payload.datos || [];
+  return roles.map((role: any) => ({
     id_rol_usuario: role.id_rol_usuario,
     nombre_rol: role.nombre || role.nombre_rol,
     descripcion: role.descripcion,
@@ -69,7 +72,9 @@ export default async function RolesPage() {
       title="Gestión de Roles"
       description="Administra los roles de usuario del sistema."
     >
-      <RolesClient data={roles} />
+      <Suspense fallback={<div>Loading roles...</div>}>
+        <RolesClient data={roles} />
+      </Suspense>
     </DashboardLayout>
   );
 }

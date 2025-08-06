@@ -1,12 +1,13 @@
 
 'use client';
 
+import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { DataTable } from '@/components/ui/data-table';
 import { columns, RoleColumn } from './columns';
 import { RoleFormModal } from './role-form-modal';
 import { Button } from '../ui/button';
 import { PlusCircle } from 'lucide-react';
-import { useState } from 'react';
 import { Input } from '../ui/input';
 
 interface RolesClientProps {
@@ -14,6 +15,9 @@ interface RolesClientProps {
 }
 
 export const RolesClient: React.FC<RolesClientProps> = ({ data }) => {
+  const searchParams = useSearchParams();
+  const highlightedId = searchParams.get('highlight');
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
   
@@ -45,7 +49,9 @@ export const RolesClient: React.FC<RolesClientProps> = ({ data }) => {
       </div>
       <DataTable 
         columns={columns} 
-        data={filteredData} 
+        data={filteredData}
+        highlightedRowId={highlightedId}
+        rowIdKey="id_rol_usuario"
       />
     </div>
   );

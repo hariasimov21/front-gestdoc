@@ -4,7 +4,6 @@
 import { z } from 'zod';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import { format } from 'date-fns';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const API_URL = `${API_BASE_URL}/arriendo`;
@@ -61,7 +60,7 @@ export async function createLease(prevState: { error?: string }, formData: FormD
     if (!response.ok) {
       const data = await response.json();
       const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
-      return { error: errorMessage || 'Error al crear el arriendo.' };
+      return { error: errorMessage || `Error del servidor: ${response.statusText}` };
     }
 
     revalidatePath('/leases');
@@ -91,8 +90,8 @@ export async function updateLease(id_arriendo: number, prevState: { error?: stri
     }
     
     const putData = {
-      fecha_inicio_arriendo: format(validatedFields.data.fecha_inicio_arriendo, 'yyyy-MM-dd'),
-      fecha_fin_arriendo: format(validatedFields.data.fecha_fin_arriendo, 'yyyy-MM-dd'),
+      fecha_inicio_arriendo: validatedFields.data.fecha_inicio_arriendo.toISOString(),
+      fecha_fin_arriendo: validatedFields.data.fecha_fin_arriendo.toISOString(),
     };
 
     try {

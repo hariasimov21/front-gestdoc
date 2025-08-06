@@ -14,7 +14,7 @@ import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Calendar } from '../ui/calendar';
 import { cn } from '@/lib/utils';
-import { Card, CardContent } from '../ui/card';
+import { Card, CardContent, CardHeader } from '../ui/card';
 
 interface TenantsClientProps {
   data: TenantColumn[];
@@ -61,66 +61,68 @@ export const TenantsClient: React.FC<TenantsClientProps> = ({ data }) => {
         onClose={() => setIsModalOpen(false)}
         initialData={null}
       />
-      <div className="flex items-center justify-between">
-            <div className="flex flex-1 items-center space-x-2">
-                <Popover>
-                    <PopoverTrigger asChild>
-                    <Button
-                        id="date"
-                        variant={"outline"}
-                        className={cn(
-                        "h-9 w-[260px] justify-start text-left font-normal sm:w-auto",
-                        !dateRange && "text-muted-foreground"
-                        )}
-                    >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {dateRange?.from ? (
-                        dateRange.to ? (
-                            <>
-                            {format(dateRange.from, "LLL dd, y")} -{" "}
-                            {format(dateRange.to, "LLL dd, y")}
-                            </>
-                        ) : (
-                            format(dateRange.from, "LLL dd, y")
-                        )
-                        ) : (
-                        <span>Filtrar por fecha de registro</span>
-                        )}
-                    </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                        initialFocus
-                        mode="range"
-                        defaultMonth={dateRange?.from}
-                        selected={dateRange}
-                        onSelect={setDateRange}
-                        numberOfMonths={2}
-                    />
-                    </PopoverContent>
-                </Popover>
-                {(globalFilter || dateRange) && (
-                    <Button variant="ghost" onClick={clearFilters} className="h-9 px-3">
-                        <X className="mr-2 h-4 w-4" />
-                        Limpiar
-                    </Button>
-                )}
-            </div>
-            <div className="flex items-center space-x-2">
-                <Input
-                    placeholder="Buscar por nombre, RUT, email..."
-                    value={globalFilter}
-                    onChange={(e) => setGlobalFilter(e.target.value)}
-                    className="h-9 w-full max-w-sm"
-                />
-                <Button onClick={() => setIsModalOpen(true)} size="sm">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Crear Arrendatario
-                </Button>
-            </div>
-      </div>
       <Card>
-        <CardContent className="p-4">
+        <CardHeader className="p-4">
+            <div className="flex items-center justify-between">
+                <div className="flex flex-1 items-center space-x-2">
+                    <Popover>
+                        <PopoverTrigger asChild>
+                        <Button
+                            id="date"
+                            variant={"outline"}
+                            className={cn(
+                            "h-9 w-[260px] justify-start text-left font-normal sm:w-auto",
+                            !dateRange && "text-muted-foreground"
+                            )}
+                        >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {dateRange?.from ? (
+                            dateRange.to ? (
+                                <>
+                                {format(dateRange.from, "LLL dd, y")} -{" "}
+                                {format(dateRange.to, "LLL dd, y")}
+                                </>
+                            ) : (
+                                format(dateRange.from, "LLL dd, y")
+                            )
+                            ) : (
+                            <span>Filtrar por fecha de registro</span>
+                            )}
+                        </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                            initialFocus
+                            mode="range"
+                            defaultMonth={dateRange?.from}
+                            selected={dateRange}
+                            onSelect={setDateRange}
+                            numberOfMonths={2}
+                        />
+                        </PopoverContent>
+                    </Popover>
+                    <Input
+                        placeholder="Buscar por nombre, RUT, email..."
+                        value={globalFilter}
+                        onChange={(e) => setGlobalFilter(e.target.value)}
+                        className="h-9 w-full max-w-sm"
+                    />
+                    {(globalFilter || dateRange) && (
+                        <Button variant="ghost" onClick={clearFilters} className="h-9 px-3">
+                            <X className="mr-2 h-4 w-4" />
+                            Limpiar
+                        </Button>
+                    )}
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Button onClick={() => setIsModalOpen(true)} size="sm">
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Crear Arrendatario
+                    </Button>
+                </div>
+            </div>
+        </CardHeader>
+        <CardContent className="p-4 pt-0">
             <DataTable 
                 columns={columns} 
                 data={filteredData} 

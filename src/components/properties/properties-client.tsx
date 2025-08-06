@@ -8,6 +8,7 @@ import { Button } from '../ui/button';
 import { PropertyFormModal } from './property-form-modal';
 import { columns, PropertyColumn } from './columns';
 import { Input } from '../ui/input';
+import { Card, CardContent } from '../ui/card';
 
 type Society = {
     id_sociedad: number;
@@ -59,10 +60,14 @@ export const PropertiesClient: React.FC<PropertiesClientProps> = ({ data, societ
             </Button>
          </div>
       </div>
-      <DataTable 
-        columns={tableColumns} 
-        data={filteredData} 
-      />
+        <Card>
+            <CardContent className="p-4">
+                <DataTable 
+                    columns={tableColumns} 
+                    data={filteredData} 
+                />
+            </CardContent>
+        </Card>
     </div>
   );
 };

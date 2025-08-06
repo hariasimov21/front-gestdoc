@@ -8,6 +8,7 @@ import { Button } from '../ui/button';
 import { DocumentTypeFormModal } from './document-type-form-modal';
 import { columns, DocumentTypeColumn } from './columns';
 import { Input } from '../ui/input';
+import { Card, CardContent } from '../ui/card';
 
 interface DocumentTypesClientProps {
   data: DocumentTypeColumn[];
@@ -44,10 +45,14 @@ export const DocumentTypesClient: React.FC<DocumentTypesClientProps> = ({ data }
             </Button>
           </div>
       </div>
-      <DataTable 
-        columns={columns} 
-        data={filteredData} 
-      />
+      <Card>
+        <CardContent className="p-4">
+            <DataTable 
+                columns={columns} 
+                data={filteredData} 
+            />
+        </CardContent>
+      </Card>
     </div>
   );
 };

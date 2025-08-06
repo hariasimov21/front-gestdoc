@@ -9,6 +9,7 @@ import { RoleFormModal } from './role-form-modal';
 import { Button } from '../ui/button';
 import { PlusCircle } from 'lucide-react';
 import { Input } from '../ui/input';
+import { Card, CardContent } from '../ui/card';
 
 interface RolesClientProps {
   data: RoleColumn[];
@@ -50,12 +51,16 @@ export const RolesClient: React.FC<RolesClientProps> = ({ data }) => {
             </Button>
         </div>
       </div>
-      <DataTable 
-        columns={columns} 
-        data={filteredData}
-        highlightedRowId={highlightedId}
-        rowIdKey="id_rol_usuario"
-      />
+      <Card>
+        <CardContent className="p-4">
+            <DataTable 
+                columns={columns} 
+                data={filteredData}
+                highlightedRowId={highlightedId}
+                rowIdKey="id_rol_usuario"
+            />
+        </CardContent>
+      </Card>
     </div>
   );
 };

@@ -15,6 +15,7 @@ import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Calendar } from '../ui/calendar';
 import { cn } from '@/lib/utils';
+import { Card, CardContent } from '../ui/card';
 
 type Tenant = {
   id_arrendatario: number;
@@ -134,12 +135,16 @@ function LeasesClientContent({ data, tenants, properties }: LeasesClientProps) {
                 </Button>
             </div>
       </div>
-      <DataTable 
-        columns={tableColumns} 
-        data={filteredData} 
-        highlightedRowId={highlightedId}
-        rowIdKey="id_arriendo"
-      />
+      <Card>
+        <CardContent className="p-4">
+            <DataTable 
+                columns={tableColumns} 
+                data={filteredData} 
+                highlightedRowId={highlightedId}
+                rowIdKey="id_arriendo"
+            />
+        </CardContent>
+      </Card>
     </div>
   );
 }

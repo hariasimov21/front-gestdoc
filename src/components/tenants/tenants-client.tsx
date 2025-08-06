@@ -14,6 +14,7 @@ import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Calendar } from '../ui/calendar';
 import { cn } from '@/lib/utils';
+import { Card, CardContent } from '../ui/card';
 
 interface TenantsClientProps {
   data: TenantColumn[];
@@ -118,10 +119,14 @@ export const TenantsClient: React.FC<TenantsClientProps> = ({ data }) => {
                 </Button>
             </div>
       </div>
-      <DataTable 
-        columns={columns} 
-        data={filteredData} 
-      />
+      <Card>
+        <CardContent className="p-4">
+            <DataTable 
+                columns={columns} 
+                data={filteredData} 
+            />
+        </CardContent>
+      </Card>
     </div>
   );
 };

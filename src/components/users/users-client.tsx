@@ -9,6 +9,7 @@ import { UserFormModal } from './user-form-modal';
 import { columns, UserColumn } from './columns';
 import { Input } from '../ui/input';
 import { useReactTable, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, SortingState } from '@tanstack/react-table';
+import { Card, CardContent } from '../ui/card';
 
 type Role = {
   id_rol_usuario: number;
@@ -61,10 +62,14 @@ export const UsersClient: React.FC<UsersClientProps> = ({ data, roles }) => {
             </Button>
         </div>
       </div>
-      <DataTable 
-        columns={tableColumns} 
-        data={filteredData} 
-      />
+      <Card>
+        <CardContent className="p-4">
+            <DataTable 
+                columns={tableColumns} 
+                data={filteredData} 
+            />
+        </CardContent>
+      </Card>
     </div>
   );
 };

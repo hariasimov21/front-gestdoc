@@ -111,7 +111,7 @@ export function DataTable<TData, TValue>({
         </div>
       ) : (
         // Desktop Table View
-        <div className="rounded-md border-0">
+        <div className="rounded-md">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

@@ -122,11 +122,15 @@ export const UserSocietyClient: React.FC<UserSocietyClientProps> = ({ allUsers, 
                             Asociar Usuario
                         </Button>
                     </div>
-                    <DataTable 
-                        columns={tableColumns} 
-                        data={associatedUsers}
-                        rowIdKey="id_usuario"
-                    />
+                    <Card>
+                        <CardContent className="p-4">
+                            <DataTable 
+                                columns={tableColumns} 
+                                data={associatedUsers}
+                                rowIdKey="id_usuario"
+                            />
+                        </CardContent>
+                    </Card>
                 </div>
             )}
         </CardContent>

@@ -8,6 +8,7 @@ import { Button } from '../ui/button';
 import { SocietyFormModal } from './society-form-modal';
 import { columns, SocietyColumn } from './columns';
 import { Input } from '../ui/input';
+import { Card, CardContent } from '../ui/card';
 
 interface SocietiesClientProps {
   data: SocietyColumn[];
@@ -45,10 +46,14 @@ export const SocietiesClient: React.FC<SocietiesClientProps> = ({ data }) => {
             </Button>
         </div>
       </div>
-      <DataTable 
-        columns={columns} 
-        data={filteredData} 
-      />
+      <Card>
+        <CardContent className="p-4">
+            <DataTable 
+                columns={columns} 
+                data={filteredData} 
+            />
+        </CardContent>
+      </Card>
     </div>
   );
 };

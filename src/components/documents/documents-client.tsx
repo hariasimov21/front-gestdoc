@@ -14,6 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
+import { Card, CardContent } from '../ui/card';
 
 type Property = {
   id_propiedad: number;
@@ -134,7 +135,11 @@ export const DocumentsClient: React.FC<DocumentsClientProps> = ({ data, properti
                 </Button>
             </div>
       </div>
-      <DataTable columns={tableColumns} data={filteredData} />
+      <Card>
+        <CardContent className="p-4">
+            <DataTable columns={tableColumns} data={filteredData} />
+        </CardContent>
+      </Card>
     </div>
   );
 };

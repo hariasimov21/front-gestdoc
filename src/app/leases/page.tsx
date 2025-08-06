@@ -107,8 +107,9 @@ async function getProperties(token: string): Promise<Property[]> {
 
 
 export default async function LeasesPage() {
-  const sessionCookie = cookies().get('session')?.value;
-  const token = cookies().get('auth_token')?.value;
+  const cookieStore = cookies();
+  const sessionCookie = cookieStore.get('session')?.value;
+  const token = cookieStore.get('auth_token')?.value;
 
   if (!sessionCookie || !token) {
     redirect('/login');

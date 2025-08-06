@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useActionState } from 'react';
@@ -30,7 +31,7 @@ import { createSociety, updateSociety } from '@/app/societies/actions';
 import { SocietyColumn } from './columns';
 
 const formSchema = z.object({
-  nombre: z.string().min(1, 'El nombre de la sociedad es requerido.'),
+  nombre_sociedad: z.string().min(1, 'El nombre de la sociedad es requerido.'),
 });
 
 
@@ -54,10 +55,18 @@ export const SocietyFormModal: React.FC<SocietyFormModalProps> = ({
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || {
-      nombre: '',
+    defaultValues: {
+        nombre_sociedad: initialData?.nombre || '',
     },
   });
+  
+  useEffect(() => {
+    if (initialData) {
+        form.setValue('nombre_sociedad', initialData.nombre);
+    } else {
+        form.setValue('nombre_sociedad', '');
+    }
+  }, [initialData, form]);
 
   const action = isEditing ? updateSociety.bind(null, initialData.id_sociedad) : createSociety;
   const [state, formAction] = useActionState(action, { error: undefined });
@@ -92,7 +101,7 @@ export const SocietyFormModal: React.FC<SocietyFormModalProps> = ({
           <form action={formAction} className="space-y-4">
             <FormField
               control={form.control}
-              name="nombre"
+              name="nombre_sociedad"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nombre de la Sociedad</FormLabel>

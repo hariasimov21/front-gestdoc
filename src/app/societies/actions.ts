@@ -1,3 +1,4 @@
+
 'use server';
 
 import { z } from 'zod';
@@ -8,7 +9,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const API_URL = `${API_BASE_URL}/sociedad`;
 
 const societySchema = z.object({
-  nombre: z.string().min(1, 'El nombre de la sociedad es requerido.'),
+  nombre_sociedad: z.string().min(1, 'El nombre de la sociedad es requerido.'),
 });
 
 async function getAuthToken() {
@@ -26,10 +27,7 @@ export async function createSociety(prevState: { error?: string }, formData: For
     return { error: 'Datos inválidos. Por favor, revisa los campos.' };
   }
   
-  // Backend expects 'nombre_sociedad'
-  const postData = {
-    nombre_sociedad: validatedFields.data.nombre,
-  };
+  const postData = validatedFields.data;
 
   try {
     const token = await getAuthToken();
@@ -64,10 +62,7 @@ export async function updateSociety(id_sociedad: number, prevState: { error?: st
         return { error: 'Datos inválidos. Por favor, revisa los campos.' };
     }
     
-    // Backend expects 'nombre_sociedad'
-    const putData = {
-      nombre_sociedad: validatedFields.data.nombre,
-    };
+    const putData = validatedFields.data;
 
     try {
         const token = await getAuthToken();

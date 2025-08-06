@@ -210,7 +210,7 @@ export const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                             emptyPlaceholder="No se encontró sociedad."
                         />
                    </FormControl>
-                   <input type="hidden" {...form.register('id_sociedad')} value={field.value} />
+                   <input type="hidden" name={field.name} value={field.value} />
                   <FormMessage />
                 </FormItem>
               )}

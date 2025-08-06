@@ -172,7 +172,7 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
                         emptyPlaceholder="No se encontró propiedad."
                       />
                    </FormControl>
-                   <input type="hidden" name="id_propiedad" value={field.value} />
+                   <input type="hidden" name={field.name} value={field.value} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -193,7 +193,7 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
                         emptyPlaceholder="No se encontró tipo."
                       />
                    </FormControl>
-                   <input type="hidden" name="id_tipo_documento" value={field.value} />
+                   <input type="hidden" name={field.name} value={field.value} />
                   <FormMessage />
                 </FormItem>
               )}

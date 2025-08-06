@@ -160,6 +160,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                         disabled={isEditing}
                      />
                    </FormControl>
+                   <input type="hidden" name={field.name} value={field.value} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -181,6 +182,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
                         disabled={isEditing}
                       />
                    </FormControl>
+                   <input type="hidden" name={field.name} value={field.value} />
                   <FormMessage />
                 </FormItem>
               )}

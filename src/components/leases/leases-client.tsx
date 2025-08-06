@@ -78,12 +78,6 @@ function LeasesClientContent({ data, tenants, properties }: LeasesClientProps) {
       />
       <div className="flex items-center justify-between">
           <div className="flex flex-1 items-center space-x-2">
-              <Input
-                  placeholder="Buscar por arrendatario o propiedad..."
-                  value={globalFilter}
-                  onChange={(e) => setGlobalFilter(e.target.value)}
-                  className="h-9 max-w-sm"
-              />
               <Popover>
                   <PopoverTrigger asChild>
                   <Button
@@ -127,10 +121,18 @@ function LeasesClientContent({ data, tenants, properties }: LeasesClientProps) {
                 </Button>
               )}
           </div>
-          <Button onClick={() => setIsModalOpen(true)} size="sm">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Crear Arriendo
-          </Button>
+            <div className="flex items-center space-x-2">
+                <Input
+                    placeholder="Buscar por arrendatario o propiedad..."
+                    value={globalFilter}
+                    onChange={(e) => setGlobalFilter(e.target.value)}
+                    className="h-9 max-w-sm"
+                />
+                <Button onClick={() => setIsModalOpen(true)} size="sm">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Crear Arriendo
+                </Button>
+            </div>
       </div>
       <DataTable 
         columns={tableColumns} 

@@ -61,60 +61,62 @@ export const TenantsClient: React.FC<TenantsClientProps> = ({ data }) => {
         initialData={null}
       />
       <div className="flex items-center justify-between">
-          <div className="flex flex-1 items-center space-x-2">
-              <Input
-                  placeholder="Buscar por nombre, RUT, email..."
-                  value={globalFilter}
-                  onChange={(e) => setGlobalFilter(e.target.value)}
-                  className="h-9 w-full max-w-sm"
-              />
-              <Popover>
-                  <PopoverTrigger asChild>
-                  <Button
-                      id="date"
-                      variant={"outline"}
-                      className={cn(
-                      "h-9 w-[260px] justify-start text-left font-normal sm:w-auto",
-                      !dateRange && "text-muted-foreground"
-                      )}
-                  >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {dateRange?.from ? (
-                      dateRange.to ? (
-                          <>
-                          {format(dateRange.from, "LLL dd, y")} -{" "}
-                          {format(dateRange.to, "LLL dd, y")}
-                          </>
-                      ) : (
-                          format(dateRange.from, "LLL dd, y")
-                      )
-                      ) : (
-                      <span>Filtrar por fecha de registro</span>
-                      )}
-                  </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                      initialFocus
-                      mode="range"
-                      defaultMonth={dateRange?.from}
-                      selected={dateRange}
-                      onSelect={setDateRange}
-                      numberOfMonths={2}
-                  />
-                  </PopoverContent>
-              </Popover>
-              {(globalFilter || dateRange) && (
-                <Button variant="ghost" onClick={clearFilters} className="h-9 px-3">
-                    <X className="mr-2 h-4 w-4" />
-                    Limpiar
+            <div className="flex flex-1 items-center space-x-2">
+                <Popover>
+                    <PopoverTrigger asChild>
+                    <Button
+                        id="date"
+                        variant={"outline"}
+                        className={cn(
+                        "h-9 w-[260px] justify-start text-left font-normal sm:w-auto",
+                        !dateRange && "text-muted-foreground"
+                        )}
+                    >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {dateRange?.from ? (
+                        dateRange.to ? (
+                            <>
+                            {format(dateRange.from, "LLL dd, y")} -{" "}
+                            {format(dateRange.to, "LLL dd, y")}
+                            </>
+                        ) : (
+                            format(dateRange.from, "LLL dd, y")
+                        )
+                        ) : (
+                        <span>Filtrar por fecha de registro</span>
+                        )}
+                    </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                        initialFocus
+                        mode="range"
+                        defaultMonth={dateRange?.from}
+                        selected={dateRange}
+                        onSelect={setDateRange}
+                        numberOfMonths={2}
+                    />
+                    </PopoverContent>
+                </Popover>
+                {(globalFilter || dateRange) && (
+                    <Button variant="ghost" onClick={clearFilters} className="h-9 px-3">
+                        <X className="mr-2 h-4 w-4" />
+                        Limpiar
+                    </Button>
+                )}
+            </div>
+            <div className="flex items-center space-x-2">
+                <Input
+                    placeholder="Buscar por nombre, RUT, email..."
+                    value={globalFilter}
+                    onChange={(e) => setGlobalFilter(e.target.value)}
+                    className="h-9 w-full max-w-sm"
+                />
+                <Button onClick={() => setIsModalOpen(true)} size="sm">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Crear Arrendatario
                 </Button>
-              )}
-          </div>
-          <Button onClick={() => setIsModalOpen(true)} size="sm">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Crear Arrendatario
-          </Button>
+            </div>
       </div>
       <DataTable 
         columns={columns} 

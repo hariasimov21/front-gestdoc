@@ -24,14 +24,13 @@ import {
 } from '@/components/ui/alert-dialog';
 
 
-export type AssociationColumn = {
-  id_usuario_sociedad: number;
-  nombre_usuario: string;
-  nombre_sociedad: string;
+export type AssociatedUser = {
+  id_usuario: number;
+  nombre: string;
 };
 
 interface CellActionProps {
-  data: AssociationColumn;
+  data: AssociatedUser;
   onDelete: (id: number) => void;
   isDeleting: number | null;
 }
@@ -50,7 +49,7 @@ const CellAction: React.FC<CellActionProps> = ({ data, onDelete, isDeleting }) =
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <AlertDialogTrigger asChild>
                         <DropdownMenuItem>
-                            <Trash className="mr-2 h-4 w-4" /> Eliminar
+                            <Trash className="mr-2 h-4 w-4" /> Desasociar
                         </DropdownMenuItem>
                     </AlertDialogTrigger>
                 </DropdownMenuContent>
@@ -59,17 +58,17 @@ const CellAction: React.FC<CellActionProps> = ({ data, onDelete, isDeleting }) =
                 <AlertDialogHeader>
                     <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Esta acción desasociará al usuario de la sociedad. No se puede deshacer.
+                        Esta acción desasociará al usuario de la sociedad seleccionada.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel disabled={isDeleting === data.id_usuario_sociedad}>Cancelar</AlertDialogCancel>
+                    <AlertDialogCancel disabled={isDeleting === data.id_usuario}>Cancelar</AlertDialogCancel>
                     <AlertDialogAction 
-                        onClick={() => onDelete(data.id_usuario_sociedad)} 
+                        onClick={() => onDelete(data.id_usuario)} 
                         className="bg-destructive hover:bg-destructive/90"
-                        disabled={isDeleting === data.id_usuario_sociedad}
+                        disabled={isDeleting === data.id_usuario}
                     >
-                         {isDeleting === data.id_usuario_sociedad ? <Loader2 className="h-4 w-4 animate-spin"/> : 'Desasociar'}
+                         {isDeleting === data.id_usuario ? <Loader2 className="h-4 w-4 animate-spin"/> : 'Desasociar'}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
@@ -78,19 +77,15 @@ const CellAction: React.FC<CellActionProps> = ({ data, onDelete, isDeleting }) =
 };
 
 export const columns = (
-    { onDelete, isDeleting }: { onDelete: (id: number) => void, isDeleting: number | null }
-): ColumnDef<AssociationColumn>[] => [
+    { onDelete, isDeleting }: { onDelete: (id_usuario: number) => void, isDeleting: number | null }
+): ColumnDef<AssociatedUser>[] => [
   {
-    accessorKey: 'id_usuario_sociedad',
-    header: 'ID',
+    accessorKey: 'id_usuario',
+    header: 'ID Usuario',
   },
   {
-    accessorKey: 'nombre_usuario',
-    header: 'Usuario',
-  },
-  {
-    accessorKey: 'nombre_sociedad',
-    header: 'Sociedad',
+    accessorKey: 'nombre',
+    header: 'Nombre de Usuario',
   },
   {
     id: 'actions',

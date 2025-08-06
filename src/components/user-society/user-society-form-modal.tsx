@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useActionState } from 'react';
+import { useEffect, useActionState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -50,6 +50,7 @@ interface UserSocietyFormModalProps {
   users: User[];
   societies: Society[];
   onSuccess: () => void;
+  initialSocietyId?: string;
 }
 
 export const UserSocietyFormModal: React.FC<UserSocietyFormModalProps> = ({
@@ -58,6 +59,7 @@ export const UserSocietyFormModal: React.FC<UserSocietyFormModalProps> = ({
   users,
   societies,
   onSuccess,
+  initialSocietyId,
 }) => {
   const { toast } = useToast();
   
@@ -65,9 +67,23 @@ export const UserSocietyFormModal: React.FC<UserSocietyFormModalProps> = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       id_usuario: '',
-      id_sociedad: '',
+      id_sociedad: initialSocietyId || '',
     },
   });
+
+  const handleClose = useCallback(() => {
+    form.reset();
+    onClose();
+  }, [form, onClose]);
+
+  useEffect(() => {
+    if (isOpen) {
+        form.reset({
+            id_usuario: '',
+            id_sociedad: initialSocietyId || '',
+        })
+    }
+  }, [isOpen, initialSocietyId, form]);
 
   const action = createAssociation;
   const [state, formAction] = useActionState(action, { error: undefined });
@@ -84,20 +100,14 @@ export const UserSocietyFormModal: React.FC<UserSocietyFormModalProps> = ({
       onSuccess();
       handleClose();
     }
-  }, [state, onSuccess, toast]);
-
-
-  const handleClose = () => {
-    form.reset();
-    onClose();
-  };
+  }, [state, onSuccess, toast, handleClose]);
   
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Asociar Usuario a Sociedad</DialogTitle>
-          <DialogDescription>Selecciona un usuario y una sociedad para crear una nueva asociación.</DialogDescription>
+          <DialogDescription>Selecciona un usuario para asociarlo a la sociedad actual.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form action={formAction} className="space-y-4">
@@ -136,6 +146,7 @@ export const UserSocietyFormModal: React.FC<UserSocietyFormModalProps> = ({
                         placeholder="Selecciona una sociedad"
                         searchPlaceholder="Buscar sociedad..."
                         emptyPlaceholder="No se encontraron sociedades."
+                        disabled={!!initialSocietyId}
                       />
                    </FormControl>
                    <input type="hidden" name={field.name} value={field.value} />

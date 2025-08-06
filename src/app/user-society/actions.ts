@@ -27,25 +27,28 @@ async function getAuthToken() {
   return token;
 }
 
-export async function getAllAssociations(): Promise<ApiResponse<{ id_usuario_sociedad: number, nombre_usuario: string, nombre_sociedad: string }[]>> {
+export async function getUsersForSociety(id_sociedad: number): Promise<ApiResponse<{ id_usuario: number, nombre: string }[]>> {
     try {
         const token = await getAuthToken();
-        const response = await fetch(`${API_URL}/listarAsociaciones`, {
+        const response = await fetch(`${API_URL}/sociedad/${id_sociedad}`, {
             headers: { Authorization: `Bearer ${token}` },
             cache: 'no-store',
         });
         if (!response.ok) {
             const data = await response.json();
-            const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : (data.message || 'Error al obtener las asociaciones.');
+            const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : (data.message || 'Error al obtener los usuarios.');
             return { payload: [], error: errorMessage };
         };
         const data = await response.json();
-        return { payload: data.payload };
+        // The API returns the full user object, let's just keep what we need
+        const users = data.map((u: any) => ({ id_usuario: u.id_usuario, nombre: u.nombre }));
+        return { payload: users };
     } catch (error) {
         console.error(error);
         return { payload: [], error: 'No se pudo conectar con el servidor.' };
     }
 }
+
 
 export async function createAssociation(prevState: { error?: string }, formData: FormData) {
   const validatedFields = associationSchema.safeParse(Object.fromEntries(formData.entries()));
@@ -84,14 +87,16 @@ export async function createAssociation(prevState: { error?: string }, formData:
   }
 }
 
-export async function deleteAssociation(id_usuario_sociedad: number) {
+export async function deleteAssociation(id_usuario: number, id_sociedad: number) {
     try {
         const token = await getAuthToken();
-        const response = await fetch(`${API_URL}/eliminarAsociacion/${id_usuario_sociedad}`, {
+        const response = await fetch(`${API_URL}/eliminarAsociacion`, {
             method: 'DELETE',
-            headers: {
+             headers: {
+                'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             },
+            body: JSON.stringify({ id_usuario, id_sociedad }),
         });
 
         if (!response.ok) {

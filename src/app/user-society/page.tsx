@@ -33,7 +33,7 @@ type ApiResponse<T> = {
   };
 };
 
-// We will fetch all users for the association
+// We will fetch all users for the association modal
 async function getUsers(token: string): Promise<User[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   try {
@@ -50,7 +50,6 @@ async function getUsers(token: string): Promise<User[]> {
     }
     const data: ApiResponse<any[]> = await response.json();
     
-    // The backend now returns relations. We must map safely.
     const users = data.payload?.datos || [];
     return users.map(user => ({ id_usuario: user.id_usuario, nombre: user.nombre }));
 
@@ -60,6 +59,7 @@ async function getUsers(token: string): Promise<User[]> {
   }
 }
 
+// We will fetch all societies for the dropdown
 async function getSocieties(token: string): Promise<Society[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   try {
@@ -97,8 +97,11 @@ export default async function UserSocietyPage() {
   }
 
   const user: Session = JSON.parse(sessionCookie);
-  const users = await getUsers(token);
-  const societies = await getSocieties(token);
+  // Fetch all users and societies for the dropdowns
+  const [users, societies] = await Promise.all([
+    getUsers(token),
+    getSocieties(token)
+  ]);
 
   return (
     <DashboardLayout 
@@ -106,7 +109,7 @@ export default async function UserSocietyPage() {
       title="Gestión de Usuario/Sociedad"
       description="Asocia usuarios a sociedades y visualiza las relaciones existentes."
     >
-      <UserSocietyClient users={users} societies={societies} />
+      <UserSocietyClient allUsers={users} allSocieties={societies} />
     </DashboardLayout>
   );
 }

@@ -33,7 +33,7 @@ type ApiResponse<T> = {
   };
 };
 
-// We only need users with rol "Usuario" for association
+// We will fetch all users for the association
 async function getUsers(token: string): Promise<User[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   try {
@@ -50,11 +50,9 @@ async function getUsers(token: string): Promise<User[]> {
     }
     const data: ApiResponse<any[]> = await response.json();
     
-    // The backend now returns relations. We must filter safely.
+    // The backend now returns relations. We must map safely.
     const users = data.payload?.datos || [];
-    return users
-        .filter(user => user.rol_usuario && user.rol_usuario.nombre_rol === 'Usuario')
-        .map(user => ({ id_usuario: user.id_usuario, nombre: user.nombre }));
+    return users.map(user => ({ id_usuario: user.id_usuario, nombre: user.nombre }));
 
   } catch (error) {
     console.error('Error fetching users:', error);

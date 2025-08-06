@@ -4,7 +4,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
 import { format, parseISO } from 'date-fns';
-import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 
 type Tenant = {
   id_arrendatario: number;
@@ -69,9 +69,11 @@ export const columns = (dependencies: { tenants: Tenant[], properties: Property[
     accessorKey: 'activo',
     header: 'Estado',
     cell: ({ row }) => (
-      <Badge variant={row.original.activo ? 'default' : 'destructive'}>
-        {row.original.activo ? 'Activo' : 'Inactivo'}
-      </Badge>
+       <Switch
+        checked={row.original.activo}
+        disabled
+        aria-readonly
+      />
     )
   },
   {

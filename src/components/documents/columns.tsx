@@ -4,7 +4,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
 import { format, parseISO } from 'date-fns';
-import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 
 type Property = {
   id_propiedad: number;
@@ -80,9 +80,11 @@ export const columns = (dependencies: { properties: Property[], documentTypes: D
     accessorKey: 'estado',
     header: 'Estado',
     cell: ({ row }) => (
-      <Badge variant={row.original.estado ? 'default' : 'destructive'}>
-        {row.original.estado ? 'Activo' : 'Inactivo'}
-      </Badge>
+      <Switch
+        checked={row.original.estado}
+        disabled
+        aria-readonly
+      />
     )
   },
   {

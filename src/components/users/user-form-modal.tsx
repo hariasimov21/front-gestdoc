@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useActionState } from 'react';
+import { useEffect, useActionState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -88,6 +88,11 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
           rol_usuario_id: '',
         },
   });
+  
+  const handleClose = useCallback(() => {
+    form.reset();
+    onClose();
+  }, [form, onClose]);
 
   const action = isEditing ? updateUser.bind(null, initialData.id_usuario) : createUser;
   const [state, formAction] = useActionState(action, undefined);
@@ -99,20 +104,12 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
         title: 'Error',
         description: state.error,
       });
-    } else if (state?.error === undefined) {
-      // This condition handles the successful case.
-      // After a successful action, `state` becomes `{ error: undefined }`
-      if (form.formState.isSubmitSuccessful) {
-        toast({ title: `Usuario ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
-        handleClose();
-      }
+    } else if (state?.error === undefined && state) {
+      // Successful submission
+      toast({ title: `Usuario ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
+      handleClose();
     }
-  }, [state, form.formState.isSubmitSuccessful, toast, isEditing, handleClose]);
-
-  function handleClose() {
-    form.reset();
-    onClose();
-  };
+  }, [state, isEditing, toast, handleClose]);
   
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>

@@ -16,13 +16,11 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ userName, userEmail, sessionExp }: DashboardHeaderProps) {
   const isMobile = useIsMobile();
   return (
-    <header className="sticky top-0 z-30 w-full border-b bg-card/95 backdrop-blur-sm">
-      <div className="flex h-16 items-center px-4 md:px-6">
-        {isMobile && <SidebarTrigger />}
-        
-        <div className="ml-auto flex items-center space-x-2 sm:space-x-4">
-          <UserNav userName={userName} userEmail={userEmail} sessionExp={sessionExp} />
-        </div>
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background/95 px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 backdrop-blur-sm">
+      {isMobile && <SidebarTrigger />}
+      
+      <div className="ml-auto flex items-center space-x-2 sm:space-x-4">
+        <UserNav userName={userName} userEmail={userEmail} sessionExp={sessionExp} />
       </div>
     </header>
   );

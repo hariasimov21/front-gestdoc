@@ -18,12 +18,8 @@ type Session = {
 
 type SummaryData = {
   propiedades_activas: number;
-  documentos_activos: number; // This might correspond to active leases, will need clarification if not.
+  documentos_activos: number; 
   documentos_por_vencer: number;
-};
-
-type ApiResponse<T> = {
-  payload: T;
 };
 
 type PaginatedLeaseResponse = {
@@ -67,7 +63,7 @@ async function getActiveLeasesCount(token: string): Promise<number> {
         return 0;
     }
     const data: PaginatedLeaseResponse = await response.json();
-    const leases = data.payload?.datos || []; // Safeguard against undefined payload
+    const leases = data.payload?.datos || []; 
     return leases.filter(lease => lease.activo).length;
   } catch (error) {
     console.error('Error fetching leases:', error);
@@ -105,25 +101,36 @@ export default async function DashboardPage() {
     >
       <div className="space-y-6">
         {/* Key Metrics Summary */}
-        <Card className="animate-fade-in-up">
-            <CardHeader>
-                <CardTitle>Resumen del Sistema</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-4 sm:grid-cols-3">
-                 <div className="p-4 border rounded-lg">
-                    <h3 className="text-sm font-medium text-muted-foreground">Propiedades Activas</h3>
-                    <p className="text-2xl font-bold">{summaryData.propiedades_activas ?? 0}</p>
-                </div>
-                 <div className="p-4 border rounded-lg">
-                    <h3 className="text-sm font-medium text-muted-foreground">Arriendos Vigentes</h3>
-                    <p className="text-2xl font-bold">{activeLeasesCount}</p>
-                </div>
-                 <div className="p-4 border rounded-lg">
-                    <h3 className="text-sm font-medium text-muted-foreground">Documentos por Vencer</h3>
-                    <p className="text-2xl font-bold text-destructive">{summaryData.documentos_por_vencer ?? 0}</p>
-                </div>
-            </CardContent>
-        </Card>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Propiedades Activas</CardTitle>
+                    <Building className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold">{summaryData.propiedades_activas ?? 0}</div>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Arriendos Vigentes</CardTitle>
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold">{activeLeasesCount}</div>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Documentos por Vencer</CardTitle>
+                    <FolderArchive className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold text-destructive">{summaryData.documentos_por_vencer ?? 0}</div>
+                </CardContent>
+            </Card>
+        </div>
+
 
         {/* Main Content Area */}
         <div className="grid gap-6 lg:grid-cols-2">
@@ -136,7 +143,7 @@ export default async function DashboardPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {quickAccessLinks.map((link) => (
                             <Link key={link.href} href={link.href} className="group">
-                                <div className="flex flex-col items-center justify-center p-4 border rounded-lg h-full transition-all hover:bg-accent hover:text-accent-foreground">
+                                <div className="flex flex-col items-center justify-center p-4 border bg-card hover:bg-accent rounded-lg h-full transition-all">
                                     <link.icon className="h-8 w-8 mb-2 text-muted-foreground transition-colors group-hover:text-primary" />
                                     <span className="text-sm font-medium text-center">{link.label}</span>
                                 </div>

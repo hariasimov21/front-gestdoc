@@ -100,7 +100,7 @@ export const UserSocietyFormModal: React.FC<UserSocietyFormModalProps> = ({
       onSuccess();
       handleClose();
     }
-  }, [state, onSuccess, toast, handleClose]);
+  }, [state]);
   
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>

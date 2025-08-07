@@ -6,11 +6,13 @@ import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-const API_URL = `${API_BASE_URL}/rol-usuario`;
+const API_URL = `${API_BASE_URL}/arrendatario`;
 
-const roleSchema = z.object({
-  nombre: z.string().min(1, 'El nombre del rol es requerido.'),
-  descripcion: z.string().min(1, 'La descripción es requerida.'),
+const tenantSchema = z.object({
+  nombre: z.string().min(1, 'El nombre es requerido.'),
+  email: z.string().email('El correo no es válido.'),
+  rubro: z.string().min(1, 'El rubro es requerido.'),
+  rut_arrendatario: z.string().min(1, 'El RUT es requerido.'),
 });
 
 async function getAuthToken() {
@@ -21,8 +23,8 @@ async function getAuthToken() {
   return token;
 }
 
-export async function createRole(prevState: { error: string } | undefined, formData: FormData) {
-  const validatedFields = roleSchema.safeParse(Object.fromEntries(formData.entries()));
+export async function createTenant(prevState: { error?: string }, formData: FormData) {
+  const validatedFields = tenantSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
     return { error: 'Datos inválidos. Por favor, revisa los campos.' };
@@ -30,7 +32,7 @@ export async function createRole(prevState: { error: string } | undefined, formD
 
   try {
     const token = await getAuthToken();
-    const response = await fetch(`${API_URL}/crearRolUsuario`, {
+    const response = await fetch(`${API_URL}/crearArrendatario`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -42,10 +44,10 @@ export async function createRole(prevState: { error: string } | undefined, formD
     if (!response.ok) {
       const data = await response.json();
       const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
-      return { error: errorMessage || 'Error al crear el rol.' };
+      return { error: errorMessage || 'Error al crear el arrendatario.' };
     }
 
-    revalidatePath('/roles');
+    revalidatePath('/arrendatarios');
     return { success: true };
   } catch (error) {
     console.error(error);
@@ -53,31 +55,36 @@ export async function createRole(prevState: { error: string } | undefined, formD
   }
 }
 
-export async function updateRole(id: number, prevState: { error: string } | undefined, formData: FormData) {
-    const validatedFields = roleSchema.safeParse(Object.fromEntries(formData.entries()));
+export async function updateTenant(rut_arrendatario: string, prevState: { error?: string }, formData: FormData) {
+    const validatedFields = tenantSchema.omit({ rut_arrendatario: true }).safeParse(Object.fromEntries(formData.entries()));
 
     if (!validatedFields.success) {
         return { error: 'Datos inválidos. Por favor, revisa los campos.' };
     }
 
+    const putData = {
+        ...validatedFields.data,
+        rut_arrendatario: rut_arrendatario, // Add the original RUT to the body
+    };
+
     try {
         const token = await getAuthToken();
-        const response = await fetch(`${API_URL}/${id}`, {
+        const response = await fetch(`${API_URL}/actualizarArrendatario`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(validatedFields.data),
+            body: JSON.stringify(putData),
         });
 
         if (!response.ok) {
             const data = await response.json();
             const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
-            return { error: errorMessage || 'Error al actualizar el rol.' };
+            return { error: errorMessage || 'Error al actualizar el arrendatario.' };
         }
 
-        revalidatePath('/roles');
+        revalidatePath('/arrendatarios');
         return { success: true };
 
     } catch (error) {
@@ -87,13 +94,12 @@ export async function updateRole(id: number, prevState: { error: string } | unde
 }
 
 
-export async function deleteRole(id: number) {
+export async function deleteTenant(rut_arrendatario: string) {
     try {
         const token = await getAuthToken();
-        const response = await fetch(`${API_URL}/${id}`, {
+        const response = await fetch(`${API_URL}/deleteArrendatario/${rut_arrendatario}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             },
         });
@@ -101,11 +107,11 @@ export async function deleteRole(id: number) {
         if (!response.ok) {
             const data = await response.json();
             const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
-            return { error: errorMessage || 'Error al eliminar el rol.' };
+            return { error: errorMessage || 'Error al eliminar el arrendatario.' };
         }
 
-        revalidatePath('/roles');
-        return { error: undefined };
+        revalidatePath('/arrendatarios');
+        return { success: true };
 
     } catch (error) {
         console.error(error);

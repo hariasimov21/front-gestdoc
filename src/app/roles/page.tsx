@@ -60,7 +60,7 @@ export default async function RolesPage() {
   const token = cookies().get('auth_token')?.value;
 
   if (!sessionCookie || !token) {
-    redirect('/login');
+    redirect('/ingresar');
   }
 
   const user: Session = JSON.parse(sessionCookie);

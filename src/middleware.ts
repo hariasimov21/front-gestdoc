@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('auth_token')?.value;
   const { pathname } = request.nextUrl;
 
-  const isPublicPath = pathname === '/login';
+  const isPublicPath = pathname === '/ingresar';
 
   // If the user is authenticated and tries to access the login page, redirect to dashboard.
   if (isPublicPath && token) {
@@ -15,7 +15,7 @@ export function middleware(request: NextRequest) {
 
   // If the user is not authenticated and tries to access a protected page, redirect to login.
   if (!isPublicPath && !token) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL('/ingresar', request.url));
   }
 
   return NextResponse.next();

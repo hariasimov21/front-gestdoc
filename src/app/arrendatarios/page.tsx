@@ -1,0 +1,70 @@
+
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { TenantsClient } from '@/components/tenants/tenants-client';
+import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
+
+type Session = {
+  nombre: string;
+  email: string;
+  rol_usuario_id: number;
+  nombre_rol: string;
+  id_usuario: number;
+  tokenExp?: number;
+};
+
+type Tenant = {
+  id_arrendatario: number;
+  nombre: string;
+  fecha_registro: string;
+  email: string;
+  rubro: string;
+  rut_arrendatario: string;
+};
+
+type ApiResponse = {
+  payload: {
+    datos: Tenant[];
+  };
+};
+
+async function getTenants(token: string): Promise<Tenant[]> {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  // Fetch all tenants by not sending pagination params for now
+  const response = await fetch(`${API_URL}/arrendatario/listarArrendatarios`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    console.error('Failed to fetch tenants');
+    return [];
+  }
+  
+  const data: ApiResponse = await response.json();
+  return data.payload.datos || [];
+}
+
+export default async function TenantsPage() {
+  const sessionCookie = cookies().get('session')?.value;
+  const token = cookies().get('auth_token')?.value;
+
+  if (!sessionCookie || !token) {
+    redirect('/ingresar');
+  }
+
+  const user: Session = JSON.parse(sessionCookie);
+  const tenants = await getTenants(token);
+
+  return (
+    <DashboardLayout 
+      user={user}
+      title="Gestión de Arrendatarios"
+      description="Administra los arrendatarios del sistema."
+    >
+      <TenantsClient data={tenants} />
+    </DashboardLayout>
+  );
+}

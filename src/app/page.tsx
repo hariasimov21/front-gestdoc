@@ -76,7 +76,7 @@ export default async function DashboardPage() {
   const token = cookies().get('auth_token')?.value;
   
   if (!sessionCookie || !token) {
-    redirect('/login');
+    redirect('/ingresar');
   }
 
   const user: Session = JSON.parse(sessionCookie);
@@ -87,10 +87,10 @@ export default async function DashboardPage() {
   ]);
 
   const quickAccessLinks = [
-    { href: '/documents', icon: FolderArchive, label: 'Documentos' },
-    { href: '/leases', icon: FileText, label: 'Arriendos' },
-    { href: '/properties', icon: Building, label: 'Propiedades' },
-    { href: '/users', icon: Users, label: 'Usuarios' },
+    { href: '/documentos', icon: FolderArchive, label: 'Documentos' },
+    { href: '/arriendos', icon: FileText, label: 'Arriendos' },
+    { href: '/propiedades', icon: Building, label: 'Propiedades' },
+    { href: '/usuarios', icon: Users, label: 'Usuarios' },
   ];
 
   return (

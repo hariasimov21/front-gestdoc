@@ -90,33 +90,33 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
                     Gestión
                 </div>
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild isActive={pathname.startsWith('/documents')} tooltip="Documentos">
-                    <Link href="/documents"><FolderArchive /> <span>Documentos</span></Link>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/documentos')} tooltip="Documentos">
+                    <Link href="/documentos"><FolderArchive /> <span>Documentos</span></Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild isActive={pathname.startsWith('/leases')} tooltip="Arriendos">
-                    <Link href="/leases"><FileText /> <span>Arriendos</span></Link>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/arriendos')} tooltip="Arriendos">
+                    <Link href="/arriendos"><FileText /> <span>Arriendos</span></Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild isActive={pathname.startsWith('/tenants')} tooltip="Arrendatarios">
-                    <Link href="/tenants"><Users /> <span>Arrendatarios</span></Link>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/arrendatarios')} tooltip="Arrendatarios">
+                    <Link href="/arrendatarios"><Users /> <span>Arrendatarios</span></Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild isActive={pathname.startsWith('/properties')} tooltip="Propiedades">
-                    <Link href="/properties"><Building /> <span>Propiedades</span></Link>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/propiedades')} tooltip="Propiedades">
+                    <Link href="/propiedades"><Building /> <span>Propiedades</span></Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild isActive={pathname.startsWith('/societies')} tooltip="Sociedades">
-                    <Link href="/societies"><Briefcase /> <span>Sociedades</span></Link>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/sociedades')} tooltip="Sociedades">
+                    <Link href="/sociedades"><Briefcase /> <span>Sociedades</span></Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild isActive={pathname.startsWith('/document-types')} tooltip="Tipos de Documento">
-                    <Link href="/document-types"><FileCog /> <span>Tipos de Documento</span></Link>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/tipos-de-documento')} tooltip="Tipos de Documento">
+                    <Link href="/tipos-de-documento"><FileCog /> <span>Tipos de Documento</span></Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>
@@ -133,13 +133,13 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild isActive={pathname.startsWith('/users')} tooltip="Usuarios">
-                    <Link href="/users"><Users /> <span>Usuarios</span></Link>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/usuarios')} tooltip="Usuarios">
+                    <Link href="/usuarios"><Users /> <span>Usuarios</span></Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild isActive={pathname.startsWith('/user-society')} tooltip="Usuario/Sociedad">
-                    <Link href="/user-society"><Users /> <span>Usuario/Sociedad</span></Link>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/usuario-sociedad')} tooltip="Usuario/Sociedad">
+                    <Link href="/usuario-sociedad"><Users /> <span>Usuario/Sociedad</span></Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>

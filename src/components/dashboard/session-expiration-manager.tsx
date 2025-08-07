@@ -37,7 +37,7 @@ export function SessionExpirationManager({ sessionExp }: SessionExpirationManage
       
       if (timeRemaining < 0) {
         // Session expired, force logout
-        logout().then(() => router.push('/login'));
+        logout().then(() => router.push('/ingresar'));
       } else if (timeRemaining <= EXPIRATION_THRESHOLD) {
         // Show modal if within threshold
         const minutes = Math.floor((timeRemaining / 1000) / 60);

@@ -6,11 +6,19 @@ import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-const API_URL = `${API_BASE_URL}/rol-usuario`;
+const API_URL = `${API_BASE_URL}/usuario`;
 
-const roleSchema = z.object({
-  nombre: z.string().min(1, 'El nombre del rol es requerido.'),
-  descripcion: z.string().min(1, 'La descripción es requerida.'),
+const createUserSchema = z.object({
+  nombre: z.string().min(1, 'El nombre es requerido.'),
+  email: z.string().email('El correo no es válido.'),
+  contrasena: z.string().min(1, 'La contraseña es requerida.'),
+  rol_usuario_id: z.string().min(1, 'El rol es requerido.'),
+});
+
+const updateUserSchema = z.object({
+    nombre: z.string().min(1, 'El nombre es requerido.'),
+    email: z.string().email('El correo no es válido.'),
+    rol_usuario_id: z.string().min(1, 'El rol es requerido.'),
 });
 
 async function getAuthToken() {
@@ -21,44 +29,54 @@ async function getAuthToken() {
   return token;
 }
 
-export async function createRole(prevState: { error: string } | undefined, formData: FormData) {
-  const validatedFields = roleSchema.safeParse(Object.fromEntries(formData.entries()));
+export async function createUser(prevState: { error: string } | undefined, formData: FormData) {
+  const validatedFields = createUserSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
     return { error: 'Datos inválidos. Por favor, revisa los campos.' };
   }
+  
+  const postData = {
+    ...validatedFields.data,
+    rol_usuario_id: parseInt(validatedFields.data.rol_usuario_id, 10),
+  };
 
   try {
     const token = await getAuthToken();
-    const response = await fetch(`${API_URL}/crearRolUsuario`, {
+    const response = await fetch(`${API_URL}/crearUsuario`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(validatedFields.data),
+      body: JSON.stringify(postData),
     });
 
     if (!response.ok) {
       const data = await response.json();
       const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
-      return { error: errorMessage || 'Error al crear el rol.' };
+      return { error: errorMessage || 'Error al crear el usuario.' };
     }
 
-    revalidatePath('/roles');
-    return { success: true };
+    revalidatePath('/usuarios');
+    return { error: undefined };
   } catch (error) {
     console.error(error);
     return { error: 'No se pudo conectar con el servidor.' };
   }
 }
 
-export async function updateRole(id: number, prevState: { error: string } | undefined, formData: FormData) {
-    const validatedFields = roleSchema.safeParse(Object.fromEntries(formData.entries()));
+export async function updateUser(id: number, prevState: { error: string } | undefined, formData: FormData) {
+    const validatedFields = updateUserSchema.safeParse(Object.fromEntries(formData.entries()));
 
     if (!validatedFields.success) {
         return { error: 'Datos inválidos. Por favor, revisa los campos.' };
     }
+
+    const putData = {
+      ...validatedFields.data,
+      rol_usuario_id: parseInt(validatedFields.data.rol_usuario_id, 10),
+    };
 
     try {
         const token = await getAuthToken();
@@ -68,17 +86,17 @@ export async function updateRole(id: number, prevState: { error: string } | unde
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(validatedFields.data),
+            body: JSON.stringify(putData),
         });
 
         if (!response.ok) {
             const data = await response.json();
             const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
-            return { error: errorMessage || 'Error al actualizar el rol.' };
+            return { error: errorMessage || 'Error al actualizar el usuario.' };
         }
 
-        revalidatePath('/roles');
-        return { success: true };
+        revalidatePath('/usuarios');
+        return { error: undefined };
 
     } catch (error) {
         console.error(error);
@@ -87,7 +105,7 @@ export async function updateRole(id: number, prevState: { error: string } | unde
 }
 
 
-export async function deleteRole(id: number) {
+export async function deleteUser(id: number) {
     try {
         const token = await getAuthToken();
         const response = await fetch(`${API_URL}/${id}`, {
@@ -101,10 +119,10 @@ export async function deleteRole(id: number) {
         if (!response.ok) {
             const data = await response.json();
             const errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
-            return { error: errorMessage || 'Error al eliminar el rol.' };
+            return { error: errorMessage || 'Error al eliminar el usuario.' };
         }
 
-        revalidatePath('/roles');
+        revalidatePath('/usuarios');
         return { error: undefined };
 
     } catch (error) {

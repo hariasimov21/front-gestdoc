@@ -5,7 +5,7 @@ import { useState, useEffect, useTransition } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Clock, Loader2, AlertTriangle, FileWarning, ArrowRight } from 'lucide-react';
-import { getExpiringLeases } from '@/app/leases/actions';
+import { getExpiringLeases } from '@/app/arriendos/actions';
 import { useToast } from '@/hooks/use-toast';
 import { format, formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -94,7 +94,7 @@ export function ExpiringLeases() {
                     </Badge>
                 </div>
               </div>
-               <Link href={`/leases?highlight=${lease.id_arriendo}`} className="opacity-0 group-hover:opacity-100 transition-opacity">
+               <Link href={`/arriendos?highlight=${lease.id_arriendo}`} className="opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button variant="ghost" size="icon" className="h-8 w-8">
                         <ArrowRight className="h-4 w-4" />
                     </Button>

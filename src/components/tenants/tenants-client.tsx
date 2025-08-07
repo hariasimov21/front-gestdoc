@@ -105,7 +105,7 @@ export const TenantsClient: React.FC<TenantsClientProps> = ({ data }) => {
                         placeholder="Buscar por nombre, RUT, email..."
                         value={globalFilter}
                         onChange={(e) => setGlobalFilter(e.target.value)}
-                        className="h-9 w-full md:max-w-sm"
+                        className="h-9 w-full md:w-[260px]"
                     />
                     {(globalFilter || dateRange) && (
                         <Button variant="ghost" onClick={clearFilters} className="h-9 px-3 w-full md:w-auto">

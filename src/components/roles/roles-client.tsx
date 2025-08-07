@@ -36,18 +36,18 @@ export const RolesClient: React.FC<RolesClientProps> = ({ data }) => {
       />
       <Card>
         <CardHeader className="p-4">
-            <div className="flex items-center justify-between">
-                <div className="relative w-full max-w-sm">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="relative w-full md:w-auto md:flex-1">
                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
                         placeholder="Buscar por nombre o descripción..."
                         value={globalFilter}
                         onChange={(e) => setGlobalFilter(e.target.value)}
-                        className="h-9 w-full pl-8"
+                        className="h-9 w-full pl-8 md:w-[260px]"
                     />
                 </div>
-                <div className="flex items-center space-x-2">
-                    <Button onClick={() => setIsModalOpen(true)} size="sm">
+                <div className="flex items-center space-x-2 w-full md:w-auto">
+                    <Button onClick={() => setIsModalOpen(true)} size="sm" className="w-full md:w-auto">
                     <PlusCircle className="mr-2 h-4 w-4" />
                     Crear Rol
                     </Button>

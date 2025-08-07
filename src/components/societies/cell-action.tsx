@@ -74,8 +74,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       <AlertDialog>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button variant="ghost" className="h-8 w-auto p-2">
               <span className="sr-only">Abrir menú</span>
+              <span className="hidden md:inline mr-2">Acciones</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>

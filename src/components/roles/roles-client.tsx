@@ -7,7 +7,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { columns, RoleColumn } from './columns';
 import { RoleFormModal } from './role-form-modal';
 import { Button } from '../ui/button';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, Search } from 'lucide-react';
 import { Input } from '../ui/input';
 import { Card, CardContent, CardHeader } from '../ui/card';
 
@@ -37,12 +37,13 @@ export const RolesClient: React.FC<RolesClientProps> = ({ data }) => {
       <Card>
         <CardHeader className="p-4">
             <div className="flex items-center justify-between">
-                <div className="flex flex-1 items-center space-x-2">
+                <div className="relative w-full max-w-sm">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
                         placeholder="Buscar por nombre o descripción..."
                         value={globalFilter}
                         onChange={(e) => setGlobalFilter(e.target.value)}
-                        className="h-9 max-w-sm"
+                        className="h-9 w-full pl-8"
                     />
                 </div>
                 <div className="flex items-center space-x-2">

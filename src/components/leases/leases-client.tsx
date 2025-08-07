@@ -3,7 +3,7 @@
 
 import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { PlusCircle, Calendar as CalendarIcon, X } from 'lucide-react';
+import { PlusCircle, Calendar as CalendarIcon, X, Search } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import { format, parseISO, startOfDay, endOfDay } from 'date-fns';
 
@@ -117,12 +117,15 @@ function LeasesClientContent({ data, tenants, properties }: LeasesClientProps) {
                         />
                         </PopoverContent>
                     </Popover>
-                    <Input
-                        placeholder="Buscar por arrendatario o propiedad..."
-                        value={globalFilter}
-                        onChange={(e) => setGlobalFilter(e.target.value)}
-                        className="h-9 w-full md:w-[260px]"
-                    />
+                    <div className="relative w-full md:w-[260px]">
+                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input
+                            placeholder="Buscar por arrendatario o propiedad..."
+                            value={globalFilter}
+                            onChange={(e) => setGlobalFilter(e.target.value)}
+                            className="h-9 w-full pl-8"
+                        />
+                    </div>
                     {(globalFilter || dateRange) && (
                         <Button variant="ghost" onClick={clearFilters} className="h-9 px-3 w-full md:w-auto">
                             <X className="mr-2 h-4 w-4" />
@@ -131,7 +134,7 @@ function LeasesClientContent({ data, tenants, properties }: LeasesClientProps) {
                     )}
                 </div>
                   <div className="flex items-center space-x-2 w-full md:w-auto">
-                      <Button onClick={() => setIsModalOpen(true)} size="sm" className="w-full md:w-auto">
+                      <Button onClick={() => setIsModalOpen(true)} size="sm" className="w-full">
                           <PlusCircle className="mr-2 h-4 w-4" />
                           Crear Arriendo
                       </Button>

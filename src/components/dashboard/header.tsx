@@ -21,7 +21,7 @@ export function DashboardHeader({ userName, userEmail, sessionExp }: DashboardHe
         <SidebarTrigger />
       </div>
       
-      <div className="ml-auto flex items-center space-x-2 sm:space-x-4">
+      <div className="ml-auto flex items-center">
         <UserNav userName={userName} userEmail={userEmail} sessionExp={sessionExp} />
       </div>
     </header>

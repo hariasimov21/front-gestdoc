@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useActionState, useCallback } from 'react';
+import { useEffect, useActionState, useCallback, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -84,21 +84,30 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({
     }
   }, [isOpen, initialData, form]);
 
-  const action = isEditing ? updateRole.bind(null, initialData.id_rol_usuario) : createRole;
-  const [state, formAction] = useActionState(action, { error: undefined, success: undefined });
+  const [state, formAction, isPending] = useActionState(
+    isEditing && initialData ? updateRole.bind(null, initialData.id_rol_usuario) : createRole, 
+    { error: undefined, success: false }
+  );
 
   useEffect(() => {
-    if (state?.error) {
+    if (!isOpen) return; // Do not show toast when modal is closed
+
+    if (state.error) {
       toast({
         variant: 'destructive',
         title: 'Error',
         description: state.error,
       });
-    } else if (state?.success) {
+    } else if (state.success) {
         toast({ title: `Rol ${isEditing ? 'actualizado' : 'creado'} con éxito.` });
         handleClose();
     }
-  }, [state, isEditing, toast, handleClose]);
+    // Reset state after showing toast to prevent it from re-appearing on re-renders
+    if (state.error || state.success) {
+      state.error = undefined;
+      state.success = false;
+    }
+  }, [state, isEditing, toast, handleClose, isOpen]);
 
   
   return (
@@ -143,7 +152,7 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({
               <Button type="button" variant="outline" onClick={handleClose}>
                 Cancelar
               </Button>
-              <SubmitButton label={actionLabel} />
+              <SubmitButton label={actionLabel} isPending={isPending} />
             </DialogFooter>
           </form>
         </Form>
@@ -152,12 +161,11 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({
   );
 };
 
-function SubmitButton({ label }: { label: string }) {
-  const { pending } = useFormStatus();
+function SubmitButton({ label, isPending }: { label: string, isPending: boolean }) {
   return (
-    <Button type="submit" disabled={pending}>
-      {pending ? <Loader2 className="animate-spin mr-2" /> : null}
-      {pending ? 'Guardando...' : label}
+    <Button type="submit" disabled={isPending}>
+      {isPending ? <Loader2 className="animate-spin mr-2" /> : null}
+      {isPending ? 'Guardando...' : label}
     </Button>
   );
 }

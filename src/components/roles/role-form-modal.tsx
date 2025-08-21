@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useActionState, useCallback } from 'react';
@@ -84,7 +85,7 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({
   }, [isOpen, initialData, form]);
 
   const action = isEditing ? updateRole.bind(null, initialData.id_rol_usuario) : createRole;
-  const [state, formAction] = useActionState(action, undefined);
+  const [state, formAction] = useActionState(action, { error: undefined, success: undefined });
 
   useEffect(() => {
     if (state?.error) {

@@ -21,7 +21,7 @@ async function getAuthToken() {
   return token;
 }
 
-export async function createRole(prevState: { error: string } | undefined, formData: FormData) {
+export async function createRole(prevState: { error?: string, success?: boolean }, formData: FormData) {
   const validatedFields = roleSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
@@ -53,7 +53,7 @@ export async function createRole(prevState: { error: string } | undefined, formD
   }
 }
 
-export async function updateRole(id: number, prevState: { error: string } | undefined, formData: FormData) {
+export async function updateRole(id: number, prevState: { error?: string, success?: boolean }, formData: FormData) {
     const validatedFields = roleSchema.safeParse(Object.fromEntries(formData.entries()));
 
     if (!validatedFields.success) {

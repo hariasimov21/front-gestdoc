@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { UserNav } from './user-nav';
 import { SidebarTrigger } from '../ui/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { ThemeToggle } from '../theme-toggle';
 
 
 interface DashboardHeaderProps {
@@ -21,7 +22,8 @@ export function DashboardHeader({ userName, userEmail, sessionExp }: DashboardHe
         <SidebarTrigger />
       </div>
       
-      <div className="ml-auto flex items-center">
+      <div className="ml-auto flex items-center gap-2">
+        <ThemeToggle />
         <UserNav userName={userName} userEmail={userEmail} sessionExp={sessionExp} />
       </div>
     </header>

@@ -20,7 +20,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { RoleFormModal } from './role-form-modal';
@@ -34,6 +33,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   const onCopy = (id: number) => {
     navigator.clipboard.writeText(String(id));
@@ -61,6 +61,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       });
     } finally {
       setLoading(false);
+      setIsAlertOpen(false);
     }
   };
 
@@ -71,7 +72,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         onClose={() => setIsEditModalOpen(false)}
         initialData={data}
       />
-      <AlertDialog>
+      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-auto p-2">
@@ -88,11 +89,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <DropdownMenuItem onClick={() => setIsEditModalOpen(true)}>
               <Edit className="mr-2 h-4 w-4" /> Editar
             </DropdownMenuItem>
-            <AlertDialogTrigger asChild>
-              <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setIsAlertOpen(true)}>
                 <Trash className="mr-2 h-4 w-4" /> Eliminar
-              </DropdownMenuItem>
-            </AlertDialogTrigger>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 

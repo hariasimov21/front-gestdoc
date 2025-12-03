@@ -15,9 +15,15 @@ import { Badge } from '../ui/badge';
 type Lease = {
   id_arriendo: number;
   fecha_fin_arriendo: string;
-  propiedad: {
-    direccion: string;
+  local: {
+    id_local: number;
+    nombre_local: string;
+    id_propiedad: number;
+    propiedad: {
+      direccion: string;
+    }
   };
+
   arrendatario: {
     nombre: string;
   };
@@ -51,16 +57,16 @@ export function ExpiringLeases() {
       <CardHeader>
         <CardTitle>Arriendos por Vencer</CardTitle>
         <div className="flex space-x-2 pt-2">
-            {timeFrames.map((frame) => (
-                <Button
-                    key={frame}
-                    size="sm"
-                    variant={days === frame ? 'default' : 'outline'}
-                    onClick={() => setDays(frame)}
-                >
-                    {frame} días
-                </Button>
-            ))}
+          {timeFrames.map((frame) => (
+            <Button
+              key={frame}
+              size="sm"
+              variant={days === frame ? 'default' : 'outline'}
+              onClick={() => setDays(frame)}
+            >
+              {frame} días
+            </Button>
+          ))}
         </div>
       </CardHeader>
       <CardContent>
@@ -72,9 +78,9 @@ export function ExpiringLeases() {
           )}
           {!isPending && leases.length === 0 && (
             <div className="flex flex-col items-center justify-center p-4 text-center text-muted-foreground">
-                <FileWarning className="h-8 w-8 mb-2" />
-                <p className="font-medium">Todo en orden</p>
-                <p className="text-sm">No hay arriendos que venzan en los próximos {days} días.</p>
+              <FileWarning className="h-8 w-8 mb-2" />
+              <p className="font-medium">Todo en orden</p>
+              <p className="text-sm">No hay arriendos que venzan en los próximos {days} días.</p>
             </div>
           )}
           {!isPending && leases.map((lease) => (
@@ -85,20 +91,20 @@ export function ExpiringLeases() {
               <div className="flex-1">
                 <p className="text-sm font-medium">{lease.arrendatario.nombre}</p>
                 <p className="text-sm text-muted-foreground truncate">
-                  {lease.propiedad.direccion}
+                  {lease.local.propiedad.direccion}
                 </p>
                 <div className="text-xs text-muted-foreground flex items-center gap-2">
-                    <span>Vence el {format(new Date(lease.fecha_fin_arriendo), 'dd/MM/yyyy')}</span>
-                    <Badge variant="outline" className="text-destructive border-destructive">
-                        {formatDistanceToNow(new Date(lease.fecha_fin_arriendo), { addSuffix: true, locale: es })}
-                    </Badge>
+                  <span>Vence el {format(new Date(lease.fecha_fin_arriendo), 'dd/MM/yyyy')}</span>
+                  <Badge variant="outline" className="text-destructive border-destructive">
+                    {formatDistanceToNow(new Date(lease.fecha_fin_arriendo), { addSuffix: true, locale: es })}
+                  </Badge>
                 </div>
               </div>
-               <Link href={`/arriendos?highlight=${lease.id_arriendo}`} className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <ArrowRight className="h-4 w-4" />
-                    </Button>
-                </Link>
+              <Link href={`/arriendos?highlight=${lease.id_arriendo}`} className="opacity-0 group-hover:opacity-100 transition-opacity">
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
             </div>
           ))}
         </div>

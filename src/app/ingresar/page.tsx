@@ -2,6 +2,8 @@
 import { LoginForm } from '@/components/auth/login-form';
 import Image from 'next/image';
 
+//comentario de prueba
+
 export default function LoginPage() {
   return (
     <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2">

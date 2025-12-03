@@ -2,7 +2,7 @@
 import { LoginForm } from '@/components/auth/login-form';
 import Image from 'next/image';
 
-//comentario de prueba
+//comentario de prueba fdhjfhasdjk
 
 export default function LoginPage() {
   return (

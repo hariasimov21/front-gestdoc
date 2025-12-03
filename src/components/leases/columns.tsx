@@ -11,13 +11,10 @@ type Tenant = {
   nombre: string;
 };
 
-type Property = {
-  id_propiedad: number;
-  direccion: string;
-};
-
 export type LeaseColumn = {
   id_arriendo: number;
+  id_local: number | null;
+  nombre_local: string;
   fecha_inicio_arriendo: string;
   fecha_fin_arriendo: string;
   activo: boolean;
@@ -38,7 +35,7 @@ const formatDate = (dateString: string) => {
 }
 
 
-export const columns = (dependencies: { tenants: Tenant[], properties: Property[] }): ColumnDef<LeaseColumn>[] => [
+export const columns = (dependencies: { tenants: Tenant[], locals: { id_local: number; nombre_local: string }[] }): ColumnDef<LeaseColumn>[] => [
   {
     accessorKey: 'id_arriendo',
     header: 'ID Arriendo',
@@ -46,6 +43,15 @@ export const columns = (dependencies: { tenants: Tenant[], properties: Property[
   {
     accessorKey: 'arrendatarioNombre',
     header: 'Arrendatario',
+  },
+  {
+    accessorKey: 'id_local',
+    header: 'ID Local',
+    cell: ({ row }) => row.original.id_local ?? 'N/A',
+  },
+  {
+    accessorKey: 'nombre_local',
+    header: 'Nombre Local',
   },
   {
     accessorKey: 'propiedadDireccion',
@@ -74,6 +80,6 @@ export const columns = (dependencies: { tenants: Tenant[], properties: Property[
   },
   {
     id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} tenants={dependencies.tenants} properties={dependencies.properties} />,
+    cell: ({ row }) => <CellAction data={row.original} tenants={dependencies.tenants} locals={dependencies.locals} />,
   },
 ];

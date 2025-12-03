@@ -18,7 +18,8 @@ const profileSchema = z.object({
 });
 
 async function getAuthToken() {
-  const token = cookies().get('auth_token')?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get('auth_token')?.value;
   if (!token) {
     throw new Error('No authentication token found.');
   }
@@ -61,12 +62,13 @@ export async function updateProfile(id: number, prevState: { error?: string, suc
     }
 
     // After successful update, we need to update the session cookie
-    const sessionCookie = cookies().get('session')?.value;
+    const cookieStore = await cookies();
+    const sessionCookie = cookieStore.get('session')?.value;
     if (sessionCookie) {
         const sessionData = JSON.parse(sessionCookie);
         sessionData.nombre = nombre;
         sessionData.email = email;
-        cookies().set('session', JSON.stringify(sessionData), {
+        cookieStore.set('session', JSON.stringify(sessionData), {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             maxAge: 60 * 60 * 24 * 7, // 1 week

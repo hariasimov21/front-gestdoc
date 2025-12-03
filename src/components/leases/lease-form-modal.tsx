@@ -39,14 +39,14 @@ type Tenant = {
   nombre: string;
 };
 
-type Property = {
-  id_propiedad: number;
-  direccion: string;
+type Local = {
+  id_local: number;
+  nombre_local: string;
 };
 
 const createLeaseSchema = z.object({
   id_arrendatario: z.string().min(1, 'El arrendatario es requerido.'),
-  id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
+  id_local: z.string().min(1, 'El local es requerido.'),
   fecha_inicio_arriendo: z.date({ required_error: 'La fecha de inicio es requerida.' }),
   fecha_fin_arriendo: z.date({ required_error: 'La fecha de fin es requerida.' }),
 });
@@ -56,7 +56,7 @@ const updateLeaseSchema = z.object({
   fecha_fin_arriendo: z.date({ required_error: 'La fecha de fin es requerida.' }),
    // These are not submitted but need to be in the form state for display
   id_arrendatario: z.string().optional(),
-  id_propiedad: z.string().optional(),
+  id_local: z.string().optional(),
 });
 
 
@@ -65,7 +65,7 @@ interface LeaseFormModalProps {
   onClose: () => void;
   initialData: LeaseColumn | null;
   tenants: Tenant[];
-  properties: Property[];
+  locals: Local[];
 }
 
 export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
@@ -73,7 +73,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
   onClose,
   initialData,
   tenants,
-  properties
+  locals
 }) => {
   const { toast } = useToast();
   
@@ -92,24 +92,24 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
     if (isOpen) {
       if (initialData && isEditing) {
         const tenant = tenants.find(t => t.nombre === initialData.arrendatarioNombre);
-        const property = properties.find(p => p.direccion === initialData.propiedadDireccion);
+        const local = locals.find(l => l.id_local === initialData.id_local || l.nombre_local === initialData.nombre_local);
         
         form.reset({
           id_arrendatario: tenant ? String(tenant.id_arrendatario) : '',
-          id_propiedad: property ? String(property.id_propiedad) : '',
+          id_local: local ? String(local.id_local) : '',
           fecha_inicio_arriendo: initialData.fecha_inicio_arriendo ? parseISO(initialData.fecha_inicio_arriendo) : new Date(),
           fecha_fin_arriendo: initialData.fecha_fin_arriendo ? parseISO(initialData.fecha_fin_arriendo) : new Date(),
         });
       } else {
          form.reset({
           id_arrendatario: '',
-          id_propiedad: '',
+          id_local: '',
           fecha_inicio_arriendo: undefined,
           fecha_fin_arriendo: undefined,
         });
       }
     }
-  }, [isOpen, initialData, isEditing, tenants, properties, form]);
+  }, [isOpen, initialData, isEditing, tenants, locals, form]);
 
 
   const action = isEditing ? updateLease.bind(null, initialData.id_arriendo) : createLease;
@@ -167,18 +167,18 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
             />
             <FormField
               control={form.control}
-              name="id_propiedad"
+              name="id_local"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Propiedad</FormLabel>
+                  <FormLabel>Local</FormLabel>
                    <FormControl>
                       <Combobox
-                        options={properties.map(p => ({ value: String(p.id_propiedad), label: p.direccion }))}
+                        options={locals.map(l => ({ value: String(l.id_local), label: l.nombre_local }))}
                         value={field.value}
                         onChange={field.onChange}
-                        placeholder="Seleccione una propiedad"
-                        searchPlaceholder="Buscar propiedad..."
-                        emptyPlaceholder="No se encontró propiedad."
+                        placeholder="Seleccione un local"
+                        searchPlaceholder="Buscar local..."
+                        emptyPlaceholder="No se encontró local."
                         disabled={isEditing}
                       />
                    </FormControl>

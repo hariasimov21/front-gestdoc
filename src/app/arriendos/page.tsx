@@ -18,14 +18,16 @@ type Tenant = {
   nombre: string;
 };
 
-type Property = {
-  id_propiedad: number;
-  direccion: string;
+type Local = {
+  id_local: number;
+  nombre_local: string;
 };
 
 type LeaseFromApi = {
     id_arriendo: number;
+    id_local?: number | null;
     nombre_arrendatario: string;
+    nombre_local?: string | null;
     direccion_propiedad: string;
     fecha_inicio_arriendo: string;
     fecha_fin_arriendo: string;
@@ -59,6 +61,18 @@ async function getLeases(token: string): Promise<LeaseFromApi[]> {
     cache: 'no-store',
   });
 
+  // Log full API response for debugging visibility when entering leases
+  try {
+    const debugClone = response.clone();
+    const debugBody = await debugClone.json();
+    console.log('getArriendos API response:', JSON.stringify(debugBody, null, 2));
+    if (debugBody?.payload?.datos) {
+      console.log('getArriendos payload.datos:', JSON.stringify(debugBody.payload.datos, null, 2));
+    }
+  } catch (err) {
+    console.error('Failed to log getArriendos response:', err);
+  }
+
   if (!response.ok) {
     console.error('Failed to fetch leases');
     return [];
@@ -88,9 +102,9 @@ async function getTenants(token: string): Promise<Tenant[]> {
 }
 
 
-async function getProperties(token: string): Promise<Property[]> {
+async function getLocals(token: string): Promise<Local[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const response = await fetch(`${API_URL}/propiedad/listarPropiedades`, {
+  const response = await fetch(`${API_URL}/locales/listarlocales`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -102,13 +116,13 @@ async function getProperties(token: string): Promise<Property[]> {
     return [];
   }
   
-  const data: PaginatedApiResponse<Property[]> = await response.json();
+  const data: PaginatedApiResponse<Local[]> = await response.json();
   return data.payload.datos || [];
 }
 
 
 export default async function LeasesPage() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('session')?.value;
   const token = cookieStore.get('auth_token')?.value;
 
@@ -117,15 +131,17 @@ export default async function LeasesPage() {
   }
 
   const user: Session = JSON.parse(sessionCookie);
-  const [leases, tenants, properties] = await Promise.all([
+  const [leases, tenants, locals] = await Promise.all([
       getLeases(token),
       getTenants(token), // Still needed for the form
-      getProperties(token), // Still needed for the form
+      getLocals(token), // Still needed for the form
   ]);
 
   const formattedLeases = leases.map(item => {
     return {
       ...item,
+      id_local: item.id_local ?? null,
+      nombre_local: item.nombre_local || 'N/A',
       arrendatarioNombre: item.nombre_arrendatario || 'N/A',
       propiedadDireccion: item.direccion_propiedad || 'N/A',
     };
@@ -137,7 +153,7 @@ export default async function LeasesPage() {
       title="Gestión de Arriendos"
       description="Administra los arriendos del sistema."
     >
-      <LeasesClient data={formattedLeases} tenants={tenants} properties={properties} />
+      <LeasesClient data={formattedLeases} tenants={tenants} locals={locals} />
     </DashboardLayout>
   );
 }

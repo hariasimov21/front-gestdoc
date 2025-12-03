@@ -22,7 +22,8 @@ const updateUserSchema = z.object({
 });
 
 async function getAuthToken() {
-  const token = cookies().get('auth_token')?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get('auth_token')?.value;
   if (!token) {
     throw new Error('No authentication token found.');
   }

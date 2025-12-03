@@ -48,8 +48,9 @@ async function getTenants(token: string): Promise<Tenant[]> {
 }
 
 export default async function TenantsPage() {
-  const sessionCookie = cookies().get('session')?.value;
-  const token = cookies().get('auth_token')?.value;
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get('session')?.value;
+  const token = cookieStore.get('auth_token')?.value;
 
   if (!sessionCookie || !token) {
     redirect('/ingresar');

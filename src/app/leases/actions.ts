@@ -10,13 +10,14 @@ const API_URL = `${API_BASE_URL}/arriendo`;
 
 const leaseSchema = z.object({
   id_arrendatario: z.string().min(1, 'El arrendatario es requerido.'),
-  id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
+  id_local: z.string().min(1, 'El local es requerido.'),
   fecha_inicio_arriendo: z.date({ required_error: 'La fecha de inicio es requerida.' }),
   fecha_fin_arriendo: z.date({ required_error: 'La fecha de fin es requerida.' }),
 });
 
 async function getAuthToken() {
-  const token = cookies().get('auth_token')?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get('auth_token')?.value;
   if (!token) {
     throw new Error('No authentication token found.');
   }
@@ -26,7 +27,7 @@ async function getAuthToken() {
 export async function createLease(prevState: { error?: string }, formData: FormData) {
   const rawData = {
     id_arrendatario: formData.get('id_arrendatario'),
-    id_propiedad: formData.get('id_propiedad'),
+    id_local: formData.get('id_local'),
     fecha_inicio_arriendo: formData.get('fecha_inicio_arriendo') ? new Date(formData.get('fecha_inicio_arriendo') as string) : undefined,
     fecha_fin_arriendo: formData.get('fecha_fin_arriendo') ? new Date(formData.get('fecha_fin_arriendo') as string) : undefined,
   };
@@ -40,7 +41,7 @@ export async function createLease(prevState: { error?: string }, formData: FormD
   
   const postData = {
     id_arrendatario: parseInt(validatedFields.data.id_arrendatario, 10),
-    id_propiedad: parseInt(validatedFields.data.id_propiedad, 10),
+    id_local: parseInt(validatedFields.data.id_local, 10),
     fecha_inicio_arriendo: validatedFields.data.fecha_inicio_arriendo.toISOString(),
     fecha_fin_arriendo: validatedFields.data.fecha_fin_arriendo.toISOString(),
     activo: true,

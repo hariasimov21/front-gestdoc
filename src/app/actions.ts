@@ -5,7 +5,8 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export async function logout() {
-  cookies().delete('auth_token');
-  cookies().delete('session');
+  const cookieStore = await cookies();
+  cookieStore.delete('auth_token');
+  cookieStore.delete('session');
   redirect('/ingresar');
 }

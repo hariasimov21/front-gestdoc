@@ -22,18 +22,13 @@ type Tenant = {
   nombre: string;
 };
 
-type Property = {
-  id_propiedad: number;
-  direccion: string;
-};
-
 interface LeasesClientProps {
   data: LeaseColumn[];
   tenants: Tenant[];
-  properties: Property[];
+  locals: { id_local: number; nombre_local: string }[];
 }
 
-function LeasesClientContent({ data, tenants, properties }: LeasesClientProps) {
+function LeasesClientContent({ data, tenants, locals }: LeasesClientProps) {
   const searchParams = useSearchParams();
   const highlightedId = searchParams.get('highlight');
 
@@ -44,7 +39,9 @@ function LeasesClientContent({ data, tenants, properties }: LeasesClientProps) {
   const filteredData = data.filter(item => {
     const textMatch =
       (item.arrendatarioNombre && item.arrendatarioNombre.toLowerCase().includes(globalFilter.toLowerCase())) ||
-      (item.propiedadDireccion && item.propiedadDireccion.toLowerCase().includes(globalFilter.toLowerCase()));
+      (item.propiedadDireccion && item.propiedadDireccion.toLowerCase().includes(globalFilter.toLowerCase())) ||
+      (item.nombre_local && item.nombre_local.toLowerCase().includes(globalFilter.toLowerCase())) ||
+      (item.id_local && String(item.id_local).toLowerCase().includes(globalFilter.toLowerCase()));
       
     let dateMatch = true;
     if (dateRange?.from) {
@@ -66,7 +63,7 @@ function LeasesClientContent({ data, tenants, properties }: LeasesClientProps) {
     setDateRange(undefined);
   }
 
-  const tableColumns = columns({ tenants, properties });
+  const tableColumns = columns({ tenants, locals });
 
   return (
     <div className="space-y-4">
@@ -75,7 +72,7 @@ function LeasesClientContent({ data, tenants, properties }: LeasesClientProps) {
         onClose={() => setIsModalOpen(false)}
         initialData={null}
         tenants={tenants}
-        properties={properties}
+        locals={locals}
       />
       <Card>
         <CardHeader className="p-4">

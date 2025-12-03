@@ -105,8 +105,9 @@ export async function login(
       roleData = { nombre_rol: rawRole.nombre || rawRole.nombre_rol };
     }
 
+    const cookieStore = await cookies()
 
-    cookies().set('auth_token', userData.token, {
+    cookieStore.set('auth_token', userData.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 60 * 60 * 24 * 7, // 1 week
@@ -123,7 +124,7 @@ export async function login(
       tokenExp: tokenExp, // Add expiration to session
     };
 
-    cookies().set('session', JSON.stringify(sessionData), {
+    cookieStore.set('session', JSON.stringify(sessionData), {
       httpOnly: true, // Also set httpOnly for the session cookie for consistency
       secure: process.env.NODE_ENV === 'production',
       maxAge: 60 * 60 * 24 * 7, // 1 week

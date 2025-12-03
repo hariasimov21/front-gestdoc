@@ -6,7 +6,12 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('auth_token')?.value;
   const { pathname } = request.nextUrl;
 
-  const isPublicPath = pathname === '/ingresar';
+  // allow direct access to assets (public files)
+  if (pathname.includes('.')) {
+    return NextResponse.next();
+  }
+
+  const isPublicPath = pathname === '/ingresar' || pathname === '/login';
 
   // If the user is authenticated and tries to access the login page, redirect to dashboard.
   if (isPublicPath && token) {
@@ -31,6 +36,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)',
   ],
 };

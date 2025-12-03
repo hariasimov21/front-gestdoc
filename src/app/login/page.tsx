@@ -1,15 +1,19 @@
 
-import Image from 'next/image';
 import { LoginForm } from '@/components/auth/login-form';
+import Image from 'next/image';
 
 export default function LoginPage() {
   return (
     <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2">
-      <div className="relative flex items-center justify-center h-56 lg:h-full flex-col bg-muted p-10 text-white dark:border-r">
-        <div 
-          className="absolute inset-0 bg-cover"
-          style={{ backgroundImage: 'url(https://placehold.co/1080x1920.png)', backgroundPosition: 'center' }}
-          data-ai-hint="office building"
+      <div className="relative flex items-center justify-center h-56 lg:h-full flex-col overflow-hidden bg-muted p-10 text-white dark:border-r">
+        <Image
+          src="/login.jpeg"
+          alt="Oficina moderna con torre de vidrio"
+          fill
+          className="object-cover"
+          unoptimized
+          priority
+          sizes="(min-width: 1024px) 50vw, 100vw"
         />
         <div className="absolute inset-0 bg-zinc-900/60" />
         <div className="relative z-20 flex items-center text-lg font-medium">

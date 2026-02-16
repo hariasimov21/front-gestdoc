@@ -50,10 +50,12 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between"
+          className="w-full min-w-0 justify-between overflow-hidden"
           disabled={disabled}
         >
-          {value ? selectedLabel : placeholder}
+          <span className="min-w-0 flex-1 truncate text-left" title={value ? selectedLabel : placeholder}>
+            {value ? selectedLabel : placeholder}
+          </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -78,7 +80,9 @@ export function Combobox({
                       value === option.value ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {option.label}
+                  <span className="block w-full truncate" title={option.label}>
+                    {option.label}
+                  </span>
                 </CommandItem>
               ))}
             </CommandGroup>

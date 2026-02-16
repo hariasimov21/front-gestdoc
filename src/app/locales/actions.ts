@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-const API_URL = `${API_BASE_URL}/local`;
+const API_URL = `${API_BASE_URL}/locales`;
 
 const localSchema = z.object({
   nombre_local: z.string().min(1, 'El nombre del local es requerido.'),

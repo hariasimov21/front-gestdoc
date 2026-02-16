@@ -16,6 +16,7 @@ type Session = {
 type Property = {
   id_propiedad: number;
   direccion: string;
+  rol_propiedad: string;
   descripcion: string;
   longitud: string;
   latitud: string;

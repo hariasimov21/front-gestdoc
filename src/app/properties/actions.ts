@@ -9,9 +9,10 @@ const API_URL = `${API_BASE_URL}/propiedad`;
 
 const propertySchema = z.object({
   direccion: z.string().min(1, 'La dirección es requerida.'),
+  rol_propiedad: z.string().min(1, 'El rol de propiedad es requerido.'),
   descripcion: z.string().min(1, 'La descripción es requerida.'),
-  longitud: z.string().min(1, 'La longitud es requerida.'),
-  latitud: z.string().min(1, 'La latitud es requerida.'),
+  longitud: z.string().optional(),
+  latitud: z.string().optional(),
   id_sociedad: z.string().min(1, 'La sociedad es requerida.'),
 });
 

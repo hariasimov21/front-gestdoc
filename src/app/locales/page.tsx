@@ -41,20 +41,29 @@ type PaginatedApiResponse<T> = {
 
 async function getLocals(token: string): Promise<Local[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const response = await fetch(`${API_URL}/local/listarLocales`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: 'no-store',
-  });
+  const localEndpoints = ['/local/listarLocales', '/locales/listarlocales'];
+  const errors: string[] = [];
 
-  if (!response.ok) {
-    console.error('Failed to fetch locals');
-    return [];
+  for (const endpoint of localEndpoints) {
+    const url = `${API_URL}${endpoint}`;
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      errors.push(`${endpoint}: ${response.status}`);
+      continue;
+    }
+
+    const data: PaginatedApiResponse<Local[]> = await response.json();
+    return data.payload.datos || [];
   }
 
-  const data: PaginatedApiResponse<Local[]> = await response.json();
-  return data.payload.datos || [];
+  console.error(`Failed to fetch locals (${errors.join(', ')})`);
+  return [];
 }
 
 async function getProperties(token: string): Promise<Property[]> {

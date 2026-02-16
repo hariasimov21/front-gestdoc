@@ -35,9 +35,10 @@ import { Combobox } from '../ui/combobox';
 
 const formSchema = z.object({
   direccion: z.string().min(1, 'La dirección es requerida.'),
+  rol_propiedad: z.string().min(1, 'El rol de propiedad es requerido.'),
   descripcion: z.string().min(1, 'La descripción es requerida.'),
-  longitud: z.string().min(1, 'La longitud es requerida.'),
-  latitud: z.string().min(1, 'La latitud es requerida.'),
+  longitud: z.string().optional(),
+  latitud: z.string().optional(),
   id_sociedad: z.string().min(1, 'La sociedad es requerida.'),
 });
 
@@ -66,20 +67,32 @@ export const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
   const title = isEditing ? 'Editar Propiedad' : 'Crear Propiedad';
   const description = isEditing ? 'Modifica los detalles de la propiedad.' : 'Añade una nueva propiedad al sistema.';
   const actionLabel = isEditing ? 'Guardar Cambios' : 'Crear';
+
+  const defaultFormValues = initialData
+    ? {
+        direccion: initialData.direccion ?? '',
+        rol_propiedad: initialData.rol_propiedad ?? '',
+        descripcion: initialData.descripcion ?? '',
+        longitud: initialData.longitud ?? '',
+        latitud: initialData.latitud ?? '',
+        id_sociedad: String(initialData.id_sociedad ?? ''),
+      }
+    : {
+        direccion: '',
+        rol_propiedad: '',
+        descripcion: '',
+        longitud: '',
+        latitud: '',
+        id_sociedad: '',
+      };
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData ? { ...initialData, id_sociedad: String(initialData.id_sociedad) } : {
-      direccion: '',
-      descripcion: '',
-      longitud: '',
-      latitud: '',
-      id_sociedad: '',
-    },
+    defaultValues: defaultFormValues,
   });
 
-  const latitud = form.watch('latitud');
-  const longitud = form.watch('longitud');
+  const latitud = form.watch('latitud') ?? '';
+  const longitud = form.watch('longitud') ?? '';
 
   const action = isEditing ? updateProperty.bind(null, initialData.id_propiedad) : createProperty;
   const [state, formAction] = useActionState(action, { error: undefined });
@@ -99,7 +112,7 @@ export const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
 
 
   const handleClose = () => {
-    form.reset();
+    form.reset(defaultFormValues);
     onClose();
   };
 
@@ -126,6 +139,19 @@ export const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                   <FormLabel>Dirección</FormLabel>
                   <FormControl>
                     <Input placeholder="Ej: Av. Siempreviva 742" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="rol_propiedad"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Rol Propiedad</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Ej: 1234-56" {...field} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -17,7 +17,7 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { DashboardHeader } from './header';
-import { Building, Home, KeyRound, Users, Briefcase, FileText, FileCog, FolderArchive, Clock, User, ChevronDown, PanelLeft } from 'lucide-react';
+import { Building, Home, KeyRound, Users, Briefcase, FileText, FileCog, FolderArchive, Clock, User, ChevronDown, PanelLeft, Store } from 'lucide-react';
 import { Breadcrumb } from '../ui/breadcrumb';
 import packageJson from '../../../package.json';
 import { formatDistanceToNow } from 'date-fns';
@@ -107,6 +107,11 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
                 <SidebarMenuItem>
                     <SidebarMenuButton asChild isActive={pathname.startsWith('/propiedades')} tooltip="Propiedades">
                     <Link href="/propiedades"><Building /> <span>Propiedades</span></Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/locales')} tooltip="Locales">
+                    <Link href="/locales"><Store /> <span>Locales</span></Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>

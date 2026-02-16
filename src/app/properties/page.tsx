@@ -20,6 +20,7 @@ type Property = {
   longitud: string;
   latitud: string;
   id_sociedad: number;
+  rol_propiedad: string;
 };
 
 type Society = {

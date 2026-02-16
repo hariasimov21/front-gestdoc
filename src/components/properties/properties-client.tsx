@@ -30,6 +30,7 @@ export const PropertiesClient: React.FC<PropertiesClientProps> = ({ data, societ
     const societyName = societies.find(s => s.id_sociedad === item.id_sociedad)?.nombre || '';
     return (
       item.direccion.toLowerCase().includes(globalFilter.toLowerCase()) ||
+      item.rol_propiedad.toLowerCase().includes(globalFilter.toLowerCase()) ||
       item.descripcion.toLowerCase().includes(globalFilter.toLowerCase()) ||
       societyName.toLowerCase().includes(globalFilter.toLowerCase())
     );

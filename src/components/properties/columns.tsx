@@ -11,6 +11,7 @@ export type PropertyColumn = {
   longitud: string;
   latitud: string;
   id_sociedad: number;
+  rol_propiedad: string;
   nombre_sociedad?: string; // Add optional field
 };
 
@@ -27,6 +28,9 @@ export const columns = (societies: Society[]): ColumnDef<PropertyColumn>[] => [
   {
     accessorKey: 'direccion',
     header: 'Dirección',
+  },
+  {    accessorKey: 'rol_propiedad',
+    header: 'Rol Propiedad',
   },
   {
     accessorKey: 'descripcion',

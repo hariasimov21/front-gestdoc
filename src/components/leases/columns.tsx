@@ -35,7 +35,11 @@ const formatDate = (dateString: string) => {
 }
 
 
-export const columns = (dependencies: { tenants: Tenant[], locals: { id_local: number; nombre_local: string }[] }): ColumnDef<LeaseColumn>[] => [
+export const columns = (dependencies: {
+  tenants: Tenant[];
+  locals: { id_local: number; nombre_local: string; id_propiedad: number }[];
+  properties: { id_propiedad: number; direccion: string }[];
+}): ColumnDef<LeaseColumn>[] => [
   {
     accessorKey: 'id_arriendo',
     header: 'ID Arriendo',
@@ -80,6 +84,13 @@ export const columns = (dependencies: { tenants: Tenant[], locals: { id_local: n
   },
   {
     id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} tenants={dependencies.tenants} locals={dependencies.locals} />,
+    cell: ({ row }) => (
+      <CellAction
+        data={row.original}
+        tenants={dependencies.tenants}
+        locals={dependencies.locals}
+        properties={dependencies.properties}
+      />
+    ),
   },
 ];

@@ -25,10 +25,11 @@ type Tenant = {
 interface LeasesClientProps {
   data: LeaseColumn[];
   tenants: Tenant[];
-  locals: { id_local: number; nombre_local: string }[];
+  locals: { id_local: number; nombre_local: string; id_propiedad: number }[];
+  properties: { id_propiedad: number; direccion: string }[];
 }
 
-function LeasesClientContent({ data, tenants, locals }: LeasesClientProps) {
+function LeasesClientContent({ data, tenants, locals, properties }: LeasesClientProps) {
   const searchParams = useSearchParams();
   const highlightedId = searchParams.get('highlight');
 
@@ -63,7 +64,7 @@ function LeasesClientContent({ data, tenants, locals }: LeasesClientProps) {
     setDateRange(undefined);
   }
 
-  const tableColumns = columns({ tenants, locals });
+  const tableColumns = columns({ tenants, locals, properties });
 
   return (
     <div className="space-y-4">
@@ -73,6 +74,7 @@ function LeasesClientContent({ data, tenants, locals }: LeasesClientProps) {
         initialData={null}
         tenants={tenants}
         locals={locals}
+        properties={properties}
       />
       <Card>
         <CardHeader className="p-4">

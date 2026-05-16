@@ -34,15 +34,22 @@ type Tenant = {
 type Local = {
   id_local: number;
   nombre_local: string;
+  id_propiedad: number;
+};
+
+type Property = {
+  id_propiedad: number;
+  direccion: string;
 };
 
 interface CellActionProps {
   data: LeaseColumn;
   tenants: Tenant[];
   locals: Local[];
+  properties: Property[];
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ data, tenants, locals }) => {
+export const CellAction: React.FC<CellActionProps> = ({ data, tenants, locals, properties }) => {
   const [loading, setLoading] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -85,6 +92,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, tenants, locals })
         initialData={data}
         tenants={tenants}
         locals={locals}
+        properties={properties}
       />
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
         <DropdownMenu>

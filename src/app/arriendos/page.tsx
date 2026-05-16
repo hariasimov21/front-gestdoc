@@ -21,6 +21,12 @@ type Tenant = {
 type Local = {
   id_local: number;
   nombre_local: string;
+  id_propiedad: number;
+};
+
+type Property = {
+  id_propiedad: number;
+  direccion: string;
 };
 
 type LeaseFromApi = {
@@ -120,6 +126,24 @@ async function getLocals(token: string): Promise<Local[]> {
   return data.payload.datos || [];
 }
 
+async function getProperties(token: string): Promise<Property[]> {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const response = await fetch(`${API_URL}/propiedad/listarPropiedades`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    console.error('Failed to fetch properties');
+    return [];
+  }
+
+  const data: PaginatedApiResponse<Property[]> = await response.json();
+  return data.payload.datos || [];
+}
+
 
 export default async function LeasesPage() {
   const cookieStore = await cookies();
@@ -131,10 +155,11 @@ export default async function LeasesPage() {
   }
 
   const user: Session = JSON.parse(sessionCookie);
-  const [leases, tenants, locals] = await Promise.all([
+  const [leases, tenants, locals, properties] = await Promise.all([
       getLeases(token),
       getTenants(token), // Still needed for the form
       getLocals(token), // Still needed for the form
+      getProperties(token),
   ]);
 
   const formattedLeases = leases.map(item => {
@@ -153,7 +178,7 @@ export default async function LeasesPage() {
       title="Gestión de Arriendos"
       description="Administra los arriendos del sistema."
     >
-      <LeasesClient data={formattedLeases} tenants={tenants} locals={locals} />
+      <LeasesClient data={formattedLeases} tenants={tenants} locals={locals} properties={properties} />
     </DashboardLayout>
   );
 }

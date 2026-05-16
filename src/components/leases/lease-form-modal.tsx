@@ -42,10 +42,17 @@ type Tenant = {
 type Local = {
   id_local: number;
   nombre_local: string;
+  id_propiedad: number;
+};
+
+type Property = {
+  id_propiedad: number;
+  direccion: string;
 };
 
 const createLeaseSchema = z.object({
   id_arrendatario: z.string().min(1, 'El arrendatario es requerido.'),
+  id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
   id_local: z.string().min(1, 'El local es requerido.'),
   fecha_inicio_arriendo: z.date({ required_error: 'La fecha de inicio es requerida.' }),
   fecha_fin_arriendo: z.date({ required_error: 'La fecha de fin es requerida.' }),
@@ -56,6 +63,7 @@ const updateLeaseSchema = z.object({
   fecha_fin_arriendo: z.date({ required_error: 'La fecha de fin es requerida.' }),
    // These are not submitted but need to be in the form state for display
   id_arrendatario: z.string().optional(),
+  id_propiedad: z.string().optional(),
   id_local: z.string().optional(),
 });
 
@@ -66,6 +74,7 @@ interface LeaseFormModalProps {
   initialData: LeaseColumn | null;
   tenants: Tenant[];
   locals: Local[];
+  properties: Property[];
 }
 
 export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
@@ -73,7 +82,8 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
   onClose,
   initialData,
   tenants,
-  locals
+  locals,
+  properties
 }) => {
   const { toast } = useToast();
   
@@ -96,6 +106,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
         
         form.reset({
           id_arrendatario: tenant ? String(tenant.id_arrendatario) : '',
+          id_propiedad: local ? String(local.id_propiedad) : '',
           id_local: local ? String(local.id_local) : '',
           fecha_inicio_arriendo: initialData.fecha_inicio_arriendo ? parseISO(initialData.fecha_inicio_arriendo) : new Date(),
           fecha_fin_arriendo: initialData.fecha_fin_arriendo ? parseISO(initialData.fecha_fin_arriendo) : new Date(),
@@ -103,6 +114,7 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
       } else {
          form.reset({
           id_arrendatario: '',
+          id_propiedad: '',
           id_local: '',
           fecha_inicio_arriendo: undefined,
           fecha_fin_arriendo: undefined,
@@ -111,6 +123,16 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
     }
   }, [isOpen, initialData, isEditing, tenants, locals, form]);
 
+
+  const selectedPropertyId = form.watch('id_propiedad');
+  const filteredLocals = selectedPropertyId
+    ? locals.filter((local) => String(local.id_propiedad) === selectedPropertyId)
+    : [];
+
+  useEffect(() => {
+    if (!isOpen || isEditing) return;
+    form.setValue('id_local', '');
+  }, [selectedPropertyId, isOpen, isEditing, form]);
 
   const action = isEditing ? updateLease.bind(null, initialData.id_arriendo) : createLease;
   const [state, formAction] = useActionState(action, { error: undefined });
@@ -167,19 +189,41 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
             />
             <FormField
               control={form.control}
+              name="id_propiedad"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Propiedad</FormLabel>
+                   <FormControl>
+                      <Combobox
+                        options={properties.map(p => ({ value: String(p.id_propiedad), label: p.direccion }))}
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Seleccione una propiedad"
+                        searchPlaceholder="Buscar propiedad..."
+                        emptyPlaceholder="No se encontró propiedad."
+                        disabled={isEditing}
+                      />
+                   </FormControl>
+                   <input type="hidden" name={field.name} value={field.value || ''} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="id_local"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Local</FormLabel>
                    <FormControl>
                       <Combobox
-                        options={locals.map(l => ({ value: String(l.id_local), label: l.nombre_local }))}
+                        options={filteredLocals.map(l => ({ value: String(l.id_local), label: l.nombre_local }))}
                         value={field.value}
                         onChange={field.onChange}
-                        placeholder="Seleccione un local"
+                        placeholder={selectedPropertyId ? 'Seleccione un local' : 'Primero seleccione una propiedad'}
                         searchPlaceholder="Buscar local..."
                         emptyPlaceholder="No se encontró local."
-                        disabled={isEditing}
+                        disabled={isEditing || !selectedPropertyId}
                       />
                    </FormControl>
                    <input type="hidden" name={field.name} value={field.value || ''} />

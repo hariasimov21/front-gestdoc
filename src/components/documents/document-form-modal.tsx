@@ -48,7 +48,6 @@ type DocumentType = {
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
 const createFormSchema = z.object({
-  nombre_documento: z.string().min(1, 'El nombre es requerido.'),
   id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
   id_tipo_documento: z.string().min(1, 'El tipo de documento es requerido.'),
   fecha_vencimiento: z.date({ required_error: 'La fecha de vencimiento es requerida.' }),
@@ -58,7 +57,6 @@ const createFormSchema = z.object({
 });
 
 const updateFormSchema = z.object({
-    nombre_documento: z.string().min(1, 'El nombre es requerido.'),
     id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
     id_tipo_documento: z.string().min(1, 'El tipo de documento es requerido.'),
     fecha_vencimiento: z.date({ required_error: 'La fecha de vencimiento es requerida.' }),
@@ -88,7 +86,7 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
   
   const isEditing = !!initialData;
   const title = isEditing ? 'Editar Documento' : 'Subir Documento';
-  const description = isEditing ? 'Actualiza los detalles del documento o sube una nueva versión.' : 'Añade un nuevo documento al sistema.';
+  const description = isEditing ? 'Actualiza los detalles o reemplaza el archivo.' : 'Añade un nuevo documento al sistema.';
   const actionLabel = isEditing ? 'Guardar Cambios' : 'Subir';
   
   const formSchema = isEditing ? updateFormSchema : createFormSchema;
@@ -96,13 +94,11 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData ? { 
-        nombre_documento: initialData.nombre_documento,
         id_propiedad: String(initialData.id_propiedad),
         id_tipo_documento: String(initialData.id_tipo_documento),
         fecha_vencimiento: initialData.fecha_vencimiento ? parseISO(initialData.fecha_vencimiento) : new Date(),
         file: undefined,
      } : {
-      nombre_documento: '',
       id_propiedad: '',
       id_tipo_documento: '',
       fecha_vencimiento: undefined,
@@ -149,19 +145,6 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
             encType="multipart/form-data"
           >
             {isEditing && <input type="hidden" name="id_documento" value={initialData.id_documento} />}
-            <FormField
-              control={form.control}
-              name="nombre_documento"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nombre del Documento</FormLabel>
-                   <FormControl>
-                    <Input placeholder="Ej: Contrato de arriendo 2024" {...field} />
-                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
              <FormField
               control={form.control}
               name="id_propiedad"
@@ -248,7 +231,12 @@ export const DocumentFormModal: React.FC<DocumentFormModalProps> = ({
                 name="file"
                 render={() => (
                     <FormItem>
-                        <FormLabel>Archivo {isEditing && '(Opcional: subir nueva versión)'}</FormLabel>
+                        <FormLabel>Archivo {isEditing && '(Opcional)'}</FormLabel>
+                        {isEditing && (
+                          <p className="text-sm text-muted-foreground truncate">
+                            {initialData.nombre_documento}
+                          </p>
+                        )}
                         <FormControl>
                             <Input 
                                 type="file" 

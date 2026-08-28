@@ -22,7 +22,6 @@ type Document = {
   id_tipo_documento: number;
   fecha_vencimiento: string;
   estado: boolean;
-  version: string;
   folder_id: string;
 };
 

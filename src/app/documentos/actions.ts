@@ -12,7 +12,6 @@ const API_URL_BASE = `${API_BASE_URL}`;
 
 // Schema for creating a document
 const createDocumentSchema = z.object({
-  nombre_documento: z.string().min(1, 'El nombre es requerido.'),
   id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
   id_tipo_documento: z.string().min(1, 'El tipo de documento es requerido.'),
   fecha_vencimiento: z.date({ required_error: 'La fecha de vencimiento es requerida.' }),
@@ -21,7 +20,6 @@ const createDocumentSchema = z.object({
 
 // Schema for updating a document (file is optional)
 const updateDocumentSchema = z.object({
-  nombre_documento: z.string().min(1, 'El nombre es requerido.'),
   id_propiedad: z.string().min(1, 'La propiedad es requerida.'),
   id_tipo_documento: z.string().min(1, 'El tipo de documento es requerido.'),
   fecha_vencimiento: z.date({ required_error: 'La fecha de vencimiento es requerida.' }),
@@ -41,7 +39,6 @@ async function getAuthToken() {
 export async function createDocument(prevState: { error?: string }, formData: FormData) {
   
     const rawData = {
-        nombre_documento: formData.get('nombre_documento'),
         id_propiedad: formData.get('id_propiedad'),
         id_tipo_documento: formData.get('id_tipo_documento'),
         fecha_vencimiento: formData.get('fecha_vencimiento') ? new Date(formData.get('fecha_vencimiento') as string) : undefined,
@@ -58,7 +55,6 @@ export async function createDocument(prevState: { error?: string }, formData: Fo
   
   // Directly use formData from the form, the backend will handle parsing.
   const apiFormData = new FormData();
-  apiFormData.append('nombre_documento', validatedFields.data.nombre_documento);
   apiFormData.append('id_propiedad', validatedFields.data.id_propiedad);
   apiFormData.append('id_tipo_documento', validatedFields.data.id_tipo_documento);
   // Format date correctly for the backend
@@ -94,7 +90,6 @@ export async function updateDocument(prevState: { error?: string }, formData: Fo
     const documentId = formData.get('id_documento');
     
     const rawData = {
-        nombre_documento: formData.get('nombre_documento'),
         id_propiedad: formData.get('id_propiedad'),
         id_tipo_documento: formData.get('id_tipo_documento'),
         fecha_vencimiento: formData.get('fecha_vencimiento') ? new Date(formData.get('fecha_vencimiento') as string) : undefined,
@@ -114,7 +109,6 @@ export async function updateDocument(prevState: { error?: string }, formData: Fo
 
     const apiFormData = new FormData();
     apiFormData.append('id_documento', String(documentId));
-    apiFormData.append('nombre_documento', validatedFields.data.nombre_documento);
     apiFormData.append('id_propiedad', validatedFields.data.id_propiedad);
     apiFormData.append('id_tipo_documento', validatedFields.data.id_tipo_documento);
     apiFormData.append('fecha_vencimiento', format(validatedFields.data.fecha_vencimiento, 'yyyy-MM-dd'));

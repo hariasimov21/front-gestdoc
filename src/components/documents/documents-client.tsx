@@ -42,8 +42,7 @@ export const DocumentsClient: React.FC<DocumentsClientProps> = ({ data, properti
     const textMatch = 
       item.nombre_documento.toLowerCase().includes(globalFilter.toLowerCase()) ||
       item.propiedadDireccion.toLowerCase().includes(globalFilter.toLowerCase()) ||
-      item.tipoDocumentoNombre.toLowerCase().includes(globalFilter.toLowerCase()) ||
-      String(item.version).toLowerCase().includes(globalFilter.toLowerCase());
+      item.tipoDocumentoNombre.toLowerCase().includes(globalFilter.toLowerCase());
       
     // Date search
     let dateMatch = true;

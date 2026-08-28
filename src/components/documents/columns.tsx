@@ -26,7 +26,6 @@ export type DocumentColumn = {
   fecha_subida: string;
   fecha_vencimiento: string;
   estado: boolean;
-  version: string;
 };
 
 const formatDate = (dateString: string) => {
@@ -67,10 +66,6 @@ export const columns = (dependencies: { properties: Property[], documentTypes: D
     accessorKey: 'fecha_vencimiento',
     header: 'Fecha Vencimiento',
     cell: ({ row }) => formatDate(row.original.fecha_vencimiento)
-  },
-   {
-    accessorKey: 'version',
-    header: 'Versión',
   },
   {
     accessorKey: 'estado',

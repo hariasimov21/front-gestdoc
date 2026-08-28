@@ -30,7 +30,6 @@ interface DocumentViewerModalProps {
 type DocumentWithSignedUrl = {
   id_documento: number;
   nombre_documento: string;
-  version: string;
   fecha_vencimiento: string;
   signedUrl: string;
 };
@@ -128,7 +127,6 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
                                         <div className="flex-1 min-w-0">
                                             <p className="font-medium truncate text-sm">{doc.nombre_documento}</p>
                                             <div className="text-xs text-muted-foreground flex items-center gap-2 mt-1">
-                                                <span>V{doc.version}</span>
                                                 {doc.fecha_vencimiento && (
                                                     <span>
                                                         Vence: {format(new Date(doc.fecha_vencimiento), 'dd/MM/yy')}

@@ -30,16 +30,7 @@ import { deleteLocal } from '@/app/locales/actions';
 
 import { DocumentViewerModal } from './document-viewer-modal';
 
-export type Property = {
-  id_propiedad: number;
-  direccion: string;
-  descripcion: string;
-  longitud: string;
-  latitud: string;
-  id_sociedad: number;
-  rol_propiedad: string;
-  nombre_sociedad?: string; // Add optional field
-};
+import type { Property } from './columns';
 
 interface CellActionProps {
   data: LocalColumn;

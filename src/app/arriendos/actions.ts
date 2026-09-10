@@ -8,12 +8,26 @@ import { revalidatePath } from 'next/cache';
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const API_URL = `${API_BASE_URL}/arriendo`;
 
+function refreshLeases() {
+  revalidatePath('/arriendos');
+  revalidatePath('/leases');
+  revalidatePath('/pagos');
+  revalidatePath('/');
+}
+
+const validDateRange = (data: { fecha_inicio_arriendo: Date; fecha_fin_arriendo: Date }) =>
+  data.fecha_fin_arriendo.toISOString().slice(0, 10) > data.fecha_inicio_arriendo.toISOString().slice(0, 10);
+const dateRangeError = {
+  message: 'La fecha de fin debe ser posterior a la fecha de inicio',
+  path: ['fecha_fin_arriendo'],
+};
+
 const leaseSchema = z.object({
   id_arrendatario: z.string().min(1, 'El arrendatario es requerido.'),
   id_local: z.string().min(1, 'El local es requerido.'),
   fecha_inicio_arriendo: z.date({ required_error: 'La fecha de inicio es requerida.' }),
   fecha_fin_arriendo: z.date({ required_error: 'La fecha de fin es requerida.' }),
-});
+}).refine(validDateRange, dateRangeError);
 
 async function getAuthToken() {
   const cookieStore = await cookies();
@@ -36,7 +50,7 @@ export async function createLease(prevState: { error?: string }, formData: FormD
 
   if (!validatedFields.success) {
     console.log(validatedFields.error.flatten().fieldErrors)
-    return { error: 'Datos inválidos. Por favor, revisa los campos.' };
+    return { error: validatedFields.error.issues[0]?.message || 'Datos inválidos. Por favor, revisa los campos.' };
   }
   
   const postData = {
@@ -64,7 +78,7 @@ export async function createLease(prevState: { error?: string }, formData: FormD
       return { error: errorMessage || `Error del servidor: ${response.statusText}` };
     }
 
-    revalidatePath('/arriendos');
+    refreshLeases();
     return { success: true };
   } catch (error) {
     console.error(error);
@@ -81,13 +95,13 @@ export async function updateLease(id_arriendo: number, prevState: { error?: stri
     const updateSchema = z.object({
         fecha_inicio_arriendo: z.date({ required_error: 'La fecha de inicio es requerida.' }),
         fecha_fin_arriendo: z.date({ required_error: 'La fecha de fin es requerida.' }),
-    })
+    }).refine(validDateRange, dateRangeError);
 
     const validatedFields = updateSchema.safeParse(rawData);
 
     if (!validatedFields.success) {
         console.log(validatedFields.error.flatten().fieldErrors)
-        return { error: 'Datos inválidos. Por favor, revisa los campos.' };
+        return { error: validatedFields.error.issues[0]?.message || 'Datos inválidos. Por favor, revisa los campos.' };
     }
     
     const putData = {
@@ -112,7 +126,7 @@ export async function updateLease(id_arriendo: number, prevState: { error?: stri
             return { error: errorMessage || 'Error al actualizar el arriendo.' };
         }
 
-        revalidatePath('/arriendos');
+        refreshLeases();
         return { success: true };
 
     } catch (error) {
@@ -138,7 +152,7 @@ export async function inactivateLease(id_arriendo: number) {
             return { error: errorMessage || 'Error al inactivar el arriendo.' };
         }
 
-        revalidatePath('/arriendos');
+        refreshLeases();
         return { success: true };
 
     } catch (error) {
@@ -170,4 +184,23 @@ export async function getExpiringLeases(days: number): Promise<{ payload: any[],
         console.error(error);
         return { payload: [], error: 'No se pudo conectar con el servidor.' };
     }
+}
+
+export async function reactivateLease(id_arriendo: number) {
+  try {
+    const token = await getAuthToken();
+    const response = await fetch(`${API_URL}/actualizarArriendo/${id_arriendo}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ activo: true }),
+    });
+    if (!response.ok) {
+      const data = await response.json();
+      return { error: Array.isArray(data.message) ? data.message.join(', ') : data.message || 'No se pudo reactivar el arriendo.' };
+    }
+    refreshLeases();
+    return { success: true };
+  } catch {
+    return { error: 'No se pudo conectar con el servidor.' };
+  }
 }

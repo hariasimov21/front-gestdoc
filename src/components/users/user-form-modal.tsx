@@ -42,6 +42,7 @@ const updateUserSchema = z.object({
     nombre: z.string().min(1, 'El nombre es requerido.'),
     email: z.string().email('El correo no es válido.'),
     rol_usuario_id: z.string().min(1, 'El rol es requerido'),
+    contrasena: z.string().optional(),
 });
 
 
@@ -156,7 +157,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                 </FormItem>
               )}
             />
-            {!isEditing && 'contrasena' in form.getValues() && (
+            {!isEditing && (
               <FormField
                 control={form.control}
                 name="contrasena"

@@ -24,7 +24,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { LeaseFormModal } from './lease-form-modal';
 import { LeaseColumn } from './columns';
-import { inactivateLease } from '@/app/leases/actions';
+import { inactivateLease, reactivateLease } from '@/app/arriendos/actions';
 
 type Tenant = {
   id_arrendatario: number;
@@ -62,7 +62,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, tenants, locals, p
   const onInactivateConfirm = async () => {
     try {
       setLoading(true);
-      const result = await inactivateLease(data.id_arriendo);
+      const result = await (data.activo ? inactivateLease : reactivateLease)(data.id_arriendo);
       if (result?.error) {
         toast({
           variant: 'destructive',
@@ -70,13 +70,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data, tenants, locals, p
           description: result.error,
         });
       } else {
-        toast({ title: 'Arriendo inactivado correctamente.' });
+        toast({ title: data.activo ? 'Arriendo inactivado correctamente.' : 'Arriendo reactivado correctamente.' });
       }
     } catch (error) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Algo salió mal al inactivar el arriendo.',
+        description: 'No se pudo cambiar el estado del arriendo.',
       });
     } finally {
       setLoading(false);
@@ -111,8 +111,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data, tenants, locals, p
             <DropdownMenuItem onClick={() => setIsEditModalOpen(true)}>
               <Edit className="mr-2 h-4 w-4" /> Editar
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setIsAlertOpen(true)} disabled={!data.activo}>
-                <PowerOff className="mr-2 h-4 w-4" /> Inactivar
+            <DropdownMenuItem onClick={() => setIsAlertOpen(true)}>
+                <PowerOff className="mr-2 h-4 w-4" /> {data.activo ? 'Inactivar' : 'Reactivar'}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -121,13 +121,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data, tenants, locals, p
           <AlertDialogHeader>
             <AlertDialogTitle>¿Estás absolutamente seguro?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta acción inactivará el arriendo. No se podrá revertir fácilmente.
+              {data.activo ? 'El arriendo pasará al historial de inactivos. Podrás reactivarlo si el local está disponible.' : 'El arriendo volverá a estar activo si el local no tiene otro arriendo activo.'}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={loading}>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={onInactivateConfirm} disabled={loading} className="bg-destructive hover:bg-destructive/90">
-              {loading ? 'Inactivando...' : 'Confirmar'}
+              {loading ? 'Guardando...' : 'Confirmar'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

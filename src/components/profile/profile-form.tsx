@@ -43,7 +43,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
   const { toast } = useToast();
   
   const action = updateProfile.bind(null, user.id_usuario);
-  const [state, formAction] = useActionState(action, undefined);
+  const [state, formAction] = useActionState(action, { error: undefined });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

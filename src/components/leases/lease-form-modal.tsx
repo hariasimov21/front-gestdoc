@@ -31,7 +31,7 @@ import { Combobox } from '../ui/combobox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
-import { createLease, updateLease } from '@/app/leases/actions';
+import { createLease, updateLease } from '@/app/arriendos/actions';
 import { LeaseColumn } from './columns';
 
 type Tenant = {
@@ -56,7 +56,7 @@ const createLeaseSchema = z.object({
   id_local: z.string().min(1, 'El local es requerido.'),
   fecha_inicio_arriendo: z.date({ required_error: 'La fecha de inicio es requerida.' }),
   fecha_fin_arriendo: z.date({ required_error: 'La fecha de fin es requerida.' }),
-});
+}).refine(data => data.fecha_fin_arriendo > data.fecha_inicio_arriendo, { message: 'La fecha de fin debe ser posterior a la fecha de inicio', path: ['fecha_fin_arriendo'] });
 
 const updateLeaseSchema = z.object({
   fecha_inicio_arriendo: z.date({ required_error: 'La fecha de inicio es requerida.' }),
@@ -65,7 +65,7 @@ const updateLeaseSchema = z.object({
   id_arrendatario: z.string().optional(),
   id_propiedad: z.string().optional(),
   id_local: z.string().optional(),
-});
+}).refine(data => data.fecha_fin_arriendo > data.fecha_inicio_arriendo, { message: 'La fecha de fin debe ser posterior a la fecha de inicio', path: ['fecha_fin_arriendo'] });
 
 
 interface LeaseFormModalProps {
@@ -164,7 +164,16 @@ export const LeaseFormModal: React.FC<LeaseFormModalProps> = ({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form action={formAction} className="space-y-4">
+          <form
+            action={formAction}
+            onSubmit={(event) => {
+              if (!formSchema.safeParse(form.getValues()).success) {
+                event.preventDefault();
+                void form.trigger();
+              }
+            }}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="id_arrendatario"

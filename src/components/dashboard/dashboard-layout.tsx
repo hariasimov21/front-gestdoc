@@ -95,6 +95,11 @@ export function DashboardLayout({ user, children, title, description }: Dashboar
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/pagos')} tooltip="Pagos mensuales">
+                      <Link href="/pagos"><FileText /> <span>Pagos mensuales</span></Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
                     <SidebarMenuButton asChild isActive={pathname.startsWith('/arriendos')} tooltip="Arriendos">
                     <Link href="/arriendos"><FileText /> <span>Arriendos</span></Link>
                     </SidebarMenuButton>

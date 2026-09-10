@@ -1,3 +1,4 @@
+import { fetchAllPages } from '@/lib/fetch-all-pages';
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -40,110 +41,21 @@ type LeaseFromApi = {
     activo: boolean;
 };
 
-type PaginatedApiResponse<T> = {
-  payload: {
-    datos: T;
-  };
-};
-
-type TenantsApiResponse = {
-    payload: {
-        datos: Tenant[];
-    }
-}
-
-type LeaseApiResponse = {
-    payload: {
-        datos: LeaseFromApi[];
-    }
-}
-
 async function getLeases(token: string): Promise<LeaseFromApi[]> {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const response = await fetch(`${API_URL}/arriendo/getArriendos`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: 'no-store',
-  });
-
-  // Log full API response for debugging visibility when entering leases
-  try {
-    const debugClone = response.clone();
-    const debugBody = await debugClone.json();
-    console.log('getArriendos API response:', JSON.stringify(debugBody, null, 2));
-    if (debugBody?.payload?.datos) {
-      console.log('getArriendos payload.datos:', JSON.stringify(debugBody.payload.datos, null, 2));
-    }
-  } catch (err) {
-    console.error('Failed to log getArriendos response:', err);
-  }
-
-  if (!response.ok) {
-    console.error('Failed to fetch leases');
-    return [];
-  }
-  
-  const data: LeaseApiResponse = await response.json();
-  return data.payload.datos || [];
+  return fetchAllPages(`${process.env.NEXT_PUBLIC_API_URL}/arriendo/getArriendos?estado=todos`, token);
 }
 
-// These are still needed for the create/edit modal
 async function getTenants(token: string): Promise<Tenant[]> {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const response = await fetch(`${API_URL}/arrendatario/listarArrendatarios`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: 'no-store',
-  });
-
-  if (!response.ok) {
-    console.error('Failed to fetch tenants');
-    return [];
-  }
-  
-  const data: TenantsApiResponse = await response.json();
-  return data.payload.datos || [];
+  return fetchAllPages(`${process.env.NEXT_PUBLIC_API_URL}/arrendatario/listarArrendatarios`, token);
 }
-
 
 async function getLocals(token: string): Promise<Local[]> {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const response = await fetch(`${API_URL}/locales/listarlocales`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: 'no-store',
-  });
-
-  if (!response.ok) {
-    console.error('Failed to fetch properties');
-    return [];
-  }
-  
-  const data: PaginatedApiResponse<Local[]> = await response.json();
-  return data.payload.datos || [];
+  return fetchAllPages(`${process.env.NEXT_PUBLIC_API_URL}/locales/listarlocales`, token);
 }
 
 async function getProperties(token: string): Promise<Property[]> {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const response = await fetch(`${API_URL}/propiedad/listarPropiedades`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: 'no-store',
-  });
-
-  if (!response.ok) {
-    console.error('Failed to fetch properties');
-    return [];
-  }
-
-  const data: PaginatedApiResponse<Property[]> = await response.json();
-  return data.payload.datos || [];
+  return fetchAllPages(`${process.env.NEXT_PUBLIC_API_URL}/propiedad/listarPropiedades`, token);
 }
-
 
 export default async function LeasesPage() {
   const cookieStore = await cookies();

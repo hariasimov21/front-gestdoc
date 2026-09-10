@@ -41,10 +41,7 @@ const formSchema = z.object({
   nro_cliente_suralis: z.string().optional(),
 });
 
-type Property = {
-  id_propiedad: number;
-  direccion: string;
-};
+import type { Property } from './columns';
 
 interface LocalFormModalProps {
   isOpen: boolean;
@@ -170,6 +167,7 @@ export const LocalFormModal: React.FC<LocalFormModalProps> = ({
                         placeholder="Seleccione una propiedad"
                         searchPlaceholder="Buscar propiedad..."
                         emptyPlaceholder="No se encontró propiedad."
+                        disabled={isEditing}
                       />
                     </FormControl>
                     <input type="hidden" name={field.name} value={field.value} />

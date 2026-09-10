@@ -10,10 +10,7 @@ import { columns, LocalColumn } from './columns';
 import { Input } from '../ui/input';
 import { Card, CardContent, CardHeader } from '../ui/card';
 
-type Property = {
-  id_propiedad: number;
-  direccion: string;
-};
+import type { Property } from './columns';
 
 interface LocalsClientProps {
   data: LocalColumn[];

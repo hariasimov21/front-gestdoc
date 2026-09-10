@@ -12,7 +12,7 @@ const localSchema = z.object({
   nombre_local: z.string().min(1, 'El nombre del local es requerido.'),
   descripcion: z.string().min(1, 'La descripción es requerida.'),
   tipo_local: z.string().min(1, 'El tipo de local es requerido.'),
-  id_propiedad: z.string().optional(),
+  id_propiedad: z.string().regex(/^[1-9]\d*$/, 'La propiedad es requerida.'),
   nro_cliente_saesa: z.string().optional(),
   nro_cliente_suralis: z.string().optional(),
 });
@@ -35,6 +35,7 @@ export async function createLocal(prevState: { error?: string }, formData: FormD
 
   const postData = {
     ...validatedFields.data,
+    id_propiedad: Number(validatedFields.data.id_propiedad),
     tipo_local: parseInt(validatedFields.data.tipo_local, 10),
   };
 
@@ -72,16 +73,16 @@ export async function updateLocal(id_local: number, prevState: { error?: string 
     return { error: 'Datos inválidos. Por favor, revisa los campos.' };
   }
 
+  const { id_propiedad, ...editableFields } = validatedFields.data;
   const putData = {
-    ...validatedFields.data,
-    id_propiedad: parseInt(validatedFields.data.id_propiedad, 10),
+    ...editableFields,
     tipo_local: parseInt(validatedFields.data.tipo_local, 10),
   };
 
   try {
     const token = await getAuthToken();
     const response = await fetch(`${API_URL}/${id_local}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,

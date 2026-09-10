@@ -35,6 +35,7 @@ function LeasesClientContent({ data, tenants, locals, properties }: LeasesClient
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('activos');
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   const filteredData = data.filter(item => {
@@ -56,7 +57,8 @@ function LeasesClientContent({ data, tenants, locals, properties }: LeasesClient
       }
     }
 
-    return textMatch && dateMatch;
+    const stateMatch = statusFilter === 'todos' || item.activo === (statusFilter === 'activos');
+    return textMatch && dateMatch && stateMatch;
   });
 
   const clearFilters = () => {
@@ -80,6 +82,16 @@ function LeasesClientContent({ data, tenants, locals, properties }: LeasesClient
         <CardHeader className="p-4">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="flex flex-col md:flex-row flex-1 items-center gap-2 w-full">
+                    <select
+                      aria-label="Estado del arriendo"
+                      value={statusFilter}
+                      onChange={event => setStatusFilter(event.target.value)}
+                      className="h-9 rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                      <option value="activos">Activos</option>
+                      <option value="inactivos">Inactivos</option>
+                      <option value="todos">Todos</option>
+                    </select>
                     <Popover>
                         <PopoverTrigger asChild>
                         <Button

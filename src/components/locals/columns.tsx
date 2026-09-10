@@ -17,13 +17,8 @@ export type LocalColumn = {
 export type Property = {
   id_propiedad: number;
   direccion: string;
-  descripcion: string;
-  longitud: string;
-  latitud: string;
-  id_sociedad: number;
-  rol_propiedad: string;
-  nombre_sociedad?: string; // Add optional field
 };
+
 
 export const columns = (properties: Property[]): ColumnDef<LocalColumn>[] => [
   {
